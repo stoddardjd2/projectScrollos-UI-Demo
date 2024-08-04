@@ -1,0 +1,273 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #8f8f8f;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* COLOR SCHEMES: */
+/* FILTER:
+https://angel-rs.github.io/css-color-filter-generator/
+ */
+/* #2ccebb */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+button:hover {
+  cursor: pointer;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+/* style a to look like button */
+.button {
+  border: 3px #6e6969 solid;
+  padding: 10px;
+  border-radius: 40px;
+  text-align: center;
+  height: 2em; /* Adjust as needed */
+  line-height: 2em; /* Same as height */
+  flex-grow: 1;
+  font-weight: bold;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+/* Home css: */
+
+/* navbar css: */
+.navbar {
+  display: flex;
+  align-items: center;
+  column-gap: 90px;
+  padding-left: 30px;
+}
+.navbar--inner-container {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+}
+.navbar img {
+  filter: brightness(0) saturate(100%) invert(74%) sepia(38%) saturate(805%)
+    hue-rotate(118deg) brightness(89%) contrast(87%);
+  width: 70px;
+}
+.navbar h1 {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+/* signin css: */
+.signin {
+  background-color: #272727;
+  font-size: 1.5em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px #6e6969 solid;
+  padding: 2em;
+  border-radius: 20px;
+  min-width: 10em;
+  /* box-shadow: 0 3px 3.5px #ebebeb81; */
+}
+.signin h1 {
+  text-align: center;
+  margin: 0.2em;
+}
+.signin label {
+  font-size: 0.6em;
+}
+.signin img {
+  width: 20px;
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(34%)
+    hue-rotate(257deg) brightness(92%) contrast(84%);
+}
+.signin--input-box {
+  display: flex;
+  border-bottom: 0.1em #6e6969 solid;
+  align-items: center;
+}
+.signin--input-box:hover {
+  border-bottom: 0.1em white solid;
+}
+.signin input {
+  padding: 1em;
+  width: 10em;
+  border: none;
+  background-color: transparent;
+}
+.signin input:focus {
+  outline: none;
+}
+.signin--forgot-password {
+  margin-top: 1em;
+  font-size: 0.5em;
+  text-align: right;
+}
+.signin--forgot-password a {
+  color: #ffffff;
+}
+.signin--after-input-container {
+  text-align: center;
+  font-size: 0.5em;
+}
+.signin--login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Discover css: */
+.discover {
+  overflow-y: hidden;
+  display: flex;
+  background-color: aqua;
+  height: 92.79vh;
+  .search-bar {
+    background-color: rgb(196, 62, 156);
+    display: flex;
+    column-gap: 4em;
+  }
+  .right-column {
+    background-color: #46aa5b;
+    flex: 5;
+    height: 100%;
+
+    .search-bar {
+      padding: 1em;
+    }
+    .content {
+      height: 90vh;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+      padding-bottom: 30px;
+      }
+      .keys{
+        background-color: rgb(68, 158, 158);
+      }
+      .document-container {
+        display: flex;
+        padding: 1em;
+        padding-right: 10em;
+        border: 1px rgb(56, 56, 56) solid;
+        .save {
+          text-align: center;
+          flex:2;
+          img {
+            margin: auto;
+            width: 2em;
+          }
+        } 
+        div {
+          align-self: center;
+          /* text-align: center; */
+          flex: 5;
+        }
+      
+
+      }
+    }
+
+    .simulate-drop-down {
+      background-color: crimson;
+      padding: 0.1em;
+    }
+  
+  .left-column {
+    flex: 1;
+    text-align: center;
+    background-color: orange;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    .flexbox {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      row-gap: 1em;
+      > div {
+        margin: 20px;
+        padding: 1em;
+        border: 2px rgb(88, 88, 88) solid;
+      }
+      .preview {
+        /* flex:1; */
+        margin-bottom: 135px;
+        background-color: #46aa5b;
+      }
+    }
+  }
+}
+
+
+/* ApiDocsViewer */
+.apiDocViewer {
+  background-color: rgb(211, 211, 211);
+  overflow: scroll;
+}
+.scheme-container {
+  background-color: rgb(219, 219, 219) !important;
+}
+/* hide labels: */
+.hidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+/* Search css: */
+.search--container {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  border: var(--thirdColor) 2px solid;
+  border-radius: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  background-color: var(--secondaryColor);
+  margin-right: 10px;
+  width: fit-content;
+}
+.search--searchbox {
+  background-color: var(--secondaryColor);
+  border: none;
+  opacity: 100%;
+  width: 30px;
+  color: var(--thirdColor);
+}
+.search--searchbox:focus {
+  transition: 0.5s ease;
+  width: 180px;
+  outline: none;
+}
+.search--searchbox::placeholder {
+  color: var(--mainColor);
+}
+.search--icon {
+  width: 2em;
+}
+.search--button {
+  background-color: var(--secondaryColor);
+  border: none;
+}
+.search--button:hover .search--icon {
+  filter: invert(100%);
+}

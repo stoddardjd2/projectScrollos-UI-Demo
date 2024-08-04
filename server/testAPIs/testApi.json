@@ -1,0 +1,1498 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "OneOMS Order Service",
+        "version": "0.0.1",
+        "description": "Order Management Service",
+        "contact": {
+            "name": "OneOMS Leadership",
+            "email": "OneOMSLeadership@walgreens.com",
+            "url": "https://dev.azure.com/WBA/oms/_git/wba-oneoms-order"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:7101",
+            "description": "Local environment"
+        }
+    ],
+    "paths": {
+        "/api/{tenantid}/order": {
+            "post": {
+                "description": "Creates a new order",
+                "operationId": "createOrder",
+                "tags": [
+                    "Order",
+                    "HDIS"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdInHeader"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Order"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400BadRequest"
+                    },
+                    "409": {
+                        "$ref": "#/components/responses/409Conflict"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/{tenantid}/order/{orderid}": {
+            "get": {
+                "description": "Gets order header details",
+                "operationId": "getOrderById",
+                "tags": [
+                    "Order",
+                    "HDIS"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns order header details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderHeader"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404NotFound"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/{tenantid}/order/{orderid}/full": {
+            "get": {
+                "description": "Get detailed order information",
+                "operationId": "getDetailedOrderById",
+                "tags": [
+                    "Order",
+                    "HDIS"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns order details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Order"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404NotFound"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/{tenantid}/order/{orderid}/lineitem": {
+            "get": {
+                "description": "Gets line items associated with the order",
+                "operationId": "getLineItemsByOrderId",
+                "tags": [
+                    "Line item"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list of line items",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/LineItem"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400BadRequest"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/{tenantid}/order/{orderid}/lineitem/{lineitemid}": {
+            "get": {
+                "description": "Gets single line item information",
+                "operationId": "getOrderbyOrderIdLineItemId",
+                "tags": [
+                    "Line item"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/LineItemIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns line item",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LineItem"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400BadRequest"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/{tenantid}/order/{orderid}/fulfillment/group": {
+            "post": {
+                "description": "Creates a new fulfillment group",
+                "operationId": "FulfillmentGroupCreate",
+                "tags": [
+                    "Fulfillment Group",
+                    "Internal"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdInHeader"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FulfillmentGroupCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Fulfillment group created successfully",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "title": "Fulfillment group Id",
+                                    "type": "string",
+                                    "example": "d3a779fa-69ce-4738-8d5b-de7a0c821480"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400BadRequest"
+                    },
+                    "409": {
+                        "$ref": "#/components/responses/409Conflict"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        },
+        "/api/{tenantid}/order/{orderid}/fulfillment/group/{fulfillmentgroupid}": {
+            "get": {
+                "description": "Fetches a fulfillment group",
+                "operationId": "FulfillmentGroupGet",
+                "tags": [
+                    "Fulfillment Group",
+                    "Internal"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FulfillmentGroupIdInPath"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fulfillment group",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FulfillmentGroupTag"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/404NotFound"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Updates a new fulfillment group",
+                "operationId": "FulfillmentGroupUpdate",
+                "tags": [
+                    "Fulfillment Group",
+                    "Internal"
+                ],
+                "security": [
+                    {
+                        "DefaultFnKeyHeader": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/TenantIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/OrderIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/FulfillmentGroupIdInPath"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdInHeader"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FulfillmentGroupUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Fulfillment group updated successfully"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400BadRequest"
+                    },
+                    "409": {
+                        "$ref": "#/components/responses/409Conflict"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/429TooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500InternalServerError"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "parameters": {
+            "LineItemIdInPath": {
+                "name": "lineitemid",
+                "in": "path",
+                "schema": {
+                    "$ref": "#/components/schemas/LineItemID"
+                },
+                "required": true,
+                "example": "1"
+            },
+            "OrderIdInPath": {
+                "name": "orderid",
+                "in": "path",
+                "schema": {
+                    "$ref": "#/components/schemas/OrderID"
+                },
+                "required": true,
+                "example": "6d1bff5a-e828-4018-9bb7-ad1c84b4ac43"
+            },
+            "TenantIdInPath": {
+                "name": "tenantid",
+                "in": "path",
+                "schema": {
+                    "$ref": "#/components/schemas/TenantID"
+                },
+                "required": true,
+                "example": "walgreens"
+            },
+            "FulfillmentGroupIdInPath": {
+                "name": "fulfillmentgroupid",
+                "in": "path",
+                "schema": {
+                    "type": "string"
+                },
+                "example": "e17bf06c-ce01-4b99-ad29-81a6ad1a66bc",
+                "required": true
+            },
+            "UserIdInHeader": {
+                "name": "user-id",
+                "in": "header",
+                "schema": {
+                    "type": "string"
+                },
+                "required": true,
+                "example": "HDIS"
+            }
+        },
+        "responses": {
+            "202RequestAccepted": {
+                "description": "Request accepted",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "string",
+                            "example": "The request has been accepted"
+                        }
+                    }
+                }
+            },
+            "400BadRequest": {
+                "description": "Bad request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "location": {
+                                        "type": "string",
+                                        "example": "body"
+                                    },
+                                    "path": {
+                                        "type": "string",
+                                        "example": "/path"
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "description of the error message"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "404NotFound": {
+                "description": "Entity not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "string",
+                            "example": "The {entity} was not found"
+                        }
+                    }
+                }
+            },
+            "409Conflict": {
+                "description": "Conflict / Entity already exists",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "string",
+                            "example": "The operation conflicted with existing entity"
+                        }
+                    }
+                }
+            },
+            "429TooManyRequests": {
+                "description": "Too many requests",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "string",
+                            "example": "Rate limit is exceeded, Please try again in 9 seconds"
+                        }
+                    }
+                }
+            },
+            "500InternalServerError": {
+                "description": "Internal server error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "string",
+                            "description": "Server error message",
+                            "example": "An error occurred while performing this operation"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "AttindasLineItem": {
+                "title": "Attindas line item",
+                "description": "Attidas line item",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseLineItem"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "title": "Line item status",
+                                "type": "string",
+                                "enum": [
+                                    "open",
+                                    "inprogress",
+                                    "shipped"
+                                ],
+                                "readOnly": true
+                            },
+                            "extendedProductIds": {
+                                "type": "object",
+                                "properties": {
+                                    "SKUID": {
+                                        "description": "Attindas Item Id",
+                                        "type": "string",
+                                        "example": 52434
+                                    },
+                                    "upc": {
+                                        "description": "Item UPC",
+                                        "type": "string",
+                                        "example": 1234567890
+                                    }
+                                }
+                            },
+                            "articleId": {
+                                "type": "string",
+                                "example": 4343434
+                            },
+                            "manufacturer": {
+                                "type": "string",
+                                "example": "some manufacturer"
+                            },
+                            "unitOfMeasure": {
+                                "type": "string",
+                                "example": "ea"
+                            },
+                            "price": {
+                                "title": "Pricing values",
+                                "type": "object",
+                                "properties": {
+                                    "unit": {
+                                        "title": "Unit price",
+                                        "description": "unit price in pennies",
+                                        "type": "integer",
+                                        "example": 343
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "AuditStamp": {
+                "type": "object",
+                "title": "Audit stamp",
+                "readOnly": true,
+                "properties": {
+                    "by": {
+                        "title": "By",
+                        "type": "string",
+                        "example": "OMS"
+                    },
+                    "on": {
+                        "title": "On",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ISO8601TS"
+                            }
+                        ]
+                    }
+                }
+            },
+            "BaseLineItem": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseOrderDocument"
+                    }
+                ],
+                "title": "Base line item",
+                "description": "Line item details",
+                "type": "object",
+                "properties": {
+                    "_doc": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DocumentType"
+                            }
+                        ],
+                        "example": "lineItem"
+                    },
+                    "description": {
+                        "title": "Item description",
+                        "type": "string",
+                        "description": "Item description",
+                        "example": "Item description"
+                    },
+                    "fulfiller": {
+                        "title": "Fulfiller",
+                        "type": "string",
+                        "description": "Who is going to fulfill the order request",
+                        "enum": [
+                            "dc"
+                        ],
+                        "example": "dc",
+                        "minLength": 1
+                    },
+                    "fulfillmentType": {
+                        "title": "Fulfillment type",
+                        "type": "string",
+                        "description": "Fulfillment type decided by routing logic",
+                        "enum": [
+                            "delivertocustomer"
+                        ],
+                        "example": "delivertocustomer"
+                    },
+                    "itemType": {
+                        "title": "Item type",
+                        "type": "string",
+                        "description": "Item type",
+                        "enum": [
+                            "attindas"
+                        ],
+                        "example": "attindas"
+                    },
+                    "lastMileSelection": {
+                        "title": "LastMile selection",
+                        "type": "string",
+                        "description": "LastMile selection ID referring the selected last mile options",
+                        "example": "e17bf06c-ce01-4b99-ad29-81a6ad1a66bc"
+                    },
+                    "lineItemID": {
+                        "$ref": "#/components/schemas/LineItemID"
+                    },
+                    "flags": {
+                        "title": "Line item flags",
+                        "type": "object",
+                        "properties": {
+                            "isHazmat": {
+                                "title": "Is hazrdous material",
+                                "type": "boolean"
+                            }
+                        }
+                    },
+                    "quantity": {
+                        "title": "Quantity values",
+                        "type": "object",
+                        "properties": {
+                            "ordered": {
+                                "title": "Ordered quantity",
+                                "type": "integer",
+                                "min": 1,
+                                "example": 5
+                            },
+                            "assigned": {
+                                "title": "Quantity assigned to line item post routing",
+                                "type": "integer",
+                                "min": 1,
+                                "readOnly": true,
+                                "example": 4
+                            },
+                            "fulfilled": {
+                                "title": "Quantity fulfilled",
+                                "type": "integer",
+                                "min": 1,
+                                "readOnly": true,
+                                "example": 3
+                            }
+                        },
+                        "required": [
+                            "ordered"
+                        ]
+                    },
+                    "shipments": {
+                        "title": "Collection of shipment IDs",
+                        "description": "Collection of shipment IDs which contains the lineitem",
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShipmentID"
+                        }
+                    },
+                    "tags": {
+                        "title": "Collection line item tags",
+                        "description": "Collection line item tags and associated values",
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LineItemTag"
+                        }
+                    }
+                },
+                "required": [
+                    "lineItemID",
+                    "fulfiller",
+                    "itemType",
+                    "orderedQuantity",
+                    "lastMileSelection"
+                ]
+            },
+            "ShipmentID": {
+                "title": "Shipment ID",
+                "type": "string",
+                "minLength": 32,
+                "maxLength": 38,
+                "format": "uuid"
+            },
+            "LineItemTag": {
+                "title": "Line item tag",
+                "description": "Tag details that refer to the tag document",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "title": "Tag type",
+                        "type": "string",
+                        "example": "fulfillmentGroup"
+                    },
+                    "value": {
+                        "title": "Tag value",
+                        "example": "12345",
+                        "type": "string"
+                    }
+                }
+            },
+            "TagBase": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseOrderDocument"
+                    }
+                ],
+                "title": "Tag document base",
+                "description": "Basic tag details details",
+                "type": "object",
+                "properties": {
+                    "_doc": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DocumentType"
+                            }
+                        ],
+                        "example": "tag"
+                    },
+                    "type": {
+                        "title": "Tag type",
+                        "type": "string",
+                        "example": "fulfillmentGroup"
+                    },
+                    "value": {
+                        "title": "Tag value",
+                        "example": "12345",
+                        "type": "string"
+                    }
+                }
+            },
+            "FulfillerType": {
+                "title": "Fulfiller type",
+                "type": "string",
+                "enum": [
+                    "dc"
+                ]
+            },
+            "FulfillmentGroupCreate": {
+                "title": "Fulfillment group create request",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "title": "Status",
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "canceled"
+                        ]
+                    },
+                    "fulfiller": {
+                        "$ref": "#/components/schemas/FulfillerType"
+                    },
+                    "fulfillerId": {
+                        "title": "Fulfiller Id",
+                        "type": "string",
+                        "example": "1234"
+                    },
+                    "lineItems": {
+                        "title": "Fulfillment group line items",
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "lineItemId": {
+                                    "$ref": "#/components/schemas/LineItemID"
+                                },
+                                "status": {
+                                    "title": "Line item status",
+                                    "type": "string",
+                                    "enum": [
+                                        "assigned",
+                                        "canceled"
+                                    ]
+                                },
+                                "assignedQuantity": {
+                                    "title": "Quantity assigned for fulfillment",
+                                    "type": "integer",
+                                    "example": 5
+                                },
+                                "allocatedQuantity": {
+                                    "title": "Quantity allocated by fulfiller",
+                                    "type": "integer",
+                                    "example": 3
+                                },
+                                "cancelationCode": {
+                                    "title": "Cancelation code",
+                                    "type": "string",
+                                    "example": "out-of-stock"
+                                },
+                                "cancelationReason": {
+                                    "title": "Cancelation reason",
+                                    "type": "string",
+                                    "example": "Out of stock"
+                                },
+                                "cancelationRequestedBy": {
+                                    "title": "Cancelation requested by",
+                                    "type": "string",
+                                    "example": "emp123"
+                                }
+                            },
+                            "required": [
+                                "lineItemId",
+                                "status",
+                                "assignedQuantity"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "fulfiller",
+                    "fulfillerId",
+                    "lineItems"
+                ]
+            },
+            "FulfillmentGroupUpdate": {
+                "title": "Fulfillment group update request",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "title": "Status",
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "allocated",
+                            "inprogress",
+                            "completed",
+                            "canceled",
+                            "deleted"
+                        ]
+                    },
+                    "lineItems": {
+                        "title": "Fulfillment group line items",
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "lineItemId": {
+                                    "$ref": "#/components/schemas/LineItemID"
+                                },
+                                "status": {
+                                    "title": "Line item status",
+                                    "type": "string",
+                                    "enum": [
+                                        "assigned",
+                                        "completed",
+                                        "canceled",
+                                        "deleted"
+                                    ]
+                                },
+                                "allocatedQuantity": {
+                                    "title": "Quantity allocated by fulfiller",
+                                    "type": "integer",
+                                    "example": 3
+                                },
+                                "fulfilledQuantity": {
+                                    "title": "Quantity actually fulfilled",
+                                    "type": "integer",
+                                    "example": 2
+                                },
+                                "cancelationCode": {
+                                    "title": "Cancelation code",
+                                    "type": "string",
+                                    "example": "out-of-stock"
+                                },
+                                "cancelationReason": {
+                                    "title": "Cancelation reason",
+                                    "type": "string",
+                                    "example": "Out of stock"
+                                },
+                                "cancelationRequestedBy": {
+                                    "title": "Cancelation requested by",
+                                    "type": "string",
+                                    "example": "emp123"
+                                }
+                            },
+                            "required": [
+                                "lineItemId",
+                                "status"
+                            ]
+                        }
+                    }
+                }
+            },
+            "FulfillmentGroupTag": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/TagBase"
+                    }
+                ],
+                "title": "Fulfillment Group Tag",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "title": "Status",
+                        "type": "string",
+                        "enum": [
+                            "new",
+                            "allocated",
+                            "inprogress",
+                            "completed",
+                            "canceled",
+                            "deleted"
+                        ]
+                    },
+                    "fulfiller": {
+                        "$ref": "#/components/schemas/FulfillerType"
+                    },
+                    "fulfillerId": {
+                        "title": "Fulfiller Id",
+                        "type": "string",
+                        "example": "1234"
+                    },
+                    "lineItems": {
+                        "title": "Fulfillment group line items",
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "lineItemId": {
+                                    "$ref": "#/components/schemas/LineItemID"
+                                },
+                                "status": {
+                                    "title": "Line item status",
+                                    "type": "string",
+                                    "enum": [
+                                        "assigned",
+                                        "completed",
+                                        "canceled",
+                                        "deleted"
+                                    ]
+                                },
+                                "assignedQuantity": {
+                                    "title": "Quantity assigned for fulfillment",
+                                    "type": "integer",
+                                    "example": 5
+                                },
+                                "allocatedQuantity": {
+                                    "title": "Quantity allocated by fulfiller",
+                                    "type": "integer",
+                                    "example": 3
+                                },
+                                "fulfilledQuantity": {
+                                    "title": "Quantity actually fulfilled",
+                                    "type": "integer",
+                                    "example": 2
+                                },
+                                "cancelationCode": {
+                                    "title": "Cancelation code",
+                                    "type": "string",
+                                    "example": "out-of-stock"
+                                },
+                                "cancelationReason": {
+                                    "title": "Cancelation reason",
+                                    "type": "string",
+                                    "example": "Out of stock"
+                                },
+                                "cancelationRequestedBy": {
+                                    "title": "Cancelation requested by",
+                                    "type": "string",
+                                    "example": "emp123"
+                                }
+                            },
+                            "required": [
+                                "lineItemId",
+                                "status",
+                                "assignedQuantity"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "fulfiller",
+                    "fulfillerId",
+                    "lineItems"
+                ]
+            },
+            "ItemTag": {
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/FulfillmentGroupTag"
+                    }
+                ]
+            },
+            "DocumentType": {
+                "title": "Document type",
+                "type": "string",
+                "readOnly": true
+            },
+            "BaseOrderDocument": {
+                "title": "Base order document",
+                "description": "Base  order document",
+                "type": "object",
+                "properties": {
+                    "_doc": {
+                        "$ref": "#/components/schemas/DocumentType"
+                    },
+                    "_etag": {
+                        "title": "ETag",
+                        "type": "string",
+                        "readOnly": true
+                    },
+                    "_ts": {
+                        "title": "Timestamp",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ISO8601TS"
+                            }
+                        ],
+                        "example": "2017-03-24T20:19:19.849Z",
+                        "readOnly": true
+                    },
+                    "created": {
+                        "$ref": "#/components/schemas/AuditStamp"
+                    },
+                    "id": {
+                        "title": "ID",
+                        "type": "string",
+                        "description": "Cosmos document ID",
+                        "readOnly": true
+                    },
+                    "modified": {
+                        "$ref": "#/components/schemas/AuditStamp"
+                    },
+                    "orderID": {
+                        "title": "Order Id",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/OrderID"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "tenantID": {
+                        "$ref": "#/components/schemas/TenantID"
+                    },
+                    "version": {
+                        "title": "Document version",
+                        "type": "string",
+                        "example": "0.0.1",
+                        "readOnly": true
+                    }
+                }
+            },
+            "Customer": {
+                "title": "General Customer",
+                "description": "General customer details",
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "title": "First name",
+                        "type": "string",
+                        "description": "First name",
+                        "minLength": 1
+                    },
+                    "lastName": {
+                        "title": "Last name",
+                        "type": "string",
+                        "description": "Last name",
+                        "minLength": 1
+                    },
+                    "type": {
+                        "title": "Type",
+                        "type": "string",
+                        "example": "general",
+                        "minLength": 1
+                    }
+                },
+                "required": [
+                    "type",
+                    "firstName",
+                    "lastName"
+                ]
+            },
+            "ISO8601TS": {
+                "title": "Date time template",
+                "type": "string",
+                "format": "date-time",
+                "example": "2017-03-24T20:19:19.849Z"
+            },
+            "LastMileSelection": {
+                "title": "LastMile selection",
+                "description": "Lastmile selection",
+                "oneOf": [
+                    {
+                        "$ref": "#/components/schemas/LastMileSelectionDelivery"
+                    }
+                ]
+            },
+            "LastMileSelectionBase": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseOrderDocument"
+                    }
+                ],
+                "title": "LastMile selection",
+                "description": "LastMile selection details along with pickup details",
+                "type": "object",
+                "properties": {
+                    "_doc": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DocumentType"
+                            }
+                        ],
+                        "example": "lastMile"
+                    },
+                    "selectionID": {
+                        "title": "LastMile selection ID",
+                        "type": "string",
+                        "description": "LastMile selection ID, must be unique across an order",
+                        "example": "e17bf06c-ce01-4b99-ad29-81a6ad1a66bc"
+                    }
+                },
+                "required": [
+                    "selectionID"
+                ]
+            },
+            "LastMileSelectionDelivery": {
+                "title": "LastMile selection type delivery",
+                "description": "LastMile selection details along with delivery details",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/LastMileSelectionBase"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "lastMile": {
+                                "type": "string",
+                                "title": "Last mile",
+                                "description": "Last mile option selected by customer",
+                                "enum": [
+                                    "delivery"
+                                ],
+                                "example": "delivery"
+                            },
+                            "isSignatureRequired": {
+                                "title": "Is signature required",
+                                "description": "Is signature required",
+                                "type": "boolean",
+                                "example": false
+                            },
+                            "shipping": {
+                                "$ref": "#/components/schemas/Shipping"
+                            }
+                        }
+                    }
+                ]
+            },
+            "LineItem": {
+                "title": "Line item",
+                "oneOf": [
+                    {
+                        "$ref": "#/components/schemas/AttindasLineItem"
+                    }
+                ]
+            },
+            "LineItemID": {
+                "title": "Line item ID",
+                "description": "Line item ID. Must be unique for each line item in an order",
+                "type": "number",
+                "example": 1
+            },
+            "Order": {
+                "title": "Complete order details",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/OrderHeader"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "tags": {
+                                "title": "Item tags",
+                                "description": "Item tag details that are associated with line items",
+                                "readOnly": true,
+                                "type": "array",
+                                "maxItems": 5,
+                                "items": {
+                                    "$ref": "#/components/schemas/ItemTag"
+                                }
+                            },
+                            "lineItems": {
+                                "title": "Line items",
+                                "description": "List of line items associated with the order. Maximum 50 line items are allowed.",
+                                "type": "array",
+                                "maxItems": 50,
+                                "items": {
+                                    "$ref": "#/components/schemas/LineItem"
+                                }
+                            },
+                            "lastMileSelections": {
+                                "title": "LastMile selections",
+                                "description": "List of last mile selections associated with the order. Line items should be linked with the seleted last mile option using the selectionID",
+                                "type": "array",
+                                "maxItems": 10,
+                                "items": {
+                                    "$ref": "#/components/schemas/LastMileSelection"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "OrderFlags": {
+                "title": "Order flags",
+                "description": "Order flags",
+                "type": "object",
+                "properties": {
+                    "isCourtesyOrder": {
+                        "title": "Is courtesy order",
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            },
+            "OrderHeader": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseOrderDocument"
+                    }
+                ],
+                "title": "Order header",
+                "description": "Top level order details",
+                "type": "object",
+                "properties": {
+                    "_doc": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DocumentType"
+                            }
+                        ],
+                        "example": "header"
+                    },
+                    "clientReferenceID": {
+                        "title": "Client Reference ID",
+                        "type": "string",
+                        "description": "Order Reference ID (HDIS ORDER ID)",
+                        "example": 23243543
+                    },
+                    "customer": {
+                        "$ref": "#/components/schemas/Customer"
+                    },
+                    "flags": {
+                        "$ref": "#/components/schemas/OrderFlags"
+                    },
+                    "orderPlacedTimestamp": {
+                        "title": "Order placed timestamp",
+                        "description": "Order placed timestamp",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ISO8601TS"
+                            }
+                        ],
+                        "example": "2017-02-24T20:19:19.849Z"
+                    },
+                    "siteID": {
+                        "title": "Site ID",
+                        "type": "string",
+                        "description": "Site ID where order was placed",
+                        "example": "HDIS",
+                        "minLength": 1
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/OrderStatus"
+                    }
+                },
+                "required": [
+                    "siteID",
+                    "orderPlacedTimestamp",
+                    "customer"
+                ]
+            },
+            "OrderID": {
+                "title": "Order ID",
+                "type": "string",
+                "minLength": 32,
+                "maxLength": 38,
+                "format": "uuid",
+                "example": "6d1bff5a-e828-4018-9bb7-ad1c84b4ac43",
+                "description": "System generated order ID (GUID)",
+                "readOnly": true
+            },
+            "OrderStatus": {
+                "title": "Order status",
+                "description": "Current status of the order",
+                "type": "string",
+                "enum": [
+                    "open",
+                    "inprogress",
+                    "completed",
+                    "canceled",
+                    "deleted"
+                ],
+                "example": "open",
+                "readOnly": true
+            },
+            "Shipping": {
+                "title": "Shipping details",
+                "description": "Shipping information of customer",
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "$ref": "#/components/schemas/ShippingAddress"
+                    },
+                    "handlingInstructions": {
+                        "title": "Handling instructions",
+                        "type": "string",
+                        "description": "The handling instruction for the delivery person",
+                        "example": "Contactless - leave behind the gate",
+                        "minLength": 1
+                    },
+                    "serviceLevel": {
+                        "title": "Service level",
+                        "type": "string",
+                        "description": "The shipping service level",
+                        "enum": [
+                            "standard"
+                        ],
+                        "example": "standard",
+                        "minLength": 1
+                    }
+                }
+            },
+            "ShippingAddress": {
+                "title": "Shipping address",
+                "type": "object",
+                "description": "Shipping address of customer",
+                "properties": {
+                    "addressLine1": {
+                        "title": "Address line 1",
+                        "type": "string",
+                        "example": "411 108th Ave NE",
+                        "minLength": 1
+                    },
+                    "addressLine2": {
+                        "title": "Address line 2",
+                        "type": "string",
+                        "example": "Suite 1200"
+                    },
+                    "city": {
+                        "title": "City",
+                        "type": "string",
+                        "example": "Bellevue",
+                        "minLength": 1
+                    },
+                    "firstName": {
+                        "title": "First name",
+                        "type": "string",
+                        "example": "Sample First Name",
+                        "minLength": 1
+                    },
+                    "lastName": {
+                        "title": "Last name",
+                        "type": "string",
+                        "example": "Sample Last Name",
+                        "minLength": 1
+                    },
+                    "state": {
+                        "title": "State",
+                        "type": "string",
+                        "description": "State name",
+                        "example": "WA",
+                        "minLength": 1
+                    },
+                    "ZIP": {
+                        "title": "ZIP",
+                        "type": "string",
+                        "example": 98004,
+                        "minLength": 1
+                    },
+                    "ZIPExtension": {
+                        "title": "ZIP extension",
+                        "type": "string",
+                        "description": "ZIP extension",
+                        "example": 8404
+                    },
+                    "countryCode": {
+                        "title": "Country code",
+                        "type": "string",
+                        "example": "US",
+                        "minLength": 2
+                    }
+                },
+                "required": [
+                    "firstName",
+                    "lastName",
+                    "addressLine1",
+                    "city",
+                    "state",
+                    "ZIP",
+                    "countryCode"
+                ]
+            },
+            "TenantID": {
+                "type": "string",
+                "title": "Tenant ID",
+                "enum": [
+                    "walgreens"
+                ],
+                "description": "Tenant:\n * `walgreens` - Walgreens\n",
+                "readOnly": true
+            }
+        },
+        "securitySchemes": {
+            "DefaultFnKeyHeader": {
+                "type": "apiKey",
+                "name": "x-functions-key",
+                "in": "header"
+            }
+        }
+    }
+}
