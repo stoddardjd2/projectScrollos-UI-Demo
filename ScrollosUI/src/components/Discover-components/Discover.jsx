@@ -2,6 +2,7 @@ import { useLoaderData } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import ApiDocBar from "./ApiDocBar";
 import Search from "./Search";
+import Saved from "./Saved";
 export default function Discover() {
   const { allApiDocs, userData } = useLoaderData();
   //make clone of loaded api docs to be able to mutate-
@@ -10,6 +11,7 @@ export default function Discover() {
   const [selectedApiID, setSelectedApiID] = useState(null);
   const [showPreview, setShowPreview] = useState({ id: null });
   const [clientUserData, setClientUserData] = useState(userData);
+  const [bookmarks, setBookmarks] = useState();
 
   //get currently selected API doc to display sidebar preview
   let selectedApiDoc;
@@ -77,14 +79,22 @@ export default function Discover() {
         <div className="flexbox">
           {/* hide sidebar content with preview showing */}
           <div>Recents</div>
-          <div>Saved</div>
+          <Saved
+            userData={userData}
+            setBookmarks={setBookmarks}
+            bookmarks={bookmarks}
+            userId={userData._id}
+          />
           <div>Project</div>
           {selectedApiID && preview}
         </div>
       </div>
       <div className="right-column">
         <div className="search-bar">
-          <Search setDisplayApiDocs={setDisplayApiDocs} allApiDocs={allApiDocs}/>
+          <Search
+            setDisplayApiDocs={setDisplayApiDocs}
+            allApiDocs={allApiDocs}
+          />
           <div>Sort</div>
         </div>
         <div className="content">

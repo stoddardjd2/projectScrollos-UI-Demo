@@ -15,12 +15,11 @@ export default function ApiDocBar(props) {
     e.stopPropagation();
     setIsSaved(!isSaved);
     //save changes to database:
-    console.log("sending PATCH REQ");
 
     //add to database if saving
     //NOTE: use opposite of isSaved since toggling value to opposite on click after function runs
     if (!isSaved) {
-      fetch(`http://localhost:3001/user/${userID}/save/bookmark`, {
+      fetch(`http://localhost:3001/user/${userID}/save/bookmarks`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -29,7 +28,7 @@ export default function ApiDocBar(props) {
       });
       //remove from database if unsaving
     } else if (isSaved) {
-      fetch(`http://localhost:3001/user/${userID}/remove/bookmark`, {
+      fetch(`http://localhost:3001/user/${userID}/remove/bookmarks`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

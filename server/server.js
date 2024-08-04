@@ -45,24 +45,12 @@ app.get("/read/getId/:id", (req, res) => {
 });
 
 // read database, limit to returning amount in parameters
-app.get("/read/limitResults/:numbOfResults", (req, res) => {
-  const { numbOfResults } = req.params;
+app.get("/read/limitResults/:limit", (req, res) => {
+  const { limit } = req.params;
   db.collection("API documents")
     .find()
-  //convert to int for limit to work using +
-    .limit(+numbOfResults)
-    .project({ info: 1, _id: 1, opennapi: 1, servers: 1 })
-    .toArray()
-    .then((results) => res.json(results))
-    .catch((err) => {
-      if (err) throw err;
-    });
-});
-
-// read database. LIMIT RESULTS
-app.get("/read/v2", (req, res) => {
-  db.collection("API documents")
-    .find()
+    //convert to int for limit to work using +
+    .limit(+limit)
     .project({ info: 1, _id: 1, opennapi: 1, servers: 1 })
     .toArray()
     .then((results) => res.json(results))
@@ -89,27 +77,61 @@ app.get("/user/:userID", (req, res) => {
   }
 });
 
-//save apiDoc to bookmarks for userID
-app.patch("/user/:userID/save/bookmark", (req, res) => {
-  const { userID } = req.params;
+//save apiDocID to type for userID
+//options: recents, saved
+app.patch("/user/:userID/save/:type", (req, res) => {
+  console.log("BOOKMARK REQ RECEIVED!");
+  const { userID, type } = req.params;
   const { docID } = req.body;
   db.collection("Users")
-    .updateOne({ _id: new ObjectId(userID) }, { $push: { bookmarks: docID } })
+    .updateOne({ _id: new ObjectId(userID) }, { $push: { [type]: docID } })
     .then(res.send("patch successful, saved!"))
     .catch((err) => {
       if (err) throw err;
     });
 });
-//save apiDoc to bookmarks for userID
-app.delete("/user/:userID/remove/bookmark", (req, res) => {
-  const { userID } = req.params;
+//save apiDocID to bookmarks for userID
+app.delete("/user/:userID/remove/:type", (req, res) => {
+  const { userID, type } = req.params;
   const { docID } = req.body;
   db.collection("Users")
-    .updateOne({ _id: new ObjectId(userID) }, { $pull: { bookmarks: docID } })
+    .updateOne({ _id: new ObjectId(userID) }, { $pull: { [type]: docID } })
     .then(res.send("patch succesful, unsaved!"))
     .catch((err) => {
       if (err) throw err;
     });
+});
+
+//for userID, get type and set limit on #of returned api info docs
+app.get("/user/:userID/get/:type/:limit", async (req, res) => {
+  console.log("LIMIT");
+  const { userID, limit, type } = req.params;
+  try {
+    const array = await db
+      .collection("Users")
+      .find({ _id: new ObjectId(userID) }, { [type]: 1 })
+      .project({ username: 0, password: 0})
+      .toArray();
+    //shorten array length of all types to limit value before sending
+
+    const objIds = array[0][type].map((id) => {
+      return new ObjectId(id);
+    });
+    console.log(objIds);
+    //send "limited" arrays
+
+    db.collection("API documents")
+      .find({ _id: { $in: objIds } })
+      .project({ info: 1, _id: 1, opennapi: 1, servers: 1 })
+      .toArray()
+      .then((results) => {
+        console.log("results");
+        console.log(results);
+        res.json(results);
+      });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // search database using string. returns INFO, _ID, OPENAPI, SERVERS

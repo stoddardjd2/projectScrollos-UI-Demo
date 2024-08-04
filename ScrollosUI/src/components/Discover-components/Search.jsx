@@ -8,7 +8,7 @@ export default function Search(props) {
   async function handleSearch() {
     //update display with search query results
     console.log("serach!");
-    const response = await fetch(`http://localhost:3001/search/title/${search}`)
+    await fetch(`http://localhost:3001/search/title/${search}`)
       .then((res) => res.json())
       .then((data) => setDisplayApiDocs(data));
   }
