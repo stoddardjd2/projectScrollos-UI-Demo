@@ -110,7 +110,7 @@ app.get("/user/:userID/get/:type/:limit", async (req, res) => {
     const array = await db
       .collection("Users")
       .find({ _id: new ObjectId(userID) }, { [type]: 1 })
-      .project({ username: 0, password: 0})
+      .project({ username: 0, password: 0 })
       .toArray();
     //shorten array length of all types to limit value before sending
 
@@ -132,6 +132,26 @@ app.get("/user/:userID/get/:type/:limit", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+//get API Docs for array of ids
+app.post("/read/ids/:limit", async (req, res) => {
+  const Ids = req.body
+  console.log(Ids)
+
+  const objIds = Ids.map((id) => {
+    return new ObjectId(id);
+  });
+
+  db.collection("API documents")
+    .find({ _id: { $in: objIds } })
+    .project({ info: 1, _id: 1, opennapi: 1, servers: 1 })
+    .toArray()
+    .then((results) => {
+      console.log("results");
+      console.log(results);
+      res.json(results);
+    });
 });
 
 // search database using string. returns INFO, _ID, OPENAPI, SERVERS
