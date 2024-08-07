@@ -7,6 +7,7 @@ import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ApiDocViewer from "./components/ApiDocViewer.jsx";
+import UserNavBar from "./components/Discover-components/UserNavBar.jsx";
 
 import "./index.css";
 import {
@@ -42,18 +43,18 @@ const router = createBrowserRouter([
     path: "discover/:userID",
     element: (
       <>
-        <Navbar />
+        {/* <UserNavBar /> */}
         <Discover />
       </>
     ),
     loader: async ({ params }) => {
-      const allApiDocs = await fetch(
-        "http://localhost:3001/read/limitResults/5"
+      const loadedDocs = await fetch(
+        "http://localhost:3001/read/limitResults/10"
       ).then((res) => res.json());
       const userData = await fetch(
         `http://localhost:3001/user/${params.userID}`
       ).then((res) => res.json());
-      return { allApiDocs, userData };
+      return { loadedDocs, userData };
     },
   },
   {

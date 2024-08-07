@@ -2,10 +2,11 @@ import searchIcon from "../../assets/search.svg";
 import clearIcon from "../../assets/x.svg";
 import { useState } from "react";
 export default function Search(props) {
-  const { setDisplayApiDocs, allApiDocs } = props;
+  const { setDisplayApiDocs, allApiDocs, apiDocsDisplay } = props;
   const [search, setSearch] = useState("");
 
-  async function handleSearch() {
+  async function handleSearch(e) {
+    e.preventDefault();
     //update display with search query results
     console.log("serach!");
     await fetch(`http://localhost:3001/search/title/${search}`)
@@ -20,7 +21,7 @@ export default function Search(props) {
 
     let matches = [];
     if (!(searchText == "")) {
-      allApiDocs.map((apiDoc) => {
+      apiDocsDisplay.map((apiDoc) => {
         if (
           apiDoc.info.title.toLowerCase().includes(searchText.toLowerCase())
         ) {
@@ -29,8 +30,9 @@ export default function Search(props) {
       });
       //update display to show search matches
       setDisplayApiDocs(matches);
-      //if search is empty:
     } else {
+      //if search is empty:
+
       setDisplayApiDocs(allApiDocs);
     }
   }
@@ -41,27 +43,35 @@ export default function Search(props) {
     setDisplayApiDocs(allApiDocs);
   }
   return (
-    <div>
+    <>
       <label htmlFor="searchbox" className="hidden">
         Search box
       </label>
       <div className="search--container">
         {/* display reset button if search has text input */}
-        {search && (
-          <img onClick={handleReset} className="search--icon" src={clearIcon} />
-        )}
-        <input
-          value={search}
-          onChange={handleActiveSearch}
-          className="search--searchbox testing!"
-          placeholder="____"
-          id="searchbox"
-        ></input>
+        {
+          <img
+            style={{ opacity: search ? "1" : "0" }}
+            onClick={handleReset}
+            className="clear--icon"
+            src={clearIcon}
+          />
+        }
+        <form onSubmit={handleSearch}>
+          <input
+            value={search}
+            onChange={handleActiveSearch}
+            className="search--searchbox testing!"
+            placeholder="______________________"
+            id="searchbox"
+          ></input>
+        </form>
+
         {/* !add functionality! */}
         <button onClick={handleSearch} className="search--button">
           {<img className="search--icon" src={searchIcon} />}
         </button>
       </div>
-    </div>
+    </>
   );
 }

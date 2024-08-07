@@ -1,51 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Saved(props) {
-  const { setBookmarks, bookmarks, userId, userData } = props;
+  const {clientUserData } = props;
+  const bookmarkIds = clientUserData.bookmarks
+  const [bookmarkDocs, setBookmarkDocs]= useState()
+  // const [bookmarks, setBookmarks] = useState();
 
-  //send bookmark ids array to server to get their api info
   useEffect(() => {
-    fetch(`http://localhost:3001/read/ids/5`, {
+    fetch(`http://localhost:3001/read/ids/4`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
-        Ids: userData.bookmarks,
-      },
+      body: JSON.stringify(bookmarkIds),
     })
       .then((results) => results.json())
       .then((docs) => {
-        console.log("setting!");
-        setBookmarks(docs);
+        setBookmarkDocs(docs);
       });
   }, []);
-  
 
-  //   useEffect(() => {
-  //     fetch(`http://localhost:3001/user/${userId}/get/bookmarks/5`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //       .then((results) => results.json())
-  //       .then((docs) => {
-  //         console.log("setting!");
-  //         setBookmarks(docs);
-  //       });
-  //   }, []);
+  //redirect using selection id for api doc viewer
+  function handleClick(e) {
+    const selectedApiID = e.target.id;
+    window.location.href = `/ApiDocViewer/${selectedApiID}`;
+  }
 
   let apiTitles;
-  if (bookmarks) {
-    console.log("bookmarks");
-    console.log(bookmarks);
-
-    apiTitles = bookmarks.map((bookmark) => {
-      return <div>{bookmark.info.title}</div>;
+  if (bookmarkDocs) {
+    apiTitles = bookmarkDocs.map((bookmarkDoc, index) => {
+      return (
+        <div key={index} id={bookmarkDoc._id} onClick={handleClick}>
+          {bookmarkDoc.info.title}
+        </div>
+      );
     });
   }
-  console.log("apiTitles");
-  console.log(apiTitles);
-  return <div>{apiTitles && apiTitles}</div>;
+  return (
+    apiTitles && <div className="sidebar--saved-container">{apiTitles}</div>
+  );
 }
