@@ -10,27 +10,33 @@ import { useEffect, useState } from "react";
 export default function InfoView(props) {
   const { getStyleForAction, apiDoc, action } = props;
   const [descriptionDropdown, setDescriptionDropdown] = useState(false);
-  const [allStatus, setAllStatus] = useState();
+  const [allStatus, setAllStatus] = useState([]);
   // get main status indicator based off each server ping status
-  function getAllStatus() {
+
+  function getStatus() {
     if (allStatus) {
       const currentStatus = Object.keys(allStatus).map((key) => {
         if (allStatus[key] === false) return false;
         if (allStatus[key] === true) return true;
       });
-      if (currentStatus.includes(false) && currentStatus.includes(true)) {
-        //if a server is offline for document
-        return warningIcon;
-      } else if (currentStatus.includes(true)) {
-        return statusOnlineIcon;
+      //return loading until all responses have been received and loaded
+      console.log(apiDoc.servers, currentStatus.length)
+      //check if servers exists then display loading icon until all servers have been pinged and response is loaded
+      if (apiDoc?.servers && apiDoc.servers.length === currentStatus.length) {
+        console.log("all statuses loaded", allStatus);
+        if (currentStatus.includes(false) && currentStatus.includes(true)) {
+          //if a server is offline for document
+          return warningIcon;
+        } else if (currentStatus.includes(true)) {
+          return statusOnlineIcon;
+        } else {
+          return statusOfflineIcon;
+        }
       } else {
-        return statusOfflineIcon;
+        return loadingIcon;
       }
-    } else {
-      return loadingIcon;
     }
   }
- 
 
   return (
     <div
@@ -58,16 +64,14 @@ export default function InfoView(props) {
               OpenAPI <strong>v{apiDoc.openapi}</strong>
             </div>
             {/* if loading, rotate image effect */}
-            {console.log("status")}
-            {console.log(getAllStatus())}
 
             <img
               className={
-                getAllStatus() === loadingIcon
+                getStatus() === loadingIcon
                   ? "loading status-icon"
                   : "status-icon"
               }
-              src={getAllStatus()}
+              src={getStatus()}
             />
           </div>
           <div className="description-container">

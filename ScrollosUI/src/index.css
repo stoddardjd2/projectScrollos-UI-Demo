@@ -394,6 +394,21 @@ button:hover {
       }
     }
   }
+  .type-status-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .open-api {
+      flex: 2;
+      /* font-size: 1.5em; */
+    }
+    .status-icon {
+      flex: 0.4;
+    }
+   
+    };
+
   .actions-container {
     max-width: 100%;
     max-height: 100%;
@@ -439,20 +454,7 @@ button:hover {
     .value {
     }
 
-    .type-status-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .open-api {
-        flex: 2;
-        font-size: 1.5em;
-      }
-      .status-icon {
-        flex: 0.5;
-      }
-     
-      };
+  
    
       .loading{
         animation: rotate 1.5s ease-in-out infinite;
