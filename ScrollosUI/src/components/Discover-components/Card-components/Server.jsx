@@ -5,7 +5,6 @@ import loadingIcon from "../../../assets/loading.svg";
 export default function Server(props) {
   const { server, setAllStatus, allStatus, index } = props;
   useEffect(() => {
-
     const pingServer = async () => {
       console.log("pinging server");
       try {
@@ -26,7 +25,10 @@ export default function Server(props) {
   }, []);
 
   function loadStatus() {
-    if (allStatus) {
+    console.log("allStatus");
+    console.log(allStatus);
+    //display loading icon if status not a true or false value AKA its not undefined
+    if (!(allStatus[index] === undefined)) {
       return allStatus[index] ? onlineIcon : offlineIcon;
     } else {
       //placeholder while waiting for ping to server to get status
@@ -37,8 +39,11 @@ export default function Server(props) {
   return (
     <>
       <div className="server-container">
+        {/* add to loading class for animation if status is undefined */}
         <img
-          className="status"
+          className={
+            allStatus[index] === undefined ? "status loading" : "status"
+          }
           src={loadStatus()}
         />
         <div className="server-address">{server.url}</div>

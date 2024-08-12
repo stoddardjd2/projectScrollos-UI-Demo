@@ -110,9 +110,6 @@ export default function DocCards(props) {
       type: "comment",
     });
   }
-  function toggleDescriptionDropdown() {
-    setDescriptionDropdown(!descriptionDropdown);
-  }
 
   function getStyleForAction(target) {
     if (action.type === "info") {
@@ -313,6 +310,7 @@ export default function DocCards(props) {
             <div className="rating">5.0 (15)</div>
           </div>
         </div>
+
 
         {/* if info is clicked*/}
         
