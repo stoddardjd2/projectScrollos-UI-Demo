@@ -2,18 +2,14 @@ import { useEffect, useState } from "react";
 
 //takes array of document ids and gets corresponding documents up to limit
 export default function SidebarItem(props) {
-  const { docIds, limit, name, expanded } = props;
+  const { docIds, limit, name, expanded, className, order, isOpen } = props;
   const [documents, setDocuments] = useState();
   const [isExpanded, setIsExpanded] = useState(expanded);
-
   //get docs for given array of ids (ex: recents, bookmarked,etc.)
-  console.log(name)
-  console.log(documents)
   useEffect(() => {
     //make sure array isnt empty/placeholder NOT IN USE
     //make sure documents isnt already loaded
     if (!documents && isExpanded) {
-    console.log("loading", name)
       fetch(`http://localhost:3001/read/ids/${limit}`, {
         method: "POST",
         headers: {
@@ -23,11 +19,10 @@ export default function SidebarItem(props) {
       })
         .then((results) => results.json())
         .then((docs) => {
-          console.log("setting docs")
           setDocuments(docs);
         });
     }
-  }, []);
+  }, [isExpanded]);
 
   //redirect using selection id for api doc viewer
   function handleClick(e) {
@@ -36,6 +31,7 @@ export default function SidebarItem(props) {
   }
 
   function toggleIsExpanded() {
+    console.log("slect!");
     setIsExpanded(!isExpanded);
   }
 
@@ -45,7 +41,7 @@ export default function SidebarItem(props) {
     items = documents.map((document, index) => {
       return (
         <div
-          className="sidebar-item"
+          className="card-item"
           key={index}
           id={document._id}
           onClick={handleClick}
@@ -56,16 +52,29 @@ export default function SidebarItem(props) {
     });
   }
   return (
-    items && (
-      <div className={`sidebar-container sidebar-item-${name}`}>
+    <div
+      className={`card-container ${className}`}
+      style={{
+        transform: isOpen
+          ? "translate(-300px,0px)"
+          : `translate(0px,${-135 * order}px)`,
+
+        transition: `${0.3 * order}s ease-in-out all`,
+      }}
+    >
+      <div
+        className="card-view-animate"
+        style={{ transition: `.3s ease-in-out all` }}
+      >
         <h5
           onClick={toggleIsExpanded}
-          className={`sidebar-header sidebar-header-${name}`}
+          className={`card-header header-${className}`}
         >
           {name}
         </h5>
-        {isExpanded && items}
+        {/* {isExpanded && items} */}
+        {items}
       </div>
-    )
+    </div>
   );
 }
