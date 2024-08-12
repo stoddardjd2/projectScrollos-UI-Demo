@@ -1,10 +1,9 @@
 import {
-  unstable_useViewTransitionState,
   useLoaderData,
 } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { uid } from "react-uid";
-import ApiDocBar from "./ApiDocBar";
+import DocCard from "./DocCard";
 import Search from "./Search";
 import Saved from "./Saved";
 import SidebarItem from "./SidebarItem";
@@ -78,7 +77,6 @@ export default function Discover() {
     // }
   }
   function toggleSidebar() {
-    console.log("TOGGLE");
     setIsOpen(!isOpen);
   }
   function handleLogout() {
@@ -86,13 +84,13 @@ export default function Discover() {
   }
 
   //api Document Bar
-  const apiDocs = apiDocsDisplay.map((apiDoc, index) => {
-    const loadIsSaved = clientUserData.bookmarks.includes(apiDoc._id);
-    const loadIsFlagged = clientUserData.flags.includes(apiDoc._id);
+  const docCards = apiDocsDisplay.map((doc) => {
+    const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
+    const loadIsFlagged = clientUserData.flags.includes(doc._id);
     return (
-      <ApiDocBar
-        key={apiDoc._id}
-        apiDoc={apiDoc}
+      <DocCard
+        key={doc._id}
+        apiDoc={doc}
         loadIsSaved={loadIsSaved}
         loadIsFlagged={loadIsFlagged}
         handleSelectedDoc={handleSelectedDoc}
@@ -103,7 +101,7 @@ export default function Discover() {
   });
 
   return (
-    <div>
+    <div className="discover-page">
       <div className="header-container">
         <div className="search-bar">
           <div className="header">Scrollos</div>
@@ -138,48 +136,80 @@ export default function Discover() {
       <div className="discover">
         <div className="left-column">
           <div className="divider">
-            {isOpen && <div className="right-split-placeholder"></div>}
-            <div onClick={toggleSidebar} className="right-split">
+            {/* {isOpen && <div className="right-split-placeholder"></div>} */}
+            <div
+              style={
+                !isOpen
+                  ? {
+                      marginLeft: "245px",
+                      transition: ".5s ease-in-out all",
+                    }
+                  : { marginLeft: "0px", transition: "1s ease-in-out all" }
+              }
+              onClick={toggleSidebar}
+              className="right-split"
+            >
               <img
                 style={{
                   transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
+                  transition: "1s ease-in-out all",
                 }}
                 src={sideExpandIcon}
               />
             </div>
+
             {/* hide sidebar content if closed */}
-            <div
-              style={{
-                width: isOpen ? "0em" : "fit-content",
-              }}
-              className="left-split"
-            >
-              <div className="flexbox">
+            <div className="left-split">
+              <div
+                className="cards-flexbox"
+                // style={{
+                //   transform: isOpen
+                //     ? "translate(-300px,0px)"
+                //     : "translate(0px,0px)",
+                //   transition: ".5s ease-in-out all",
+                // }}
+              >
                 {/* hide sidebar content with preview showing */}
                 <SidebarItem
                   name="Recently Viewed"
                   docIds={clientUserData.recents}
                   limit={5}
                   expanded={true}
+                  className="recently-viewed"
+                  order="1"
+                  isOpen={isOpen}
                 />
                 <SidebarItem
                   name="Recent Bookmarks"
                   docIds={clientUserData.bookmarks}
                   limit={5}
                   expanded={true}
+                  className="recent-bookmarks"
+                  order="2"
+                  isOpen={isOpen}
                 />
                 <SidebarItem
                   name="Flagged"
                   docIds={clientUserData.flags}
                   limit={5}
                   expanded={true}
+                  className="flagged"
+                  order="3"
+                  isOpen={isOpen}
                 />
-                <SideBarItemNotes name="Notes" notes={clientUserData.notes} />
-                <SidebarItem
+                <SideBarItemNotes
+                  expanded={true}
+                  name="Notes"
+                  notes={clientUserData.notes}
+                  className="notes"
+                  order="4"
+                  isOpen={isOpen}
+                />
+                {/* <SidebarItem
                   name="Project"
                   docIds={clientUserData.bookmarks}
                   limit={1}
-                />
+                /> */}
                 {/* {selectedApiID && <Preview selectedApiDoc={selectedApiDoc}/>} */}
               </div>
             </div>
@@ -187,26 +217,17 @@ export default function Discover() {
         </div>
 
         <div className="right-column">
-          <div className="divider">
-            <div className="content">
-              {/* <div style={{backgroundColor:"black"}} className="document-container keys">
-            <div className="dropdown-icon"></div>
-            <div className="title">Title</div>
-            <div>Updated: </div>
-            <div>Flagged:</div>
-            <div>Add to Project</div>
-            <div className="save">Save</div>
-          </div> */}
-         
-         {/* if no search results */}
-              {!(apiDocsDisplay.length === 0) ? apiDocs : <div className="no-results">NO RESULTS</div>}
-            </div>
-            <div className="right-split">
-              <div className="flexbox">
-              {/* <div className="feed">DATA</div>
-              <div className="feed">Feed</div> */}
-              </div>
-            </div>
+          <div className="card-grid">
+            {/* if no search results */}
+            {!(apiDocsDisplay.length === 0) ? (
+              <>
+                {docCards}
+                {docCards}
+                {docCards}
+              </>
+            ) : (
+              <div className="no-results">NO RESULTS</div>
+            )}
           </div>
         </div>
       </div>

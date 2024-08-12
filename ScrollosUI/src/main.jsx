@@ -1,5 +1,5 @@
 import React from "react";
-import App from "./App.jsx";
+// import App from "./App.jsx";
 import ReactDOM from "react-dom/client";
 import Home from "./components/Home.jsx";
 import Discover from "./components/Discover-components/Discover.jsx";
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
     ),
     loader: async ({ params }) => {
       const loadedDocs = await fetch(
-        "http://localhost:3001/read/limitResults/10"
+        "http://localhost:3001/read/limitResults/30"
       ).then((res) => res.json());
       const userData = await fetch(
         `http://localhost:3001/user/${params.userID}`
