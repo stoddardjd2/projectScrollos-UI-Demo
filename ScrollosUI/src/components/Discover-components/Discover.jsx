@@ -1,7 +1,5 @@
-import {
-  useLoaderData,
-} from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useLoaderData } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { uid } from "react-uid";
 import DocCard from "./DocCard";
 import Search from "./Search";
@@ -13,6 +11,7 @@ import Sort from "./Sort";
 import Logout from "./Logout";
 import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
+import walgreensLogo from "../../assets/walgreensLogo.svg";
 export default function Discover() {
   const { loadedDocs, userData } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
@@ -104,7 +103,8 @@ export default function Discover() {
     <div className="discover-page">
       <div className="header-container">
         <div className="search-bar">
-          <div className="header">Scrollos</div>
+          <div className="header">Walgreens' API Docs</div>
+          {/* <img src={walgreensLogo} /> */}
 
           <Search
             setDisplayApiDocs={setDisplayApiDocs}
@@ -170,6 +170,7 @@ export default function Discover() {
                 // }}
               >
                 {/* hide sidebar content with preview showing */}
+                {/* expanded NOT in use */}
                 <SidebarItem
                   name="Recently Viewed"
                   docIds={clientUserData.recents}
@@ -189,6 +190,15 @@ export default function Discover() {
                   isOpen={isOpen}
                 />
                 <SidebarItem
+                  name="Projects"
+                  docIds={clientUserData.bookmarks}
+                  limit={5}
+                  expanded={true}
+                  className="recent-bookmarks"
+                  order="3"
+                  isOpen={isOpen}
+                />
+                {/* <SidebarItem
                   name="Flagged"
                   docIds={clientUserData.flags}
                   limit={5}
@@ -196,7 +206,7 @@ export default function Discover() {
                   className="flagged"
                   order="3"
                   isOpen={isOpen}
-                />
+                /> */}
                 <SideBarItemNotes
                   expanded={true}
                   name="Notes"

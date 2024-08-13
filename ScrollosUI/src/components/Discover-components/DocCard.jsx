@@ -6,9 +6,10 @@ import starIcon from "../../assets/star.svg";
 import addIcon from "../../assets/add.svg";
 import commentIcon from "../../assets/comment.svg";
 
+import NotesView from "./Card-components/NotesView";
 import AddView from "./Card-components/AddView";
-
 import InfoView from "./Card-components/InfoView";
+// import getStyleForAction from "./Card-components/getStyleForAction";
 export default function DocCards(props) {
   const {
     setClientUserData,
@@ -115,11 +116,10 @@ export default function DocCards(props) {
     if (action.type === "info") {
       if (target === "bookmark") {
         return {
-          // backgroundColor: "red",
-          // transform: "rotateY(0deg)",
-          // visibility: "hidden",
-          // transitionDelay: ".00005s",
-          // visibility:"hidden"
+          transitionTimingFunction: "linear",
+          transitionDuration: "0s",
+          transitionDelay: ".15s",
+          visibility: "hidden",
         };
       } else if (target === "info-action") {
         return {
@@ -133,6 +133,7 @@ export default function DocCards(props) {
       } else if (target === "date-star") {
         return {
           height: "0px",
+
           transitionDuration: "0s",
           transitionDelay: ".15s",
           overflow: "hidden",
@@ -274,7 +275,18 @@ export default function DocCards(props) {
               className={isSaved ? "save saveFill" : "save saveEmpty"}
               onClick={handleSave}
               src={isSaved ? saveFill : saveEmpty}
-              style={action.active ? getStyleForAction("bookmark") : {}}
+              style={
+                action.active
+                  ? getStyleForAction("bookmark")
+                  // when closing info, use delay. If not info closing, use default
+                  : action.type === "info"
+                  ? {
+                      transitionTimingFunction: "linear",
+                      transitionDuration: "0s",
+                      transitionDelay: ".15s",
+                    }
+                  : {}
+              }
             />
           </div>
         </div>
@@ -311,34 +323,20 @@ export default function DocCards(props) {
           </div>
         </div>
 
-
         {/* if info is clicked*/}
-        
-        <InfoView getStyleForAction={getStyleForAction} apiDoc={apiDoc} action={action} />
-       
 
-        {/* if comments is clicked */}
-        <div
-          className="comment-action"
-          style={
-            action.active
-              ? getStyleForAction("comment-action")
-              : {
-                  width: "auto",
-                  height: "0px",
-                  transitionProperty: "all",
-                  transitionTimingFunction: "ease-in-out",
-                  transitionDuration: ".5s",
-                  overflow: "hidden",
-                }
-          }
-        >
-          <div>Comments:</div>
-        </div>
+        <InfoView
+          getStyleForAction={getStyleForAction}
+          apiDoc={apiDoc}
+          action={action}
+        />
 
+        {/* if comments is clicked (REPURPOSED FOR NOTES)*/}
+        <NotesView getStyleForAction={getStyleForAction} action={action}/>
+     
         {/* if add is clicked: */}
-        <AddView action={action} getStyleForAction={getStyleForAction}/>
-       
+        <AddView action={action} getStyleForAction={getStyleForAction} />
+
         <div
           className="actions-container"
           style={
@@ -365,11 +363,7 @@ export default function DocCards(props) {
             /> */}
 
           <img className="add" src={addIcon} onClick={handleIsAddClicked} />
-          <img
-            className="info"
-            src={infoIcon}
-            onClick={handleInfoClick}
-          />
+          <img className="info" src={infoIcon} onClick={handleInfoClick} />
         </div>
       </div>
 
