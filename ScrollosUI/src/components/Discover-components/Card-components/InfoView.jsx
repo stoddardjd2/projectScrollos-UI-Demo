@@ -20,10 +20,8 @@ export default function InfoView(props) {
         if (allStatus[key] === true) return true;
       });
       //return loading until all responses have been received and loaded
-      console.log(apiDoc.servers, currentStatus.length)
       //check if servers exists then display loading icon until all servers have been pinged and response is loaded
       if (apiDoc?.servers && apiDoc.servers.length === currentStatus.length) {
-        console.log("all statuses loaded", allStatus);
         if (currentStatus.includes(false) && currentStatus.includes(true)) {
           //if a server is offline for document
           return warningIcon;

@@ -12,6 +12,8 @@ import Logout from "./Logout";
 import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
+
+import Sidebar from "./Sidebar";
 export default function Discover() {
   const { loadedDocs, userData } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
@@ -121,6 +123,11 @@ export default function Discover() {
         </div>
         <div className="page-info-bar">
           <div className="found">10 docs found</div>
+          {/* <div className="quick-option-container">
+            <img className="quick-option-icon" src/>
+            <div className="quick-option">Recent bookmarks </div>
+          </div> */}
+
           <Sort
             allApiDocs={loadedDocs}
             setDisplayApiDocs={setDisplayApiDocs}
@@ -141,7 +148,7 @@ export default function Discover() {
               style={
                 !isOpen
                   ? {
-                      marginLeft: "245px",
+                      // marginLeft: "245px",
                       transition: ".5s ease-in-out all",
                     }
                   : { marginLeft: "0px", transition: "1s ease-in-out all" }
@@ -151,7 +158,7 @@ export default function Discover() {
             >
               <img
                 style={{
-                  transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
+                  transform: !isOpen ? "rotate(0deg)" : "rotate(180deg)",
                   transition: "1s ease-in-out all",
                 }}
                 src={sideExpandIcon}
@@ -159,19 +166,22 @@ export default function Discover() {
             </div>
 
             {/* hide sidebar content if closed */}
+
             <div className="left-split">
-              <div
+              <Sidebar isOpen={isOpen}/>
+
+              {/* <div
                 className="cards-flexbox"
-                // style={{
-                //   transform: isOpen
-                //     ? "translate(-300px,0px)"
-                //     : "translate(0px,0px)",
-                //   transition: ".5s ease-in-out all",
-                // }}
-              >
-                {/* hide sidebar content with preview showing */}
-                {/* expanded NOT in use */}
-                <SidebarItem
+                style={{
+                  transform: isOpen
+                    ? "translate(-300px,0px)"
+                    : "translate(0px,0px)",
+                  transition: ".5s ease-in-out all",
+                }}
+              > */}
+              {/* hide sidebar content with preview showing */}
+              {/* expanded NOT in use */}
+              {/* <SidebarItem
                   name="Recently Viewed"
                   docIds={clientUserData.recents}
                   limit={5}
@@ -197,8 +207,9 @@ export default function Discover() {
                   className="recent-bookmarks"
                   order="3"
                   isOpen={isOpen}
-                />
-                {/* <SidebarItem
+                /> */}
+
+              {/* <SidebarItem
                   name="Flagged"
                   docIds={clientUserData.flags}
                   limit={5}
@@ -207,21 +218,23 @@ export default function Discover() {
                   order="3"
                   isOpen={isOpen}
                 /> */}
-                <SideBarItemNotes
+
+              {/* <SideBarItemNotes
                   expanded={true}
                   name="Notes"
                   notes={clientUserData.notes}
                   className="notes"
                   order="4"
                   isOpen={isOpen}
-                />
-                {/* <SidebarItem
+                /> */}
+
+              {/* <SidebarItem
                   name="Project"
                   docIds={clientUserData.bookmarks}
                   limit={1}
                 /> */}
-                {/* {selectedApiID && <Preview selectedApiDoc={selectedApiDoc}/>} */}
-              </div>
+              {/* {selectedApiID && <Preview selectedApiDoc={selectedApiDoc}/>} */}
+              {/* </div> */}
             </div>
           </div>
         </div>

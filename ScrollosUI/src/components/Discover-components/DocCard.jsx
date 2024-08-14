@@ -9,6 +9,8 @@ import commentIcon from "../../assets/comment.svg";
 import NotesView from "./Card-components/NotesView";
 import AddView from "./Card-components/AddView";
 import InfoView from "./Card-components/InfoView";
+
+import ActionButton from "./Card-components/ActionButton";
 // import getStyleForAction from "./Card-components/getStyleForAction";
 export default function DocCards(props) {
   const {
@@ -20,9 +22,11 @@ export default function DocCards(props) {
     loadIsFlagged,
   } = props;
   const [isSaved, setIsSaved] = useState(loadIsSaved);
-  const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
+  // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
   const [action, setAction] = useState({ active: false, type: "none" });
   // const [IsinfoFlipped, setIsInfoFlipped] = useState(false);
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function handleSave(e) {
     e.stopPropagation();
@@ -66,50 +70,58 @@ export default function DocCards(props) {
     }
   }
 
-  //have flags visable for entire company
-  function handleFlag(e) {
-    e.stopPropagation();
-    setIsFlagged(!isFlagged);
-    //save changes to database:
-    //add to database if saving
-    //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
-    if (!isFlagged) {
-      fetch(`http://localhost:3001/user/${userID}/save/flags`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ docID: apiDoc._id }),
+  // //have flags visable for entire company
+  // function handleFlag(e) {
+  //   e.stopPropagation();
+  //   setIsFlagged(!isFlagged);
+  //   //save changes to database:
+  //   //add to database if saving
+  //   //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
+  //   if (!isFlagged) {
+  //     fetch(`http://localhost:3001/user/${userID}/save/flags`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ docID: apiDoc._id }),
+  //     });
+  //     //remove from database if unsaving
+  //   } else if (isFlagged) {
+  //     fetch(`http://localhost:3001/user/${userID}/remove/flags`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ docID: apiDoc._id }),
+  //     });
+  //   }
+  // }
+
+  async function handleAction(e) {
+    const id = e.currentTarget.id;
+    console.log(id);
+    // if switching to new action view when different action view is open-
+    //-close old view first then open
+    if (action.active && !(action.type === id)) {
+      setAction({ active: false });
+      await delay(500);
+      setAction({
+        active: true,
+        type: id,
       });
-      //remove from database if unsaving
-    } else if (isFlagged) {
-      fetch(`http://localhost:3001/user/${userID}/remove/flags`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ docID: apiDoc._id }),
-      });
+    } else {
+      // if clicking same action when action view is open, close the current view
+      if (action.active) {
+        //if closing action view
+        setAction({ active: false });
+      } else {
+        setAction({
+          // if opening action view
+          active: !action.active,
+          type: id,
+        });
+      }
     }
-  }
-
-  function handleIsAddClicked() {
-    setAction({ active: !action.active, type: "add", add: true });
-    // setIsAddClicked(!isAddClicked);
-  }
-
-  function handleInfoClick() {
-    setAction({
-      active: !action.active,
-      type: "info",
-    });
-    // setIsInfoFlipped(!IsinfoFlipped);
-  }
-  function handleCommentClick() {
-    setAction({
-      active: !action.active,
-      type: "comment",
-    });
   }
 
   function getStyleForAction(target) {
@@ -160,6 +172,7 @@ export default function DocCards(props) {
           maxHeight: "0px",
           minHeight: "0px",
           visibility: "visible",
+          padding: "0px",
         };
       } else if (target === "add-action") {
         return {
@@ -187,21 +200,23 @@ export default function DocCards(props) {
           maxHeight: "0em",
           minHeight: "0em",
           marginTop: "-80px",
+          padding: "0px",
         };
       } else if (target === "date-star") {
         return {
-          // height: "0px",
+          // maxHeight: "60px",
           // height: "1em",
           // minHeight: "1em",
           // marginRight:"100%",
           // marginLeft: "100%",
-          // marginTop: "100%",
-          // transition: "2s ease-in-out all",
+          maxHeight: "100px",
+
+          transition: "2s ease-in-out all",
         };
       } else if (target === "comment-action") {
         return {
           width: "auto",
-          height: "78%",
+          height: "82%",
           transitionProperty: "all",
           transitionTimingFunction: "ease-in-out",
           transitionDuration: ".5s",
@@ -215,6 +230,16 @@ export default function DocCards(props) {
           transitionTimingFunction: "ease-in-out",
           transitionDuration: ".5s",
           // transitionDelay: ".1s",
+        };
+      } else if (target === "bookmark") {
+        return {
+          transitionTimingFunction: "linear",
+          transitionDuration: ".5s",
+          transitionDelay: ".15s",
+          transform: "translate(230px, -100px) scale(2.3)",
+          // backgroundColor: "red"
+
+          // visibility: "hidden",
         };
       }
       // return { backgroundColor: "red" };
@@ -237,6 +262,7 @@ export default function DocCards(props) {
           maxHeight: "0em",
           minHeight: "0em",
           marginLeft: "300px",
+          padding: "0px",
         };
       } else if (target === "add-action") {
         return {
@@ -252,6 +278,16 @@ export default function DocCards(props) {
           width: "0%",
           height: "0%",
           visibility: "hidden",
+        };
+      } else if (target === "bookmark") {
+        return {
+          transitionTimingFunction: "linear",
+          transitionDuration: ".5s",
+          transitionDelay: ".15s",
+          transform: "translate(230px, -100px) scale(2.3)",
+          // backgroundColor: "red"
+
+          // visibility: "hidden",
         };
       }
     }
@@ -278,14 +314,20 @@ export default function DocCards(props) {
               style={
                 action.active
                   ? getStyleForAction("bookmark")
-                  // when closing info, use delay. If not info closing, use default
-                  : action.type === "info"
-                  ? {
-                      transitionTimingFunction: "linear",
-                      transitionDuration: "0s",
-                      transitionDelay: ".15s",
+                  : // when closing info, use delay. If not info closing, use default
+                    //  : action.type === "info"
+                    //   ? {
+                    //       transitionTimingFunction: "linear",
+                    //       transitionDuration: "0s",
+                    //       // transitionDelay: ".15s",
+                    //       transform: "translate(215px, 8px) scale(2.3)",
+                    //     }
+                    {
+                      transitionTimingFunction: "ease-in-out",
+                      transitionDuration: ".2s",
+                      // transitionDelay: ".15s",
+                      transform: "translate(230px, 8px) scale(2.3)",
                     }
-                  : {}
               }
             />
           </div>
@@ -332,8 +374,8 @@ export default function DocCards(props) {
         />
 
         {/* if comments is clicked (REPURPOSED FOR NOTES)*/}
-        <NotesView getStyleForAction={getStyleForAction} action={action}/>
-     
+        <NotesView getStyleForAction={getStyleForAction} action={action} />
+
         {/* if add is clicked: */}
         <AddView action={action} getStyleForAction={getStyleForAction} />
 
@@ -349,11 +391,16 @@ export default function DocCards(props) {
                 }
           }
         >
-          <img
-            className="comment"
+          {/* <img
+            id="comment"
+            className={
+              action.type === "comment"
+                ? "active action-icon"
+                : "inactive action-icon"
+            }
             src={commentIcon}
-            onClick={handleCommentClick}
-          />
+            onClick={handleAction}
+          /> */}
           {/* <img
               onClick={handleFlag}
               className={
@@ -362,8 +409,26 @@ export default function DocCards(props) {
               src={isFlagged ? filledflagIcon : unfilledflagIcon}
             /> */}
 
-          <img className="add" src={addIcon} onClick={handleIsAddClicked} />
-          <img className="info" src={infoIcon} onClick={handleInfoClick} />
+          {/* <div
+            className={
+              action.type === "add" ? "active container" : "inactive container"
+            }
+          >
+            <img
+              id="add"
+              className={
+                action.type === "add"
+                  ? "active action-icon"
+                  : "inactive action-icon"
+              }
+              src={addIcon}
+              onClick={handleAction}
+            />
+          </div> */}
+          <ActionButton type="comment" img={commentIcon} handleAction={handleAction} action={action} />
+          <ActionButton type="add" img={addIcon} handleAction={handleAction} action={action} />
+          <ActionButton type="info" img={infoIcon} handleAction={handleAction} action={action} />
+        
         </div>
       </div>
 

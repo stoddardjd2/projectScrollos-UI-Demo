@@ -25,8 +25,6 @@ export default function Server(props) {
   }, []);
 
   function loadStatus() {
-    console.log("allStatus");
-    console.log(allStatus);
     //display loading icon if status not a true or false value AKA its not undefined
     if (!(allStatus[index] === undefined)) {
       return allStatus[index] ? onlineIcon : offlineIcon;
