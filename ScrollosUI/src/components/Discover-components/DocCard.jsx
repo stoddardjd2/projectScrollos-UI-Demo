@@ -160,6 +160,7 @@ export default function DocCards(props) {
           maxHeight: "0px",
           minHeight: "0px",
           visibility: "visible",
+          padding: "0px",
         };
       } else if (target === "add-action") {
         return {
@@ -187,21 +188,23 @@ export default function DocCards(props) {
           maxHeight: "0em",
           minHeight: "0em",
           marginTop: "-80px",
+          padding: "0px",
         };
       } else if (target === "date-star") {
         return {
-          // height: "0px",
+          // maxHeight: "60px",
           // height: "1em",
           // minHeight: "1em",
           // marginRight:"100%",
           // marginLeft: "100%",
-          // marginTop: "100%",
-          // transition: "2s ease-in-out all",
+          maxHeight: "100px",
+
+          transition: "2s ease-in-out all",
         };
       } else if (target === "comment-action") {
         return {
           width: "auto",
-          height: "78%",
+          height: "82%",
           transitionProperty: "all",
           transitionTimingFunction: "ease-in-out",
           transitionDuration: ".5s",
@@ -215,6 +218,16 @@ export default function DocCards(props) {
           transitionTimingFunction: "ease-in-out",
           transitionDuration: ".5s",
           // transitionDelay: ".1s",
+        };
+      } else if (target === "bookmark") {
+        return {
+          transitionTimingFunction: "linear",
+          transitionDuration: ".5s",
+          transitionDelay: ".15s",
+          transform: "translate(230px, -100px) scale(2.3)",
+          // backgroundColor: "red"
+
+          // visibility: "hidden",
         };
       }
       // return { backgroundColor: "red" };
@@ -237,6 +250,7 @@ export default function DocCards(props) {
           maxHeight: "0em",
           minHeight: "0em",
           marginLeft: "300px",
+          padding: "0px",
         };
       } else if (target === "add-action") {
         return {
@@ -252,6 +266,16 @@ export default function DocCards(props) {
           width: "0%",
           height: "0%",
           visibility: "hidden",
+        };
+      } else if (target === "bookmark") {
+        return {
+          transitionTimingFunction: "linear",
+          transitionDuration: ".5s",
+          transitionDelay: ".15s",
+          transform: "translate(230px, -100px) scale(2.3)",
+          // backgroundColor: "red"
+
+          // visibility: "hidden",
         };
       }
     }
@@ -278,14 +302,20 @@ export default function DocCards(props) {
               style={
                 action.active
                   ? getStyleForAction("bookmark")
-                  // when closing info, use delay. If not info closing, use default
-                  : action.type === "info"
-                  ? {
-                      transitionTimingFunction: "linear",
-                      transitionDuration: "0s",
-                      transitionDelay: ".15s",
+                   // when closing info, use delay. If not info closing, use default
+                //  : action.type === "info"
+                //   ? {
+                //       transitionTimingFunction: "linear",
+                //       transitionDuration: "0s",
+                //       // transitionDelay: ".15s",
+                //       transform: "translate(215px, 8px) scale(2.3)",
+                //     }
+                  : {
+                      transitionTimingFunction: "ease-in-out",
+                      transitionDuration: ".2s",
+                      // transitionDelay: ".15s",
+                      transform: "translate(230px, 8px) scale(2.3)",
                     }
-                  : {}
               }
             />
           </div>
@@ -332,8 +362,8 @@ export default function DocCards(props) {
         />
 
         {/* if comments is clicked (REPURPOSED FOR NOTES)*/}
-        <NotesView getStyleForAction={getStyleForAction} action={action}/>
-     
+        <NotesView getStyleForAction={getStyleForAction} action={action} />
+
         {/* if add is clicked: */}
         <AddView action={action} getStyleForAction={getStyleForAction} />
 

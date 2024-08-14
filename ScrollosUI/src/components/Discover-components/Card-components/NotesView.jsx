@@ -27,7 +27,7 @@ export default function NotesView(props) {
     >
         <div className="notes-header">Notes:</div>
         <textarea onChange={handleNotes} className="notes-input" value={notes} placeholder="Your notes..."></textarea>
-        <div className="prev-notes">Your notes</div>
+        {/* <div className="prev-notes">Your notes</div> */}
     </div>
   );
 }

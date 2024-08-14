@@ -158,7 +158,7 @@ export default function Discover() {
             >
               <img
                 style={{
-                  transform: isOpen ? "rotate(0deg)" : "rotate(180deg)",
+                  transform: !isOpen ? "rotate(0deg)" : "rotate(180deg)",
                   transition: "1s ease-in-out all",
                 }}
                 src={sideExpandIcon}
