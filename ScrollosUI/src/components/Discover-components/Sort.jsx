@@ -56,12 +56,14 @@ export default function Sort(props) {
               &#8644; Sort by:
             </option>
             <option value="recent">Recent</option>
-            <option value="flagged">Flagged</option>
+            <option value="Ratings">Ratings</option>
             <option value="bookmarked">Bookmarked</option>
+            <option value="Creation Created">Recently Created</option>
+            <option value="Recently Updated">Recently Updated</option>
           </select>
         </div>
         <button onClick={resetSearch} className="sort--button-refresh">
-          <a href="http://"></a>
+          {/* <a href="http://"></a> */}
           <img className="sort--button-refresh-icon" src={refreshIcon}></img>
         </button>
       </div>
