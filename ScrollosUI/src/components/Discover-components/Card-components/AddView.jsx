@@ -13,10 +13,10 @@ export default function AddView(props) {
   }
   const projectsElements = projects.map((project, index) => {
     return (
-      <div id={index} className="item-container" onClick={handleCheckToggle}>
+      <div key={index} id={index} className="item-container" onClick={handleCheckToggle}>
         <div className="item">{project}</div>
         <img
-          className="checkbox icon"
+          className= {isChecked[index] ? "empty-checkbox icon" : "checked icon"}
           src={isChecked[index] ? emptyCheckboxIcon : checkedIcon}
         />
       </div>
@@ -29,7 +29,6 @@ export default function AddView(props) {
   function handleSubmitInput() {
     setInput("")
     setProjects(prev=>([...prev, input]))
-    console.log("YTES")
   }
   return (
     <div
