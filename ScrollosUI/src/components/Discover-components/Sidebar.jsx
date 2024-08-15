@@ -1,14 +1,17 @@
 import scrollosIcon from "../../assets/icon.svg";
 import documentsIcon from "../../assets/sidebar-icons/documents.svg";
-import recentsIcon from "../../assets/sidebar-icons/recents.svg";
 import projectsIcon from "../../assets/sidebar-icons/projects.svg";
 import discussionsIcon from "../../assets/sidebar-icons/discussions.svg";
 import notesIcon from "../../assets/sidebar-icons/notes.svg";
 import settingsIcon from "../../assets/sidebar-icons/settings.svg";
 import notificationsIcon from "../../assets/sidebar-icons/notifications.svg";
-import userIcon from "../../assets/sidebar-icons/user.svg";
+import logoutIcon from '../../assets/sidebar-icons/logout.svg'
 export default function Sidebar(props) {
   const { isOpen } = props;
+  function handleLogout() {
+    window.location.href = "/";
+  }
+
   return (
     <div
       className="side-bar"
@@ -40,10 +43,10 @@ export default function Sidebar(props) {
           <img src={documentsIcon} />
           <div className="sidebar-item"> Documents</div>
         </div>
-        <div className="sidebar-item-container">
+        {/* <div className="sidebar-item-container">
           <img src={recentsIcon} />
           <div className="sidebar-item"> Recents</div>
-        </div>
+        </div> */}
         <div className="sidebar-item-container">
           <img src={projectsIcon} />
           <div className="sidebar-item"> Projects</div>
@@ -60,27 +63,24 @@ export default function Sidebar(props) {
         {/* Account fields */}
         <div className="account-items-container">
           <div className="account-header">Account</div>
-          <div className="settings">
             <div className="sidebar-item-container settings">
               <img src={settingsIcon} />
               <div className="sidebar-item"> Settings</div>
             </div>
-          </div>
           <div className="notifications">
             <div className="sidebar-item-container notifications">
               <img src={notificationsIcon} />
               <div className="sidebar-item"> Notifications</div>
             </div>
           </div>
-          <div className="user-info">
-            <div className="user-info-container">
-              <img className="user-icon" src={userIcon} />
-              <div>
-                <div className="username">Jared Stoddard</div>
-                <div className="email">stoddardjd2@gmail.com</div>
-              </div>
-              <div className="ellipsis">...</div>
+            <div className="notifications">
+            <div className="sidebar-item-container notifications">
+              <img src={logoutIcon} />
+              <div onClick={handleLogout} className="sidebar-item"> Logout</div>
             </div>
+          </div>
+          <div className="user-info">
+           
           </div>
         </div>
       </div>
