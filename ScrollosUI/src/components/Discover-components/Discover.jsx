@@ -13,6 +13,7 @@ import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
 
+import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
 export default function Discover() {
   const { loadedDocs, userData } = useLoaderData();
@@ -24,30 +25,12 @@ export default function Discover() {
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
   const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
-  // const [selectedApiID, setSelectedApiID] = useState(null);
-  //NOT IN USE VVV
-  // const [showPreview, setShowPreview] = useState({ id: null });
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
 
-  //get currently selected API doc to display sidebar preview
-  // let selectedDoc;
-  // if (selectedApiID) {
-  //   loadedDocs.map((doc) => {
-  //     if (doc._id === selectedApiID) {
-  //       const apiIndex = loadedDocs.indexOf(doc);
-  //       selectedDoc = loadedDocs[apiIndex];
-  //     }
-  //   });
-  // }
-
   function handleSelectedDoc(e) {
     const selectedDocId = e.currentTarget.id;
-    //DOUBLE CLICK DISABLED!
-    //if double clicked same api, redirect to apiDocViewer
-    //On single click, load preview
-    // if (selectedApiID == selectedDocId) {
 
     //update recents in db with updated recents array
     let recentDocIds = [];
@@ -72,10 +55,7 @@ export default function Discover() {
         }
       ).then((window.location.href = `/ApiDocViewer/${selectedDocId}`));
     }
-    // } else {
-    //   setSelectedApiID(selectedDocId);
-    //   setShowPreview(selectedDocId);
-    // }
+
   }
   function toggleSidebar() {
     setIsOpen(!isOpen);
@@ -123,16 +103,12 @@ export default function Discover() {
         </div>
         <div className="page-info-bar">
           <div className="found">10 docs found</div>
-          {/* <div className="quick-option-container">
-            <img className="quick-option-icon" src/>
-            <div className="quick-option">Recent bookmarks </div>
-          </div> */}
-
-          <Sort
+          <FilterBar/>
+          {/* <Sort
             allApiDocs={loadedDocs}
             setDisplayApiDocs={setDisplayApiDocs}
             clientUserData={clientUserData}
-          />
+          /> */}
           <div className="page-container">
             <div className="page">1</div>
             <div className="page">2</div>
@@ -143,12 +119,10 @@ export default function Discover() {
       <div className="discover">
         <div className="left-column">
           <div className="divider">
-            {/* {isOpen && <div className="right-split-placeholder"></div>} */}
             <div
               style={
                 !isOpen
                   ? {
-                      // marginLeft: "245px",
                       transition: ".5s ease-in-out all",
                     }
                   : { marginLeft: "0px", transition: "1s ease-in-out all" }
@@ -166,75 +140,8 @@ export default function Discover() {
             </div>
 
             {/* hide sidebar content if closed */}
-
             <div className="left-split">
-              <Sidebar isOpen={isOpen}/>
-
-              {/* <div
-                className="cards-flexbox"
-                style={{
-                  transform: isOpen
-                    ? "translate(-300px,0px)"
-                    : "translate(0px,0px)",
-                  transition: ".5s ease-in-out all",
-                }}
-              > */}
-              {/* hide sidebar content with preview showing */}
-              {/* expanded NOT in use */}
-              {/* <SidebarItem
-                  name="Recently Viewed"
-                  docIds={clientUserData.recents}
-                  limit={5}
-                  expanded={true}
-                  className="recently-viewed"
-                  order="1"
-                  isOpen={isOpen}
-                />
-                <SidebarItem
-                  name="Recent Bookmarks"
-                  docIds={clientUserData.bookmarks}
-                  limit={5}
-                  expanded={true}
-                  className="recent-bookmarks"
-                  order="2"
-                  isOpen={isOpen}
-                />
-                <SidebarItem
-                  name="Projects"
-                  docIds={clientUserData.bookmarks}
-                  limit={5}
-                  expanded={true}
-                  className="recent-bookmarks"
-                  order="3"
-                  isOpen={isOpen}
-                /> */}
-
-              {/* <SidebarItem
-                  name="Flagged"
-                  docIds={clientUserData.flags}
-                  limit={5}
-                  expanded={true}
-                  className="flagged"
-                  order="3"
-                  isOpen={isOpen}
-                /> */}
-
-              {/* <SideBarItemNotes
-                  expanded={true}
-                  name="Notes"
-                  notes={clientUserData.notes}
-                  className="notes"
-                  order="4"
-                  isOpen={isOpen}
-                /> */}
-
-              {/* <SidebarItem
-                  name="Project"
-                  docIds={clientUserData.bookmarks}
-                  limit={1}
-                /> */}
-              {/* {selectedApiID && <Preview selectedApiDoc={selectedApiDoc}/>} */}
-              {/* </div> */}
+              <Sidebar isOpen={isOpen} />
             </div>
           </div>
         </div>

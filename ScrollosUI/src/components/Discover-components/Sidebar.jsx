@@ -1,6 +1,5 @@
 import scrollosIcon from "../../assets/icon.svg";
 import documentsIcon from "../../assets/sidebar-icons/documents.svg";
-import recentsIcon from "../../assets/sidebar-icons/recents.svg";
 import projectsIcon from "../../assets/sidebar-icons/projects.svg";
 import discussionsIcon from "../../assets/sidebar-icons/discussions.svg";
 import notesIcon from "../../assets/sidebar-icons/notes.svg";
@@ -40,10 +39,10 @@ export default function Sidebar(props) {
           <img src={documentsIcon} />
           <div className="sidebar-item"> Documents</div>
         </div>
-        <div className="sidebar-item-container">
+        {/* <div className="sidebar-item-container">
           <img src={recentsIcon} />
           <div className="sidebar-item"> Recents</div>
-        </div>
+        </div> */}
         <div className="sidebar-item-container">
           <img src={projectsIcon} />
           <div className="sidebar-item"> Projects</div>

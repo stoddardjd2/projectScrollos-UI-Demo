@@ -79,6 +79,16 @@ https://angel-rs.github.io/css-color-filter-generator/
     transform: rotate(360deg);
   }
 }
+@keyframes expand {
+  from {
+    width: 0px;
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+    width: 100%;
+  }
+}
 
 body {
   height: 100%;
@@ -90,7 +100,7 @@ html {
 }
 a {
   text-decoration: none;
-  color: white;
+  color: #cccccc;
 }
 /* style a to look like button */
 .button {
@@ -245,7 +255,7 @@ button:hover {
   background-color: var(--primary-light);
   .search-bar {
     border-radius: 10px;
-    box-shadow: 0 10px 10px #00000081;
+    box-shadow: 0 7px 10px #00000081;
     font-size: 0.7em;
     background-color: var(--primary);
     display: flex;
@@ -274,21 +284,136 @@ button:hover {
     }
   }
   .page-info-bar {
+    padding-top: 0.6em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 2em;
+    overflow: hidden;
     .found {
       margin-left: 120px;
     }
-    .quick-option-container {
+
+    .filter-bar {
+      user-select: none;
+      /* margin-left: auto; */
+      margin-right: 12em;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: 2em;
-      .quick-option {
+      gap: 2em;
+      height: 5em;
+      .vertical-border{
+        margin-top: 7px;
+        margin-bottom: auto;
+        height: 50px;
+        border-right: 1px rgb(255, 255, 255) solid;
+      }
+      .sort-main-container {
+      }
+      .option-container {
+        overflow: hidden;
+
+        cursor: pointer;
+        margin: 0.5em 0em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: "Inter", sans-serif;
+        max-width: 4.5em;
+
+        /* option upwards animation */
+        .option-if-slidebar-active {
+          height: 0px;
+          translate: 0px -100px;
+          opacity: 0%;
+          transition: 0.3s ease-in-out all;
+          /* transition-delay: "0.5s"; */
+        }
+        .option-if-slidebar-inactive {
+          height: 50px;
+          transition: 0.3s ease-in-out all;
+        }
+
+        .sort-container {
+          display: flex;
+          margin-left: 30%;
+          /* flex-direction: column; */
+          /* align-items: center; */
+          width: 48.67px;
+          height: 50.58px;
+          font-size: 12.8px;
+          /* font-size: 0.8em; */
+          .toggle-container {
+            display: flex;
+            gap: 2em;
+          }
+          .toggle-container:hover {
+            /* translate: -2em; */
+          }
+          .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 33px;
+            max-width: 33px;
+            /* max-height: 50px; */
+            /* min-height: 54px; */
+            img {
+              translate: 2px -5px;
+              font: 1em sans-serif;
+              width: 24px;
+              filter: brightness(100);
+            }
+          }
+        }
+        /* sort upwards animation */
+        .sort-inactive {
+          /* translate: 0px 100px; */
+          /* transform: scale(0); */
+          height: 0px;
+          opacity: 0%;
+          /* translate: 0px -50px; */
+          transition: 0.3s ease-in-out all;
+        }
+        .sort-active {
+          translate: 0px -0px;
+          transform: scale(1);
+          /* height: auto; */
+          translate: 0px 7px;
+          transition: 0.3s ease-in-out all;
+        }
+
+        .option {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .active {
+          border-bottom: 2px rgb(255, 255, 255) solid;
+          animation: expand 0.3s ease-in-out;
+        }
+        .icon {
+          max-width: 1.5em;
+          max-height: 1.5em;
+          filter: brightness(100);
+          margin-bottom: 0.4em;
+        }
+        .name {
+          font-size: 0.8em;
+          text-wrap: nowrap;
+        }
+        .hover-border{
+          margin-top: 0.5em;
+          width: 100%;
+          min-height: 0.3em;
+        }
+        .bottom-border {
+          margin-top: 0.5em;
+          width: 100%;
+          min-height: 0.3em;
+        }
       }
     }
+
     .page-container {
       display: flex;
       justify-content: center;
@@ -797,19 +922,31 @@ button:hover {
         }
 
         .sidebar-items-container {
+          font-size: 0.9em;
           flex: 2;
           display: flex;
           flex-direction: column;
           align-items: left;
-          gap: 1em;
-          .sidebar-item-container {
-            width: 240px;
+          img {
+            max-width: 2em;
+            min-width: 2em;
+          }
+          .sidebar-item-container:hover {
+            cursor: pointer;
+            background-color: rgb(235, 235, 235);
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+          }
 
+          .sidebar-item-container {
+            margin-right: 1em;
+            padding: 0.3em;
             flex: 1;
             display: flex;
             align-items: center;
-            margin-left: 1em;
+            padding-left: 1em;
             flex: 1;
+
             .sidebar-item {
               padding-left: 1em;
             }
@@ -818,11 +955,12 @@ button:hover {
           .bottom-border {
             flex: 3;
             border-bottom: 1.5px #a8a8a8 solid;
-            width: 200px;
+            width: 220px;
             align-self: center;
           }
           /* account items */
           .account-items-container {
+            margin-top: 1em;
             flex: 8;
             display: flex;
             flex-direction: column;
@@ -859,7 +997,7 @@ button:hover {
               text-align: left;
               border: 2px #404040 solid;
               border-radius: 30px;
-              font-size: 0.7em;
+              font-size: 0.9em;
               padding: 10px 10px;
               gap: 1em;
               max-height: 5em;
@@ -1040,7 +1178,6 @@ button:hover {
 
 /* Sort css: */
 .sort {
-  margin-left: auto;
   margin-right: 40px;
 }
 .sort--container {
