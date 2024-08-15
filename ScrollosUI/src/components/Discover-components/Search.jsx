@@ -44,30 +44,28 @@ export default function Search(props) {
   }
   return (
     <>
-      <label htmlFor="searchbox" className="hidden">
+      {/* <label htmlFor="searchbox" className="hidden">
         Search box
-      </label>
+      </label> */}
       <div className="search--container">
         {/* display reset button if search has text input */}
-        {
+        {/* {
           <img
             style={{ opacity: search ? "1" : "0" }}
             onClick={handleReset}
             className="clear--icon"
             src={clearIcon}
           />
-        }
-        <form onSubmit={handleSearch}>
+        } */}
+        <form className="search-form" onSubmit={handleSearch}>
           <input
             value={search}
             onChange={handleActiveSearch}
-            className="search--searchbox testing!"
-            placeholder="______________________"
+            className="search--searchbox"
+            placeholder="Find API document"
             id="searchbox"
           ></input>
         </form>
-
-        {/* !add functionality! */}
         <button onClick={handleSearch} className="search--button">
           {<img className="search--icon" src={searchIcon} />}
         </button>

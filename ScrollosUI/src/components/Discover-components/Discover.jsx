@@ -12,6 +12,7 @@ import Logout from "./Logout";
 import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
+import userIcon from "../../assets/sidebar-icons/user.svg";
 
 import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
@@ -55,13 +56,9 @@ export default function Discover() {
         }
       ).then((window.location.href = `/ApiDocViewer/${selectedDocId}`));
     }
-
   }
   function toggleSidebar() {
     setIsOpen(!isOpen);
-  }
-  function handleLogout() {
-    window.location.href = "/";
   }
 
   //api Document Bar
@@ -85,25 +82,35 @@ export default function Discover() {
     <div className="discover-page">
       <div className="header-container">
         <div className="search-bar">
-          <div className="header">Walgreens' API Docs</div>
+          <div className="header">API Library </div>
           {/* <img src={walgreensLogo} /> */}
 
-          <Search
+          {/* <div style={{display:"flex", alignItems: "center"}}> */}
+            <Search
+              setDisplayApiDocs={setDisplayApiDocs}
+              allApiDocs={loadedDocs}
+              apiDocsDisplay={apiDocsDisplay}
+            />
+
+            <div className="user-info-container">
+              <img className="user-icon" src={userIcon} />
+              <div>
+                <div className="username">Jared Stoddard</div>
+                <div className="email">stoddardjd2@gmail.com</div>
+              </div>
+              <div className="ellipsis">...</div>
+            </div>
+          {/* </div> */}
+        </div>
+        <div className="page-info-bar">
+          {/* <div className="found">10 docs found</div> */}
+          <div className="left-margin"></div>
+          {/* <Search
             setDisplayApiDocs={setDisplayApiDocs}
             allApiDocs={loadedDocs}
             apiDocsDisplay={apiDocsDisplay}
-          />
-
-          <div className="settings button">
-            <img src={settingsIcon} />
-          </div>
-          <btn onClick={handleLogout} className="logout button">
-            Logout
-          </btn>
-        </div>
-        <div className="page-info-bar">
-          <div className="found">10 docs found</div>
-          <FilterBar/>
+          /> */}
+          <FilterBar />
           {/* <Sort
             allApiDocs={loadedDocs}
             setDisplayApiDocs={setDisplayApiDocs}

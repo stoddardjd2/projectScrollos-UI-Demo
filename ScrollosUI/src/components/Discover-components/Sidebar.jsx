@@ -5,9 +5,13 @@ import discussionsIcon from "../../assets/sidebar-icons/discussions.svg";
 import notesIcon from "../../assets/sidebar-icons/notes.svg";
 import settingsIcon from "../../assets/sidebar-icons/settings.svg";
 import notificationsIcon from "../../assets/sidebar-icons/notifications.svg";
-import userIcon from "../../assets/sidebar-icons/user.svg";
+import logoutIcon from '../../assets/sidebar-icons/logout.svg'
 export default function Sidebar(props) {
   const { isOpen } = props;
+  function handleLogout() {
+    window.location.href = "/";
+  }
+
   return (
     <div
       className="side-bar"
@@ -59,27 +63,24 @@ export default function Sidebar(props) {
         {/* Account fields */}
         <div className="account-items-container">
           <div className="account-header">Account</div>
-          <div className="settings">
             <div className="sidebar-item-container settings">
               <img src={settingsIcon} />
               <div className="sidebar-item"> Settings</div>
             </div>
-          </div>
           <div className="notifications">
             <div className="sidebar-item-container notifications">
               <img src={notificationsIcon} />
               <div className="sidebar-item"> Notifications</div>
             </div>
           </div>
-          <div className="user-info">
-            <div className="user-info-container">
-              <img className="user-icon" src={userIcon} />
-              <div>
-                <div className="username">Jared Stoddard</div>
-                <div className="email">stoddardjd2@gmail.com</div>
-              </div>
-              <div className="ellipsis">...</div>
+            <div className="notifications">
+            <div className="sidebar-item-container notifications">
+              <img src={logoutIcon} />
+              <div onClick={handleLogout} className="sidebar-item"> Logout</div>
             </div>
+          </div>
+          <div className="user-info">
+           
           </div>
         </div>
       </div>

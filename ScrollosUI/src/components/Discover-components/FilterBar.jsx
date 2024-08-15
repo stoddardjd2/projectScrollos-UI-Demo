@@ -8,6 +8,7 @@ import { useState } from "react";
 export default function FilterBar() {
   const [active, setActive] = useState("All Docs");
   const [hover, setHover] = useState();
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   function handleClick(e) {
     setActive(e.currentTarget.id);
@@ -16,7 +17,11 @@ export default function FilterBar() {
     console.log("enter");
     setHover(e.currentTarget.id);
   }
-
+async function handleMouseLeave(){
+    // console.log("ea")
+    // await delay(1000)
+    // setHover();
+}
   return (
     <div className="filter-bar">
       <FilterOption
@@ -24,6 +29,7 @@ export default function FilterBar() {
         img={allDocsIcon}
         handleClick={handleClick}
         active={active}
+        handleMouseLeave={handleMouseLeave}
         handleMouseEnter={handleMouseEnter}
         hover={hover}
       />
@@ -33,6 +39,7 @@ export default function FilterBar() {
         img={recentsIcon}
         handleClick={handleClick}
         active={active}
+        handleMouseLeave={handleMouseLeave}
         handleMouseEnter={handleMouseEnter}
         hover={hover}
       />
@@ -40,6 +47,7 @@ export default function FilterBar() {
         name="Bookmarks"
         img={bookmarkIcon}
         handleClick={handleClick}
+        handleMouseLeave={handleMouseLeave}
         handleMouseEnter={handleMouseEnter}
         active={active}
         hover={hover}
@@ -57,6 +65,7 @@ export default function FilterBar() {
         sortImg={sortByIcon}
         sortOption1="Most"
         sortOption2="Least"
+        handleMouseLeave={handleMouseLeave}
         handleMouseEnter={handleMouseEnter}
         hover={hover}
       />
@@ -71,8 +80,10 @@ export default function FilterBar() {
         sortOption1="Oldest"
         sortOption2="Newest"
         handleMouseEnter={handleMouseEnter}
+        handleMouseLeave={handleMouseLeave}
         hover={hover}
       />
+  
     </div>
   );
 }
@@ -90,6 +101,7 @@ function FilterOption(props) {
     sortOption2,
     sortImg,
     hover,
+    handleMouseLeave
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
@@ -104,6 +116,7 @@ function FilterOption(props) {
         id={name}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className="option-container"
       >
         <div
@@ -155,17 +168,19 @@ function FilterOption(props) {
           className={
             active === name ? "bottom-border active" : "bottom-border inactive"
           }
-          style={
-            // if hovering over current item and not active, display bottom border
-            hover === name && !(hover === active)
-              ? {
-                  borderBottom: " 2px var(--primary) solid",
-                  animation: "expand 0.3s ease-in-out",
-                }
-              : {
-                  animation: "shrink 0.3s ease-in-out",
-                }
-          }
+        //   style={
+        //     // if hovering over current item and not active, display bottom border
+        //     hover === name && !(hover === active)
+        //       ? {
+        //           borderBottom: " 2px green solid",
+        //           animation: "expand 1s ease-in-out",
+        //           width:" 100%"
+        //         }
+        //       : {
+
+        //           animation: "shrink 0.3s ease-in-out",
+        //         }
+        //   }
         ></div>
       </div>
     </div>
