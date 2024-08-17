@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 export default function FilterOption(props) {
   const {
-    name,
+    displayName,
     img,
     handleClick,
     active,
@@ -11,23 +11,12 @@ export default function FilterOption(props) {
     sortOption2,
     sortImg,
     clientUserData,
-    id,
-    text
+    activeId,
+    text,
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
-
-  
-
-  //if no name given, use id as name
-  let optionName;
-  if(!name){
-    optionName = id;
-  }else{
-    optionName = name;
-  }
-
-
+  console.log("active", active);
 
   function handleSort(e) {
     setSort((prev) => !prev);
@@ -35,7 +24,7 @@ export default function FilterOption(props) {
 
   return (
     <div
-      id={id}
+      id={activeId}
       className="sort-main-container"
       onClick={(e) => {
         handleClick(e);
@@ -50,19 +39,19 @@ export default function FilterOption(props) {
         <div
           //   className="option"
           className={
-            slider && active === id
+            slider && active === activeId
               ? "option option-if-slidebar-active"
               : "option option-if-slidebar-inactive"
           }
         >
           <img className="icon " src={img} />
-          <div className="name">{optionName}</div>
+          <div className="name">{displayName}</div>
         </div>
         {/* if slider enabled and current option active, show extra sort options: */}
         <div
           onClick={handleSort}
           className={
-            slider && active === id
+            slider && active === activeId
               ? "sort-container sort-active"
               : "sort-container sort-inactive"
           }
@@ -80,9 +69,7 @@ export default function FilterOption(props) {
               <div>{sortOption1}</div>
             </div>
 
-            <div
-              className={"container"}
-            >
+            <div className={"container"}>
               <img src={sortImg} />
               <div>{sortOption2}</div>
             </div>
@@ -90,9 +77,7 @@ export default function FilterOption(props) {
         </div>
         <div
           className={
-            active === id
-              ? "bottom-border active"
-              : "bottom-border inactive"
+            active === activeId ? "bottom-border active" : "bottom-border inactive"
           }
         ></div>
       </div>

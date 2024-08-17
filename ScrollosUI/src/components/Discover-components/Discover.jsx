@@ -57,7 +57,7 @@ export default function Discover() {
     },
   ]);
 
-  const [active, setActive] = useState("All Docs");
+  const [active, setActive] = useState("all docs");
   useEffect(() => {
     //deterimine display option based on active selection
     if (active) {

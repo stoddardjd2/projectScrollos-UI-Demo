@@ -17,7 +17,6 @@ export default function FilterBar(props) {
     projects,
   } = props;
   const [hover, setHover] = useState();
-  const [filter, setFilter] = useState("sortby");
 
   // function handleFilter(e) {
   //   const id = e.currentTarget.id;
@@ -31,41 +30,40 @@ export default function FilterBar(props) {
 
   return (
     <div className="filter-bar">
+      {/* active id deterimines display docs in discover switch case statement */}
       <FilterOption
-        id="documents"
-        name="All Docs"
+        activeId="documents"
+        displayName="All Docs"
         img={allDocsIcon}
         handleClick={handleClick}
         active={active}
-        hover={hover}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
-
       <FilterOption
-        id="Recents"
+        activeId="recents"
+        displayName="Recents"
         img={recentsIcon}
         handleClick={handleClick}
         active={active}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
-        hover={hover}
       />
       <FilterOption
-        id="Bookmarks"
+        activeId="bookmarks"
+        displayName="Bookmarks"
         img={bookmarkIcon}
         handleClick={handleClick}
         active={active}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
-        hover={hover}
       />
       <FilterOption
-        id="Last Project"
+        activeId="last project"
+        displayName="Last Project"
         img={LastProjectIcon}
         handleClick={handleClick}
         active={active}
-        hover={hover}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
@@ -74,7 +72,8 @@ export default function FilterBar(props) {
       <div className="vertical-border"></div>
       {/* <div></div> */}
       <FilterOption
-        id="Ratings"
+        activeId="ratings"
+        displayName="Ratings"
         img={starIcon}
         handleClick={handleClick}
         active={active}
@@ -85,10 +84,10 @@ export default function FilterBar(props) {
         sortOption2="Least"
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
-        hover={hover}
       />
       <FilterOption
-        id="Doc Age"
+        activeId="doc age"
+        displayName="Doc Age"
         img={newDocIcon}
         handleClick={handleClick}
         active={active}
@@ -99,7 +98,6 @@ export default function FilterBar(props) {
         sortOption2="Newest"
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
-        hover={hover}
       />
     </div>
   );
