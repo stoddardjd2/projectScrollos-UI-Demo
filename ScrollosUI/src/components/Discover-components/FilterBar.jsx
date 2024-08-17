@@ -4,24 +4,73 @@ import newDocIcon from "../../assets/filter-bar-icons/new-document.svg";
 import allDocsIcon from "../../assets/filter-bar-icons/all-documents.svg";
 import starIcon from "../../assets/filter-bar-icons/star.svg";
 import sortByIcon from "../../assets/filter-bar-icons/sortby.svg";
-import { useState } from "react";
-export default function FilterBar() {
+import FilterOption from "./FilterOption";
+import LastProjectIcon from "../../assets/filter-bar-icons/last-project.svg";
+import { useState, useEffect } from "react";
+export default function FilterBar(props) {
+  const { setDisplayApiDocs, clientUserData, loadedDocs, projects } = props;
   const [active, setActive] = useState("All Docs");
   const [hover, setHover] = useState();
-  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const [filter, setFilter] = useState("sortby");
+
+  useEffect(() => {
+    if (!(filter == "sortby")) {
+      switch (filter) {
+        case "bookmarks":
+          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);
+          break;
+        case "recents":
+          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.recents);
+          break;
+        case "flagged":
+          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.flags);
+        case "all docs":
+          // NO REQUEST. Set display to have loaded docs at start
+          setDisplayApiDocs(loadedDocs);
+          break;
+        case "ratings":
+          getDocsByArrayOfIdsAndUpdateDisplay([]);
+          break;
+        case "doc age":
+          getDocsByArrayOfIdsAndUpdateDisplay([]);
+          break;
+        case "last project":
+          getDocsByArrayOfIdsAndUpdateDisplay(projects[0].documentIds);
+          break;
+      }
+    }
+  }, [filter]);
+
+  async function getDocsByArrayOfIdsAndUpdateDisplay(idsArray) {
+    fetch(`http://localhost:3001/read/ids/${1000}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(idsArray),
+    })
+      .then((results) => results.json())
+      .then((json) => {
+        setDisplayApiDocs(json);
+      });
+  }
+
+  function handleFilter(e) {
+    const id = e.currentTarget.id;
+
+    setFilter(id.toLowerCase());
+  }
 
   function handleClick(e) {
     setActive(e.currentTarget.id);
   }
-  function handleMouseEnter(e) {
-    console.log("enter");
-    setHover(e.currentTarget.id);
-  }
-async function handleMouseLeave(){
-    // console.log("ea")
-    // await delay(1000)
-    // setHover();
-}
+  //   function handleMouseEnter(e) {
+  //     console.log("enter");
+  //     setHover(e.currentTarget.id);
+  //   }
+  // async function handleMouseLeave(){
+
+  // }
   return (
     <div className="filter-bar">
       <FilterOption
@@ -29,9 +78,10 @@ async function handleMouseLeave(){
         img={allDocsIcon}
         handleClick={handleClick}
         active={active}
-        handleMouseLeave={handleMouseLeave}
-        handleMouseEnter={handleMouseEnter}
         hover={hover}
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleFilter={handleFilter}
       />
 
       <FilterOption
@@ -39,19 +89,32 @@ async function handleMouseLeave(){
         img={recentsIcon}
         handleClick={handleClick}
         active={active}
-        handleMouseLeave={handleMouseLeave}
-        handleMouseEnter={handleMouseEnter}
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleFilter={handleFilter}
         hover={hover}
       />
       <FilterOption
         name="Bookmarks"
         img={bookmarkIcon}
         handleClick={handleClick}
-        handleMouseLeave={handleMouseLeave}
-        handleMouseEnter={handleMouseEnter}
         active={active}
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleFilter={handleFilter}
         hover={hover}
       />
+      <FilterOption
+        name="Last Project"
+        img={LastProjectIcon}
+        handleClick={handleClick}
+        active={active}
+        hover={hover}
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleFilter={handleFilter}
+      />
+
       {/* <div></div> */}
       <div className="vertical-border"></div>
       {/* <div></div> */}
@@ -65,8 +128,9 @@ async function handleMouseLeave(){
         sortImg={sortByIcon}
         sortOption1="Most"
         sortOption2="Least"
-        handleMouseLeave={handleMouseLeave}
-        handleMouseEnter={handleMouseEnter}
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleFilter={handleFilter}
         hover={hover}
       />
       <FilterOption
@@ -79,110 +143,11 @@ async function handleMouseLeave(){
         sortImg={sortByIcon}
         sortOption1="Oldest"
         sortOption2="Newest"
-        handleMouseEnter={handleMouseEnter}
-        handleMouseLeave={handleMouseLeave}
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleFilter={handleFilter}
         hover={hover}
       />
-  
-    </div>
-  );
-}
-// additional components:
-function FilterOption(props) {
-  const {
-    name,
-    img,
-    handleClick,
-    handleMouseEnter,
-    active,
-    slider,
-    sortByIcon,
-    sortOption1,
-    sortOption2,
-    sortImg,
-    hover,
-    handleMouseLeave
-  } = props;
-  //    default to sort from high to low
-  const [sort, setSort] = useState(true);
-  function handleSort(e) {
-    setSort((prev) => !prev);
-    console.log("sort");
-  }
-
-  return (
-    <div className="sort-main-container">
-      <div
-        id={name}
-        onClick={handleClick}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="option-container"
-      >
-        <div
-          //   className="option"
-          className={
-            slider && active === name
-              ? "option option-if-slidebar-active"
-              : "option option-if-slidebar-inactive"
-          }
-        >
-          <img className="icon " src={img} />
-          <div className="name">{name}</div>
-        </div>
-
-        {/* if slider enabled and current option active, show extra sort options: */}
-
-        <div
-          onClick={handleSort}
-          className={
-            slider && active === name
-              ? "sort-container sort-active"
-              : "sort-container sort-inactive"
-          }
-        >
-          <div
-            style={
-              !sort
-                ? { translate: "-4.55em", transition: ".4s ease-in-out all" }
-                : { transition: ".4s ease-in-out all" }
-            }
-            className="toggle-container"
-          >
-            <div className={"container"}>
-              <img src={sortImg} style={{ transform: "rotateX(180deg)" }} />
-              <div>{sortOption1}</div>
-            </div>
-
-            <div
-              className={"container"}
-              //   style={sort ? { marginLeft: " 100px" } : {}}
-            >
-              <img src={sortImg} />
-              <div>{sortOption2}</div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={
-            active === name ? "bottom-border active" : "bottom-border inactive"
-          }
-        //   style={
-        //     // if hovering over current item and not active, display bottom border
-        //     hover === name && !(hover === active)
-        //       ? {
-        //           borderBottom: " 2px green solid",
-        //           animation: "expand 1s ease-in-out",
-        //           width:" 100%"
-        //         }
-        //       : {
-
-        //           animation: "shrink 0.3s ease-in-out",
-        //         }
-        //   }
-        ></div>
-      </div>
     </div>
   );
 }
