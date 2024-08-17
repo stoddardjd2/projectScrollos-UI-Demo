@@ -20,7 +20,7 @@ import Sidebar from "./Sidebar";
 export default function Discover() {
   const { loadedDocs, userData } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
-  const userDataSchema = { recents: [], bookmarks: [], notes: [], flags: [] };
+  const userDataSchema = { recents: [], bookmarks: [], notes: [], flags: [], recentProjects:[] };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
@@ -30,10 +30,6 @@ export default function Discover() {
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    console.log("disc. DISPLAY CHANGE:", apiDocsDisplay);
-  }, [apiDocsDisplay]);
 
   // for controlling right column display:
   //Changed by sidebar selection

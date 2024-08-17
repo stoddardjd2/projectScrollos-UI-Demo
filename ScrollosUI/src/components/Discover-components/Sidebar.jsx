@@ -19,10 +19,6 @@ export default function Sidebar(props) {
   } = props;
   const [dropdownSelection, setDropdownSelection] = useState();
 
-  useEffect(() => {
-    console.log("projects", projects);
-  }, [projects]);
-
   function handleOptionSelection(e) {
     //changing display disabled in rightColumn.jsx!!!
     const id = e.currentTarget.id.toLowerCase();
@@ -170,13 +166,32 @@ function SidebarItem(props) {
     setProjects,
   } = props;
   const isSelected = rightColumnDisplay === name.toLowerCase();
+  const [initialDropdownOrder, setInitialDropdownOrder] =
+    useState(dropdownItems);
+  //get initial dropdown order and prevent from changing when projects array changes.
+  //only change when adding new projects
+
+  useEffect(() => {
+    //if project created, get that project from array and add to initial array
+    if (dropdownItems) {
+      //check if dropdown exists for current option
+      if (dropdownItems.length > initialDropdownOrder.length) {
+        //check if dropdownItems length is greater, indicating project was added
+        setInitialDropdownOrder((prev) => {
+          //add new project to front of array(new item will be first value in array)
+          prev.unshift(dropdownItems[0]);
+          return [...prev];
+        });
+      }
+    }
+  }, [dropdownItems]);
 
   function handleDropdownSelection(e) {
     const id = e.currentTarget.id;
     // id is project name which is always unique
     let documentsArray = [];
     let indexOfCurrentProject;
-    dropdownItems.map((project, index) => {
+    initialDropdownOrder.map((project, index) => {
       if (project.id === id) {
         documentsArray = project.documentIds;
         indexOfCurrentProject = index;
@@ -229,22 +244,22 @@ function SidebarItem(props) {
         <div className="sidebar-item">{name}</div>
       </div>
       {/*show dropdown if exists and selected */}
-      {dropdownItems && isSelected && (
+      {initialDropdownOrder && isSelected && (
         <>
-          {dropdownItems.map((item, index) => {
+          {initialDropdownOrder.map((item, index) => {
             return (
               //if dropdown item selected, add selection styling
               <div
                 style={
-                  dropdownSelection === dropdownItems[index].id
+                  dropdownSelection === initialDropdownOrder[index].id
                     ? {
                         backgroundColor: "var(--primary-light)",
                         color: "white",
                       }
                     : {}
                 }
-                id={dropdownItems[index].id}
-                key={dropdownItems[index].id}
+                id={initialDropdownOrder[index].id}
+                key={initialDropdownOrder[index].id}
                 onClick={handleDropdownSelection}
                 className="dropdown-item"
               >
