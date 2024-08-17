@@ -5,9 +5,17 @@ import discussionsIcon from "../../assets/sidebar-icons/discussions.svg";
 import notesIcon from "../../assets/sidebar-icons/notes.svg";
 import settingsIcon from "../../assets/sidebar-icons/settings.svg";
 import notificationsIcon from "../../assets/sidebar-icons/notifications.svg";
-import logoutIcon from '../../assets/sidebar-icons/logout.svg'
+import logoutIcon from "../../assets/sidebar-icons/logout.svg";
+import { useEffect, useState } from "react";
 export default function Sidebar(props) {
-  const { isOpen } = props;
+  const {
+    isOpen,
+    setRightColumnDisplay,
+    rightColumnDisplay,
+    projects,
+    setDisplayApiDocs,
+    loadedDocs,
+  } = props;
   function handleLogout() {
     window.location.href = "/";
   }
@@ -20,10 +28,10 @@ export default function Sidebar(props) {
           ? {
               width: "0px",
               // transform:"translate(-300px, 0)",
-              transition: ".6s ease-in-out all",
+              transition: ".5s ease-in-out all",
             }
           : {
-              transition: ".6s ease-in-out all",
+              transition: ".5s ease-in-out all",
             }
       }
     >
@@ -39,51 +47,159 @@ export default function Sidebar(props) {
         <div className="slider-option">Business</div>
       </div>
       <div className="sidebar-items-container">
-        <div className="sidebar-item-container">
-          <img src={documentsIcon} />
-          <div className="sidebar-item"> Documents</div>
-        </div>
-        {/* <div className="sidebar-item-container">
-          <img src={recentsIcon} />
-          <div className="sidebar-item"> Recents</div>
-        </div> */}
-        <div className="sidebar-item-container">
-          <img src={projectsIcon} />
-          <div className="sidebar-item"> Projects</div>
-        </div>
-        <div className="sidebar-item-container">
-          <img src={discussionsIcon} />
-          <div className="sidebar-item"> Discussions</div>
-        </div>
-        <div className="sidebar-item-container">
-          <img src={notesIcon} />
-          <div className="sidebar-item"> Notes</div>
-        </div>
+        <SidebarItem
+          name="Documents"
+          img={documentsIcon}
+          rightColumnDisplay={rightColumnDisplay}
+          setDisplayApiDocs={setDisplayApiDocs}
+          setRightColumnDisplay={setRightColumnDisplay}
+          loadedDocs={loadedDocs}
+        />
+        <SidebarItem
+          name="Projects"
+          img={projectsIcon}
+          rightColumnDisplay={rightColumnDisplay}
+          dropdownItems={projects}
+          setDisplayApiDocs={setDisplayApiDocs}
+          setRightColumnDisplay={setRightColumnDisplay}
+        />
+
+        <SidebarItem
+          name="Discussions"
+          img={discussionsIcon}
+          rightColumnDisplay={rightColumnDisplay}
+          
+          setDisplayApiDocs={setDisplayApiDocs}
+          setRightColumnDisplay={setRightColumnDisplay}
+        />
+        <SidebarItem
+          name="Notes"
+          img={notesIcon}
+          rightColumnDisplay={rightColumnDisplay}
+          setDisplayApiDocs={setDisplayApiDocs}
+          setRightColumnDisplay={setRightColumnDisplay}
+        />
+        {/* border */}
         <div className="bottom-border"></div>
         {/* Account fields */}
         <div className="account-items-container">
           <div className="account-header">Account</div>
-            <div className="sidebar-item-container settings">
-              <img src={settingsIcon} />
-              <div className="sidebar-item"> Settings</div>
-            </div>
-          <div className="notifications">
-            <div className="sidebar-item-container notifications">
-              <img src={notificationsIcon} />
-              <div className="sidebar-item"> Notifications</div>
-            </div>
-          </div>
-            <div className="notifications">
-            <div className="sidebar-item-container notifications">
-              <img src={logoutIcon} />
-              <div onClick={handleLogout} className="sidebar-item"> Logout</div>
-            </div>
-          </div>
-          <div className="user-info">
-           
-          </div>
+
+          <SidebarItem
+            name="Settings"
+            img={settingsIcon}
+            rightColumnDisplay={rightColumnDisplay}
+            setDisplayApiDocs={setDisplayApiDocs}
+            setRightColumnDisplay={setRightColumnDisplay}
+          />
+          <SidebarItem
+            name="Notifications"
+            img={notificationsIcon}
+            rightColumnDisplay={rightColumnDisplay}
+            setDisplayApiDocs={setDisplayApiDocs}
+            setRightColumnDisplay={setRightColumnDisplay}
+          />
+          <SidebarItem
+            name="Logout"
+            img={logoutIcon}
+            rightColumnDisplay={rightColumnDisplay}
+            setDisplayApiDocs={setDisplayApiDocs}
+            setRightColumnDisplay={setRightColumnDisplay}
+          />
         </div>
       </div>
+    </div>
+  );
+}
+function SidebarItem(props) {
+  const {
+    name,
+    img,
+    clickHandler,
+    rightColumnDisplay,
+    dropdownItems,
+    setRightColumnDisplay,
+    setDisplayApiDocs,
+    loadedDocs,
+  } = props;
+  const [dropdownSelection, setDropdownSelection] = useState();
+
+  const isSelected = rightColumnDisplay === name.toLowerCase();
+
+  function handleOptionSelection(e) {
+    //changing display disabled in rightColumn.jsx!!!
+    const id = e.currentTarget.id.toLowerCase();
+    //if documents selected, set apiDocs to loaded docs
+    if (loadedDocs) {
+      setDisplayApiDocs(loadedDocs);
+    }
+    setRightColumnDisplay(id);
+    //reset dropdown selection on option selection
+    setDropdownSelection()
+  }
+
+  function handleDropdownSelection(e) {
+    const id = e.currentTarget.id;
+    const documentsArray = dropdownItems[id].documentIds;
+    setDropdownSelection(id);
+    //update display to show documents included in dropdown selection
+    fetch(`http://localhost:3001/read/ids`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(documentsArray),
+    })
+      .then((results) => results.json())
+      .then((json) => setDisplayApiDocs(json));
+  }
+
+  return (
+    <div>
+      <div
+        id={name}
+        onClick={handleOptionSelection}
+        className="sidebar-item-container"
+        // Highlight currently displayed option
+        style={
+          isSelected
+            ? { backgroundColor: "var(--primary-light)", color: "white" }
+            : {}
+        }
+      >
+        {/* change color of image when selected */}
+        <img
+          src={img}
+          style={isSelected ? { filter: "brightness(100)" } : {}}
+        />
+        <div className="sidebar-item">{name}</div>
+      </div>
+      {/*show dropdown if exists and selected */}
+      {dropdownItems && isSelected && (
+        <>
+          {dropdownItems.map((item, index) => {
+            return (
+              //if dropdown item selected, add selection styling
+              <div
+                style={
+                  dropdownSelection == index
+                    ? {
+                        backgroundColor: "var(--primary-light)",
+                        color: "white",
+                      }
+                    : {}
+                }
+                id={index}
+                key={index}
+                onClick={handleDropdownSelection}
+                className="dropdown-item"
+              >
+                {item.id}
+              </div>
+            );
+          })}
+        </>
+      )}
     </div>
   );
 }

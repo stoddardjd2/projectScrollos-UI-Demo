@@ -7,6 +7,7 @@ import Saved from "./Saved";
 import SidebarItem from "./SidebarItem";
 import Preview from "./Preview";
 import sideExpandIcon from "../../assets/sideExpand.svg";
+import RightColumn from "./RightColumn";
 import Sort from "./Sort";
 import Logout from "./Logout";
 import settingsIcon from "../../assets/settings.svg";
@@ -29,6 +30,26 @@ export default function Discover() {
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
+
+  // for controlling right column display:
+  //Changed by sidebar selection
+  const [rightColumnDisplay, setRightColumnDisplay] = useState("documents");
+  // Store all projects for current user:
+  //temporary values to test:
+  const [projects, setProjects] = useState([
+    {
+      id: "Project One",
+      documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
+    },
+    {
+      id: "Project Two",
+      documentIds: [
+        "66aeb7944d74dc0a686c2a08",
+        "66aeb79e4d74dc0a686c2a0a",
+        "66aeb7a34d74dc0a686c2a0b",
+      ],
+    },
+  ]);
 
   function handleSelectedDoc(e) {
     const selectedDocId = e.currentTarget.id;
@@ -74,6 +95,8 @@ export default function Discover() {
         handleSelectedDoc={handleSelectedDoc}
         userID={clientUserData._id}
         setClientUserData={setClientUserData}
+        projects={projects}
+        setProjects={setProjects}
       />
     );
   });
@@ -86,20 +109,20 @@ export default function Discover() {
           {/* <img src={walgreensLogo} /> */}
 
           {/* <div style={{display:"flex", alignItems: "center"}}> */}
-            <Search
-              setDisplayApiDocs={setDisplayApiDocs}
-              allApiDocs={loadedDocs}
-              apiDocsDisplay={apiDocsDisplay}
-            />
+          <Search
+            setDisplayApiDocs={setDisplayApiDocs}
+            allApiDocs={loadedDocs}
+            apiDocsDisplay={apiDocsDisplay}
+          />
 
-            <div className="user-info-container">
-              <img className="user-icon" src={userIcon} />
-              <div>
-                <div className="username">Jared Stoddard</div>
-                <div className="email">stoddardjd2@gmail.com</div>
-              </div>
-              <div className="ellipsis">...</div>
+          <div className="user-info-container">
+            <img className="user-icon" src={userIcon} />
+            <div>
+              <div className="username">Jared Stoddard</div>
+              <div className="email">stoddardjd2@gmail.com</div>
             </div>
+            <div className="ellipsis">...</div>
+          </div>
           {/* </div> */}
         </div>
         <div className="page-info-bar">
@@ -148,25 +171,22 @@ export default function Discover() {
 
             {/* hide sidebar content if closed */}
             <div className="left-split">
-              <Sidebar isOpen={isOpen} />
+              <Sidebar
+              setDisplayApiDocs={setDisplayApiDocs}
+                projects={projects}
+                isOpen={isOpen}
+                rightColumnDisplay={rightColumnDisplay}
+                setRightColumnDisplay={setRightColumnDisplay}
+                loadedDocs={loadedDocs}
+              />
             </div>
           </div>
         </div>
-
-        <div className="right-column">
-          <div className="card-grid">
-            {/* if no search results */}
-            {!(apiDocsDisplay.length === 0) ? (
-              <>
-                {docCards}
-                {docCards}
-                {docCards}
-              </>
-            ) : (
-              <div className="no-results">NO RESULTS</div>
-            )}
-          </div>
-        </div>
+        <RightColumn
+          rightColumnDisplay={rightColumnDisplay}
+          docCards={docCards}
+          apiDocsDisplay={apiDocsDisplay}
+        />
       </div>
     </div>
   );
