@@ -20,6 +20,8 @@ export default function DocCards(props) {
     handleSelectedDoc,
     userID,
     loadIsFlagged,
+    projects,
+    setProjects
   } = props;
   const [isSaved, setIsSaved] = useState(loadIsSaved);
   // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
@@ -28,15 +30,15 @@ export default function DocCards(props) {
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+
+
   function handleSave(e) {
     e.stopPropagation();
     //save changes to database:
     //add to database if saving
     //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
-    console.log("fetchinG!");
     //save:
     if (!isSaved) {
-      console.log("save!");
 
       setClientUserData((prev) => ({
         ...prev,
@@ -99,7 +101,6 @@ export default function DocCards(props) {
 
   async function handleAction(e) {
     const id = e.currentTarget.id;
-    console.log(id);
     // if switching to new action view when different action view is open-
     //-close old view first then open
     if (action.active && !(action.type === id)) {
@@ -199,7 +200,10 @@ export default function DocCards(props) {
           transition: ".5s ease-in-out all",
           maxHeight: "0em",
           minHeight: "0em",
+          // transform: "translate(40px 40px)",
           marginTop: "-80px",
+          marginLeft:"20px",
+          // marginBottom: "-50px",
           padding: "0px",
         };
       } else if (target === "date-star") {
@@ -377,7 +381,7 @@ export default function DocCards(props) {
         <NotesView getStyleForAction={getStyleForAction} action={action} />
 
         {/* if add is clicked: */}
-        <AddView action={action} getStyleForAction={getStyleForAction} />
+        <AddView apiDoc={apiDoc} projects={projects} setProjects={setProjects} action={action} getStyleForAction={getStyleForAction} />
 
         <div
           className="actions-container"
