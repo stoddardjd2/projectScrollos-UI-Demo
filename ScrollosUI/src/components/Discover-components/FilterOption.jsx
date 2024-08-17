@@ -11,10 +11,23 @@ export default function FilterOption(props) {
     sortOption2,
     sortImg,
     clientUserData,
-    handleFilter,
+    id,
+    text
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
+
+  
+
+  //if no name given, use id as name
+  let optionName;
+  if(!name){
+    optionName = id;
+  }else{
+    optionName = name;
+  }
+
+
 
   function handleSort(e) {
     setSort((prev) => !prev);
@@ -22,15 +35,14 @@ export default function FilterOption(props) {
 
   return (
     <div
-      id={name}
+      id={id}
       className="sort-main-container"
       onClick={(e) => {
-        handleFilter(e);
         handleClick(e);
       }}
     >
       <div
-        // id={name}
+        // id={lowerCaseName}
         // onMouseEnter={handleMouseEnter}
         // onMouseLeave={handleMouseLeave}
         className="option-container"
@@ -38,21 +50,19 @@ export default function FilterOption(props) {
         <div
           //   className="option"
           className={
-            slider && active === name
+            slider && active === id
               ? "option option-if-slidebar-active"
               : "option option-if-slidebar-inactive"
           }
         >
           <img className="icon " src={img} />
-          <div className="name">{name}</div>
+          <div className="name">{optionName}</div>
         </div>
-
         {/* if slider enabled and current option active, show extra sort options: */}
-
         <div
           onClick={handleSort}
           className={
-            slider && active === name
+            slider && active === id
               ? "sort-container sort-active"
               : "sort-container sort-inactive"
           }
@@ -72,31 +82,18 @@ export default function FilterOption(props) {
 
             <div
               className={"container"}
-              //   style={sort ? { marginLeft: " 100px" } : {}}
             >
               <img src={sortImg} />
               <div>{sortOption2}</div>
             </div>
           </div>
         </div>
-
         <div
           className={
-            active === name ? "bottom-border active" : "bottom-border inactive"
+            active === id
+              ? "bottom-border active"
+              : "bottom-border inactive"
           }
-          //   style={
-          //     // if hovering over current item and not active, display bottom border
-          //     hover === name && !(hover === active)
-          //       ? {
-          //           borderBottom: " 2px green solid",
-          //           animation: "expand 1s ease-in-out",
-          //           width:" 100%"
-          //         }
-          //       : {
-
-          //           animation: "shrink 0.3s ease-in-out",
-          //         }
-          //   }
         ></div>
       </div>
     </div>

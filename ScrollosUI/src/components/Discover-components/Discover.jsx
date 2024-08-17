@@ -20,7 +20,13 @@ import Sidebar from "./Sidebar";
 export default function Discover() {
   const { loadedDocs, userData } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
-  const userDataSchema = { recents: [], bookmarks: [], notes: [], flags: [], recentProjects:[] };
+  const userDataSchema = {
+    recents: [],
+    bookmarks: [],
+    notes: [],
+    flags: [],
+    recentProjects: [],
+  };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
@@ -50,6 +56,53 @@ export default function Discover() {
       ],
     },
   ]);
+
+  const [active, setActive] = useState("All Docs");
+  useEffect(() => {
+    //deterimine display option based on active selection
+    if (active) {
+      console.log("effect time:", active);
+      switch (active) {
+        case "bookmarks":
+          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);
+          break;
+        case "recents":
+          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.recents);
+          break;
+        case "flagged":
+          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.flags);
+        case "documents":
+          // NO REQUEST. Set display to have loaded docs at start
+          setDisplayApiDocs(loadedDocs);
+          break;
+        case "ratings":
+          getDocsByArrayOfIdsAndUpdateDisplay([]);
+          break;
+        case "doc age":
+          getDocsByArrayOfIdsAndUpdateDisplay([]);
+          break;
+        case "last project":
+          getDocsByArrayOfIdsAndUpdateDisplay(projects[0].documentIds);
+          break;
+      }
+    }
+  }, [active]);
+
+  //for determine display type using active selection
+  async function getDocsByArrayOfIdsAndUpdateDisplay(idsArray) {
+    fetch(`http://localhost:3001/read/ids/${1000}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(idsArray),
+    })
+      .then((results) => results.json())
+      .then((json) => {
+        setDisplayApiDocs(json);
+      });
+  }
+
 
   function handleSelectedDoc(e) {
     const selectedDocId = e.currentTarget.id;
@@ -138,6 +191,8 @@ export default function Discover() {
             loadedDocs={loadedDocs}
             clientUserData={clientUserData}
             projects={projects}
+            active={active}
+            setActive={setActive}
           />
           {/* <Sort
             allApiDocs={loadedDocs}
@@ -184,6 +239,8 @@ export default function Discover() {
                 rightColumnDisplay={rightColumnDisplay}
                 setRightColumnDisplay={setRightColumnDisplay}
                 loadedDocs={loadedDocs}
+                setActive={setActive}
+                active={active}
               />
             </div>
           </div>

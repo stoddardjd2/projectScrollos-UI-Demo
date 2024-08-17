@@ -16,6 +16,8 @@ export default function Sidebar(props) {
     setProjects,
     setDisplayApiDocs,
     loadedDocs,
+    setActive,
+    active,
   } = props;
   const [dropdownSelection, setDropdownSelection] = useState();
 
@@ -23,13 +25,10 @@ export default function Sidebar(props) {
     //changing display disabled in rightColumn.jsx!!!
     const id = e.currentTarget.id.toLowerCase();
 
-    //if documents selected, set apiDocs to loaded docs
-    if (loadedDocs) {
-      setDisplayApiDocs(loadedDocs);
-    }
-    setRightColumnDisplay(id);
+
     //reset dropdown selection on option selection
     setDropdownSelection();
+    setActive(id);
   }
 
   function handleLogout() {
@@ -73,6 +72,7 @@ export default function Sidebar(props) {
           handleOptionSelection={handleOptionSelection}
           setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
         />
         <SidebarItem
           name="Projects"
@@ -84,6 +84,7 @@ export default function Sidebar(props) {
           setRightColumnDisplay={setRightColumnDisplay}
           setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
           dropdownSelection={dropdownSelection}
         />
 
@@ -96,6 +97,7 @@ export default function Sidebar(props) {
           dropdownSelection={dropdownSelection}
           setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
           setRightColumnDisplay={setRightColumnDisplay}
         />
         <SidebarItem
@@ -107,6 +109,7 @@ export default function Sidebar(props) {
           dropdownSelection={dropdownSelection}
           setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
           setRightColumnDisplay={setRightColumnDisplay}
         />
         {/* border */}
@@ -124,6 +127,7 @@ export default function Sidebar(props) {
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
             setProjects={setProjects}
+            active={active}
             setRightColumnDisplay={setRightColumnDisplay}
           />
           <SidebarItem
@@ -135,6 +139,7 @@ export default function Sidebar(props) {
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
             setProjects={setProjects}
+            active={active}
             setRightColumnDisplay={setRightColumnDisplay}
           />
           <SidebarItem
@@ -146,6 +151,7 @@ export default function Sidebar(props) {
             dropdownSelection={dropdownSelection}
             setDropdownSelection={setDropdownSelection}
             setProjects={setProjects}
+            active={active}
             setRightColumnDisplay={setRightColumnDisplay}
           />
         </div>
@@ -164,8 +170,10 @@ function SidebarItem(props) {
     dropdownSelection,
     setDropdownSelection,
     setProjects,
+    active,
   } = props;
-  const isSelected = rightColumnDisplay === name.toLowerCase();
+  // const isSelected = rightColumnDisplay === name.toLowerCase();
+  const isSelected = name.toLowerCase() === active;
   const [initialDropdownOrder, setInitialDropdownOrder] =
     useState(dropdownItems);
   //get initial dropdown order and prevent from changing when projects array changes.
