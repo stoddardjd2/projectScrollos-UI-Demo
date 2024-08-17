@@ -31,6 +31,10 @@ export default function Discover() {
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    console.log("disc. DISPLAY CHANGE:", apiDocsDisplay);
+  }, [apiDocsDisplay]);
+
   // for controlling right column display:
   //Changed by sidebar selection
   const [rightColumnDisplay, setRightColumnDisplay] = useState("documents");
@@ -62,7 +66,7 @@ export default function Discover() {
         recentDocIds.push(recentId);
       }
     });
-
+    setDisplayApiDocs;
     //update recents with new recents array
     //make sure array is not empty
     if (!(recentDocIds[0] == "")) {
@@ -133,7 +137,12 @@ export default function Discover() {
             allApiDocs={loadedDocs}
             apiDocsDisplay={apiDocsDisplay}
           /> */}
-          <FilterBar />
+          <FilterBar
+            setDisplayApiDocs={setDisplayApiDocs}
+            loadedDocs={loadedDocs}
+            clientUserData={clientUserData}
+            projects={projects}
+          />
           {/* <Sort
             allApiDocs={loadedDocs}
             setDisplayApiDocs={setDisplayApiDocs}
@@ -172,8 +181,9 @@ export default function Discover() {
             {/* hide sidebar content if closed */}
             <div className="left-split">
               <Sidebar
-              setDisplayApiDocs={setDisplayApiDocs}
+                setDisplayApiDocs={setDisplayApiDocs}
                 projects={projects}
+                setProjects={setProjects}
                 isOpen={isOpen}
                 rightColumnDisplay={rightColumnDisplay}
                 setRightColumnDisplay={setRightColumnDisplay}

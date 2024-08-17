@@ -13,9 +13,29 @@ export default function Sidebar(props) {
     setRightColumnDisplay,
     rightColumnDisplay,
     projects,
+    setProjects,
     setDisplayApiDocs,
     loadedDocs,
   } = props;
+  const [dropdownSelection, setDropdownSelection] = useState();
+
+  useEffect(() => {
+    console.log("projects", projects);
+  }, [projects]);
+
+  function handleOptionSelection(e) {
+    //changing display disabled in rightColumn.jsx!!!
+    const id = e.currentTarget.id.toLowerCase();
+
+    //if documents selected, set apiDocs to loaded docs
+    if (loadedDocs) {
+      setDisplayApiDocs(loadedDocs);
+    }
+    setRightColumnDisplay(id);
+    //reset dropdown selection on option selection
+    setDropdownSelection();
+  }
+
   function handleLogout() {
     window.location.href = "/";
   }
@@ -54,6 +74,9 @@ export default function Sidebar(props) {
           setDisplayApiDocs={setDisplayApiDocs}
           setRightColumnDisplay={setRightColumnDisplay}
           loadedDocs={loadedDocs}
+          handleOptionSelection={handleOptionSelection}
+          setDropdownSelection={setDropdownSelection}
+          setProjects={setProjects}
         />
         <SidebarItem
           name="Projects"
@@ -61,15 +84,22 @@ export default function Sidebar(props) {
           rightColumnDisplay={rightColumnDisplay}
           dropdownItems={projects}
           setDisplayApiDocs={setDisplayApiDocs}
+          handleOptionSelection={handleOptionSelection}
           setRightColumnDisplay={setRightColumnDisplay}
+          setDropdownSelection={setDropdownSelection}
+          setProjects={setProjects}
+          dropdownSelection={dropdownSelection}
         />
 
         <SidebarItem
           name="Discussions"
           img={discussionsIcon}
           rightColumnDisplay={rightColumnDisplay}
-          
           setDisplayApiDocs={setDisplayApiDocs}
+          handleOptionSelection={handleOptionSelection}
+          dropdownSelection={dropdownSelection}
+          setDropdownSelection={setDropdownSelection}
+          setProjects={setProjects}
           setRightColumnDisplay={setRightColumnDisplay}
         />
         <SidebarItem
@@ -77,6 +107,10 @@ export default function Sidebar(props) {
           img={notesIcon}
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
+          handleOptionSelection={handleOptionSelection}
+          dropdownSelection={dropdownSelection}
+          setDropdownSelection={setDropdownSelection}
+          setProjects={setProjects}
           setRightColumnDisplay={setRightColumnDisplay}
         />
         {/* border */}
@@ -90,6 +124,10 @@ export default function Sidebar(props) {
             img={settingsIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
+            handleOptionSelection={handleOptionSelection}
+            dropdownSelection={dropdownSelection}
+            setDropdownSelection={setDropdownSelection}
+            setProjects={setProjects}
             setRightColumnDisplay={setRightColumnDisplay}
           />
           <SidebarItem
@@ -97,6 +135,10 @@ export default function Sidebar(props) {
             img={notificationsIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
+            handleOptionSelection={handleOptionSelection}
+            dropdownSelection={dropdownSelection}
+            setDropdownSelection={setDropdownSelection}
+            setProjects={setProjects}
             setRightColumnDisplay={setRightColumnDisplay}
           />
           <SidebarItem
@@ -104,6 +146,10 @@ export default function Sidebar(props) {
             img={logoutIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
+            handleOptionSelection={handleOptionSelection}
+            dropdownSelection={dropdownSelection}
+            setDropdownSelection={setDropdownSelection}
+            setProjects={setProjects}
             setRightColumnDisplay={setRightColumnDisplay}
           />
         </div>
@@ -115,32 +161,40 @@ function SidebarItem(props) {
   const {
     name,
     img,
-    clickHandler,
     rightColumnDisplay,
     dropdownItems,
-    setRightColumnDisplay,
     setDisplayApiDocs,
-    loadedDocs,
+    handleOptionSelection,
+    dropdownSelection,
+    setDropdownSelection,
+    setProjects,
   } = props;
-  const [dropdownSelection, setDropdownSelection] = useState();
-
   const isSelected = rightColumnDisplay === name.toLowerCase();
-
-  function handleOptionSelection(e) {
-    //changing display disabled in rightColumn.jsx!!!
-    const id = e.currentTarget.id.toLowerCase();
-    //if documents selected, set apiDocs to loaded docs
-    if (loadedDocs) {
-      setDisplayApiDocs(loadedDocs);
-    }
-    setRightColumnDisplay(id);
-    //reset dropdown selection on option selection
-    setDropdownSelection()
-  }
 
   function handleDropdownSelection(e) {
     const id = e.currentTarget.id;
-    const documentsArray = dropdownItems[id].documentIds;
+    // id is project name which is always unique
+    let documentsArray = [];
+    let indexOfCurrentProject;
+    dropdownItems.map((project, index) => {
+      if (project.id === id) {
+        documentsArray = project.documentIds;
+        indexOfCurrentProject = index;
+      }
+    });
+
+    //push selected proejct to front of array
+    // setProjects();
+    setProjects((prevProjects) => {
+      //make copy of values not by reference to prevProjects so that it may be mutated seperately
+      const prevProjectsCopy = [...prevProjects];
+      prevProjectsCopy.splice(indexOfCurrentProject, 1);
+      prevProjectsCopy.unshift(prevProjects[indexOfCurrentProject]);
+      // const recentOrderArray = prevProjects.concat(prevProjectsCopy)
+      return [...prevProjectsCopy];
+    });
+
+    // const documentsArray = dropdownItems[id].documentIds;
     setDropdownSelection(id);
     //update display to show documents included in dropdown selection
     fetch(`http://localhost:3001/read/ids`, {
@@ -182,15 +236,15 @@ function SidebarItem(props) {
               //if dropdown item selected, add selection styling
               <div
                 style={
-                  dropdownSelection == index
+                  dropdownSelection === dropdownItems[index].id
                     ? {
                         backgroundColor: "var(--primary-light)",
                         color: "white",
                       }
                     : {}
                 }
-                id={index}
-                key={index}
+                id={dropdownItems[index].id}
+                key={dropdownItems[index].id}
                 onClick={handleDropdownSelection}
                 className="dropdown-item"
               >

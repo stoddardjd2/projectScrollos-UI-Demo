@@ -5,6 +5,12 @@ export default function Search(props) {
   const { setDisplayApiDocs, allApiDocs, apiDocsDisplay } = props;
   const [search, setSearch] = useState("");
 
+  function handleInput(e){
+    const value = e.target.value
+    console.log("serach update:", value)
+    setSearch(value);
+  }
+
   async function handleSearch(e) {
     e.preventDefault();
     //update display with search query results
@@ -14,28 +20,28 @@ export default function Search(props) {
       .then((data) => setDisplayApiDocs(data));
   }
 
-  function handleActiveSearch(e) {
-    console.log("handling serach");
-    const searchText = e.target.value;
-    setSearch(searchText);
+  // function handleActiveSearch(e) {
+  //   console.log("handling serach");
+  //   const searchText = e.target.value;
+  //   setSearch(searchText);
 
-    let matches = [];
-    if (!(searchText == "")) {
-      apiDocsDisplay.map((apiDoc) => {
-        if (
-          apiDoc.info.title.toLowerCase().includes(searchText.toLowerCase())
-        ) {
-          matches.push(apiDoc);
-        }
-      });
-      //update display to show search matches
-      setDisplayApiDocs(matches);
-    } else {
-      //if search is empty:
+  //   let matches = [];
+  //   if (!(searchText == "")) {
+  //     apiDocsDisplay.map((apiDoc) => {
+  //       if (
+  //         apiDoc.info.title.toLowerCase().includes(searchText.toLowerCase())
+  //       ) {
+  //         matches.push(apiDoc);
+  //       }
+  //     });
+  //     //update display to show search matches
+  //     setDisplayApiDocs(matches);
+  //   } else {
+  //     //if search is empty:
 
-      setDisplayApiDocs(allApiDocs);
-    }
-  }
+  //     setDisplayApiDocs(allApiDocs);
+  //   }
+  // }
 
   function handleReset() {
     //reset search
@@ -49,25 +55,26 @@ export default function Search(props) {
       </label> */}
       <div className="search--container">
         {/* display reset button if search has text input */}
-        {/* {
+        {
           <img
-            style={{ opacity: search ? "1" : "0" }}
+            style={{ visibility: search ? "visible" : "hidden"}}
             onClick={handleReset}
-            className="clear--icon"
+            className="clear--icon search-box-icon"
             src={clearIcon}
           />
-        } */}
+        }
         <form className="search-form" onSubmit={handleSearch}>
           <input
             value={search}
-            onChange={handleActiveSearch}
+            // onChange={handleActiveSearch}
+            onChange={handleInput}
             className="search--searchbox"
             placeholder="Find API document"
             id="searchbox"
           ></input>
         </form>
         <button onClick={handleSearch} className="search--button">
-          {<img className="search--icon" src={searchIcon} />}
+          {<img className="search--icon search-box-icon" src={searchIcon} />}
         </button>
       </div>
     </>
