@@ -170,11 +170,13 @@ export default function DocCards(props) {
           onClick={handleAddRating}
           id={index + 2}
           style={
-            mouseOverStar >= index + 2
-              ? { opacity: "100%", transition: ".3s ease-in-out all" }
-              : !isAddRatingExpanded
-              ? { opacity: "0%", transitionDelay: ratingDelay.enter }
-              : { opacity: "40%", transitionDelay: ratingDelay.exit }
+            isAddRatingExpanded
+              ? // if expanded:
+                mouseOverStar >= index + 2
+                ? { opacity: "100%", transition: "0s ease-in-out all" }
+                : { transition: "0s ease-in-out all", opacity:" 40%" }
+              : //if not expanded:
+                { opacity:" 40%"}
           }
         />
       );
@@ -432,11 +434,13 @@ export default function DocCards(props) {
               // onMouseLeave={() => setMouseOverStar()}
               className="star"
               style={
-                isAddRatingExpanded && mouseOverStar >= 1
-                  ? { opacity: "100%" }
-                  : !isAddRatingExpanded
-                  ? { opacity: "100%", transition: ".3s ease-in-out all" }
-                  : { opacity: "40%", transition: ".3s ease-in-out all" }
+                isAddRatingExpanded
+                  ? // if expanded:
+                    mouseOverStar >= 1
+                    ? { opacity: "100%", transition: "0s ease-in-out all" }
+                    : { transition: "0s ease-in-out all", opacity: "40%" }
+                  : //if not expanded:
+                    {}
               }
               onClick={(e) => {
                 //only set rating if expanded
