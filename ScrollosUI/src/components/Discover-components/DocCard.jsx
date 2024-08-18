@@ -32,8 +32,6 @@ export default function DocCards(props) {
   const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-  console.log(mouseOverStar);
-
   function handleSave(e) {
     e.stopPropagation();
     //save changes to database:
@@ -136,7 +134,6 @@ export default function DocCards(props) {
   }
   function handleMouseOverStar(e) {
     const id = e.currentTarget.id;
-    console.log("mopuse over:", id);
     setMouseOverStar(id);
   }
 
@@ -166,22 +163,20 @@ export default function DocCards(props) {
     ];
     return ratingDelays.map((ratingDelay, index) => {
       return (
-          <img
-            key={index}
-            src={starIcon}
-            className="star"
-            onClick={handleAddRating}
-            onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
-            onMouseLeave={() => setMouseOverStar()}
-            id={index + 2}
-            style={
-              mouseOverStar >= index + 2
-                ? { opacity: "100%", transition: ".3s ease-in-out all" }
-                : !isAddRatingExpanded
-                ? { opacity: "0%", transitionDelay: ratingDelay.enter }
-                : { opacity: "40%", transitionDelay: ratingDelay.exit }
-            }
-          />
+        <img
+          key={index}
+          src={starIcon}
+          className="star"
+          onClick={handleAddRating}
+          id={index + 2}
+          style={
+            mouseOverStar >= index + 2
+              ? { opacity: "100%", transition: ".3s ease-in-out all" }
+              : !isAddRatingExpanded
+              ? { opacity: "0%", transitionDelay: ratingDelay.enter }
+              : { opacity: "40%", transitionDelay: ratingDelay.exit }
+          }
+        />
       );
     });
   }
@@ -424,12 +419,17 @@ export default function DocCards(props) {
           }
         >
           <div className="updated">Opened 8/8/2024 </div>
-          <div className="rating-container" onClick={handleToggleAddRating}>
+          <div
+            className="rating-container"
+            onClick={handleToggleAddRating}
+            onMouseOver={(e) => setMouseOverStar(e.target.id)}
+            onMouseLeave={() => setMouseOverStar()}
+          >
             <img
               src={starIcon}
               id={1}
-              onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
-              onMouseLeave={() => setMouseOverStar()}
+              // onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
+              // onMouseLeave={() => setMouseOverStar()}
               className="star"
               style={
                 isAddRatingExpanded && mouseOverStar >= 1
