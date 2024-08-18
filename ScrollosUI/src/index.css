@@ -285,6 +285,7 @@ button:hover {
     justify-content: space-between;
     column-gap: 4em;
     padding: 1em;
+    height: 64px;
     .header {
       text-wrap: nowrap;
       text-align: center;
@@ -609,13 +610,28 @@ button:hover {
     .rating-container {
       display: flex;
       align-items: center;
-      gap: 4px;
+      justify-content: end;
+
+      .add-rating-container {
+        overflow: hidden;
+        display: flex;
+        height: 100%;
+        transition: 0.8s ease-in-out all;
+      }
+
+      /* for rating opacity*/
 
       .rating {
+        padding-left: 6px;
       }
+      /* .star:hover {
+        filter: brightness(0) saturate(100%) invert(88%) sepia(37%)
+          saturate(1329%) hue-rotate(1deg) brightness(104%) contrast(107%);
+      } */
       .star {
         width: 1em;
         transform: translate(0, -0.1em);
+        transition: 0.5s ease-in-out all;
       }
     }
   }
@@ -1041,14 +1057,17 @@ button:hover {
 
         /* dropdown */
         .dropdown-item {
+          overflow: hidden;
+          text-overflow: ellipsis;
           font-size: 1em;
           text-align: left;
           padding: 0.3em;
-          padding-left: 2em;
+          padding-left: 1.8em;
+          padding-right: 3em;
           border-top-right-radius: 20px;
           border-bottom-right-radius: 20px;
           margin-top: 0.2em;
-          width: 9em;
+          width: 13em;
         }
         .dropdown-item:last-child {
           margin-bottom: 0.5em;
@@ -1077,9 +1096,16 @@ button:hover {
             max-width: 24px;
             min-width: 24px;
           }
+
+          .dropdown-items-container-restricter {
+            /* height: auto; */
+          }
+          .dropdown-items-container {
+            transition: 1s ease-in-out all;
+            overflow: hidden;
+          }
           .sidebar-item-container:hover {
             cursor: pointer;
-            background-color: rgb(235, 235, 235);
           }
 
           .sidebar-item-container {
@@ -1091,6 +1117,12 @@ button:hover {
             padding-left: 1em;
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
+            .dropdown-icon {
+              margin-left: auto;
+              transform: rotate(90deg);
+              width: 24px;
+              /* FIISH ICON!!! */
+            }
             .sidebar-item {
               padding-left: 1em;
             }
@@ -1256,11 +1288,11 @@ button:hover {
   border-radius: 30px;
   padding: 10px;
   background-color: white;
+  width: 30%;
 }
 .search-form {
   display: flex;
   width: 100%;
-  justify-content: center;
   /* width: fit-content; */
 }
 .search-box-icon {
@@ -1274,10 +1306,11 @@ button:hover {
 .search--searchbox {
   border: none;
   opacity: 100%;
-  font-size: 20px;
+  font-size: 14px;
   color: #707070;
+  padding-left: 14px;
 }
-.search--searchbox:focus{
+.search--searchbox:focus {
   text-align: left;
   outline: none;
 }
@@ -1409,10 +1442,10 @@ button:hover {
   font-size: 0.9em;
   padding: 10px 10px;
   gap: 1em;
-  max-height: 5em;
+  max-height: 4em;
   width: 200px;
   .user-icon {
-    width: 35px;
+    width: 32px;
   }
   .username {
     font-size: 1.1em;

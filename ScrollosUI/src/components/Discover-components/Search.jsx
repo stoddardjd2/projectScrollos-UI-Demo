@@ -5,9 +5,9 @@ export default function Search(props) {
   const { setDisplayApiDocs, allApiDocs, apiDocsDisplay } = props;
   const [search, setSearch] = useState("");
 
-  function handleInput(e){
-    const value = e.target.value
-    console.log("serach update:", value)
+  function handleInput(e) {
+    const value = e.target.value;
+    console.log("serach update:", value);
     setSearch(value);
   }
 
@@ -56,12 +56,9 @@ export default function Search(props) {
       <div className="search--container">
         {/* display reset button if search has text input */}
         {
-          <img
-            style={{ visibility: search ? "visible" : "hidden"}}
-            onClick={handleReset}
-            className="clear--icon search-box-icon"
-            src={clearIcon}
-          />
+          <button onClick={handleSearch} className="search--button">
+            {<img className="search--icon search-box-icon" src={searchIcon} />}
+          </button>
         }
         <form className="search-form" onSubmit={handleSearch}>
           <input
@@ -73,9 +70,12 @@ export default function Search(props) {
             id="searchbox"
           ></input>
         </form>
-        <button onClick={handleSearch} className="search--button">
-          {<img className="search--icon search-box-icon" src={searchIcon} />}
-        </button>
+        <img
+          style={{ visibility: search ? "visible" : "hidden" }}
+          onClick={handleReset}
+          className="clear--icon search-box-icon"
+          src={clearIcon}
+        />
       </div>
     </>
   );

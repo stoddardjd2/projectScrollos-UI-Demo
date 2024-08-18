@@ -54,14 +54,13 @@ export default function Discover() {
         "66aeb79e4d74dc0a686c2a0a",
         "66aeb7a34d74dc0a686c2a0b",
       ],
-    },
+    }
   ]);
 
   const [active, setActive] = useState("all docs");
   useEffect(() => {
     //deterimine display option based on active selection
     if (active) {
-      console.log("effect time:", active);
       switch (active) {
         case "bookmarks":
           getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);

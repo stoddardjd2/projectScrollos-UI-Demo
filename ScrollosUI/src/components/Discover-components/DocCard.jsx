@@ -21,16 +21,18 @@ export default function DocCards(props) {
     userID,
     loadIsFlagged,
     projects,
-    setProjects
+    setProjects,
   } = props;
   const [isSaved, setIsSaved] = useState(loadIsSaved);
   // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
   const [action, setAction] = useState({ active: false, type: "none" });
   // const [IsinfoFlipped, setIsInfoFlipped] = useState(false);
 
+  const [mouseOverStar, setMouseOverStar] = useState();
+  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-
+  console.log(mouseOverStar);
 
   function handleSave(e) {
     e.stopPropagation();
@@ -39,7 +41,6 @@ export default function DocCards(props) {
     //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
     //save:
     if (!isSaved) {
-
       setClientUserData((prev) => ({
         ...prev,
         bookmarks: [...prev.bookmarks, apiDoc._id],
@@ -125,6 +126,66 @@ export default function DocCards(props) {
     }
   }
 
+  function handleToggleAddRating() {
+    setIsAddRatingExpanded(!isAddRatingExpanded);
+  }
+  function handleAddRating(e) {
+    const rating = e.currentTarget.id;
+    console.log("adding rating of :", rating);
+    // FETCH DATABASE AND ADD RATING!
+  }
+  function handleMouseOverStar(e) {
+    const id = e.currentTarget.id;
+    console.log("mopuse over:", id);
+    setMouseOverStar(id);
+  }
+
+  function getAverageRating(ratings) {
+    if (ratings.length === 0) {
+      return { sum: 0, average: 0 };
+    }
+
+    let totalSum = ratings.reduce(
+      (acc, ratingObj) => acc + parseFloat(ratingObj.rating),
+      0
+    );
+    let average = totalSum / ratings.length;
+
+    // Rounding the average to the nearest tenth
+    let roundedAverage = Math.round(average * 10) / 10;
+
+    return roundedAverage;
+  }
+
+  function getRatingElements() {
+    const ratingDelays = [
+      { enter: "0.4s", exit: "0s" },
+      { enter: "0.3s", exit: "0.1s" },
+      { enter: "0.2s", exit: "0.2s" },
+      { enter: "0.1s", exit: "0.3s" },
+    ];
+    return ratingDelays.map((ratingDelay, index) => {
+      return (
+          <img
+            key={index}
+            src={starIcon}
+            className="star"
+            onClick={handleAddRating}
+            onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
+            onMouseLeave={() => setMouseOverStar()}
+            id={index + 2}
+            style={
+              mouseOverStar >= index + 2
+                ? { opacity: "100%", transition: ".3s ease-in-out all" }
+                : !isAddRatingExpanded
+                ? { opacity: "0%", transitionDelay: ratingDelay.enter }
+                : { opacity: "40%", transitionDelay: ratingDelay.exit }
+            }
+          />
+      );
+    });
+  }
+
   function getStyleForAction(target) {
     if (action.type === "info") {
       if (target === "bookmark") {
@@ -202,7 +263,7 @@ export default function DocCards(props) {
           minHeight: "0em",
           // transform: "translate(40px 40px)",
           marginTop: "-80px",
-          marginLeft:"20px",
+          marginLeft: "20px",
           // marginBottom: "-50px",
           padding: "0px",
         };
@@ -362,10 +423,35 @@ export default function DocCards(props) {
               : { transition: ".5s ease-in-out all", overflow: "hidden" }
           }
         >
-          <div className="updated">8/8/2024 </div>
-          <div className="rating-container">
-            <img src={starIcon} className="star" />
-            <div className="rating">5.0 (15)</div>
+          <div className="updated">Opened 8/8/2024 </div>
+          <div className="rating-container" onClick={handleToggleAddRating}>
+            <img
+              src={starIcon}
+              id={1}
+              onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
+              onMouseLeave={() => setMouseOverStar()}
+              className="star"
+              style={
+                isAddRatingExpanded && mouseOverStar >= 1
+                  ? { opacity: "100%" }
+                  : !isAddRatingExpanded
+                  ? { opacity: "100%", transition: ".3s ease-in-out all" }
+                  : { opacity: "40%", transition: ".3s ease-in-out all" }
+              }
+              onClick={(e) => {
+                //only set rating if expanded
+                isAddRatingExpanded && handleAddRating(e);
+              }}
+            />
+
+            <div
+              className="add-rating-container"
+              style={!isAddRatingExpanded ? { width: "0%" } : { width: "100%" }}
+            >
+              {getRatingElements()}
+            </div>
+
+            <div className="rating">{getAverageRating(apiDoc.ratings)}</div>
           </div>
         </div>
 
@@ -381,7 +467,13 @@ export default function DocCards(props) {
         <NotesView getStyleForAction={getStyleForAction} action={action} />
 
         {/* if add is clicked: */}
-        <AddView apiDoc={apiDoc} projects={projects} setProjects={setProjects} action={action} getStyleForAction={getStyleForAction} />
+        <AddView
+          apiDoc={apiDoc}
+          projects={projects}
+          setProjects={setProjects}
+          action={action}
+          getStyleForAction={getStyleForAction}
+        />
 
         <div
           className="actions-container"
@@ -429,10 +521,24 @@ export default function DocCards(props) {
               onClick={handleAction}
             />
           </div> */}
-          <ActionButton type="comment" img={commentIcon} handleAction={handleAction} action={action} />
-          <ActionButton type="add" img={addIcon} handleAction={handleAction} action={action} />
-          <ActionButton type="info" img={infoIcon} handleAction={handleAction} action={action} />
-        
+          <ActionButton
+            type="comment"
+            img={commentIcon}
+            handleAction={handleAction}
+            action={action}
+          />
+          <ActionButton
+            type="add"
+            img={addIcon}
+            handleAction={handleAction}
+            action={action}
+          />
+          <ActionButton
+            type="info"
+            img={infoIcon}
+            handleAction={handleAction}
+            action={action}
+          />
         </div>
       </div>
 

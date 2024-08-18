@@ -16,8 +16,6 @@ export default function FilterOption(props) {
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
-  console.log("active", active);
-
   function handleSort(e) {
     setSort((prev) => !prev);
   }
