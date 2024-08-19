@@ -49,7 +49,7 @@ const router = createBrowserRouter([
     ),
     loader: async ({ params }) => {
       const loadedDocs = await fetch(
-        "http://localhost:3001/read/limitResults/30"
+        "http://localhost:3001/read/limitResults/12"
       ).then((res) => res.json());
       const userData = await fetch(
         `http://localhost:3001/user/${params.userID}`

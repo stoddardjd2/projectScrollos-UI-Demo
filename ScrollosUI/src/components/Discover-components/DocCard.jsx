@@ -32,6 +32,8 @@ export default function DocCards(props) {
   const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+
+
   function handleSave(e) {
     e.stopPropagation();
     //save changes to database:
@@ -71,33 +73,6 @@ export default function DocCards(props) {
     }
   }
 
-  // //have flags visable for entire company
-  // function handleFlag(e) {
-  //   e.stopPropagation();
-  //   setIsFlagged(!isFlagged);
-  //   //save changes to database:
-  //   //add to database if saving
-  //   //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
-  //   if (!isFlagged) {
-  //     fetch(`http://localhost:3001/user/${userID}/save/flags`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ docID: apiDoc._id }),
-  //     });
-  //     //remove from database if unsaving
-  //   } else if (isFlagged) {
-  //     fetch(`http://localhost:3001/user/${userID}/remove/flags`, {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ docID: apiDoc._id }),
-  //     });
-  //   }
-  // }
-
   async function handleAction(e) {
     const id = e.currentTarget.id;
     // if switching to new action view when different action view is open-
@@ -130,6 +105,8 @@ export default function DocCards(props) {
   function handleAddRating(e) {
     const rating = e.currentTarget.id;
     console.log("adding rating of :", rating);
+
+    
     // FETCH DATABASE AND ADD RATING!
   }
   function handleMouseOverStar(e) {
@@ -138,20 +115,22 @@ export default function DocCards(props) {
   }
 
   function getAverageRating(ratings) {
-    if (ratings.length === 0) {
-      return { sum: 0, average: 0 };
-    }
+    if (ratings) {
+      if (ratings.length === 0) {
+        return { sum: 0, average: 0 };
+      }
 
-    let totalSum = ratings.reduce(
-      (acc, ratingObj) => acc + parseFloat(ratingObj.rating),
-      0
-    );
-    let average = totalSum / ratings.length;
+      let totalSum = ratings.reduce(
+        (acc, ratingObj) => acc + parseFloat(ratingObj.rating),
+        0
+      );
+      let average = totalSum / ratings.length;
 
-    // Rounding the average to the nearest tenth
-    let roundedAverage = Math.round(average * 10) / 10;
+      // Rounding the average to the nearest tenth
+      let roundedAverage = Math.round(average * 10) / 10;
 
-    return roundedAverage;
+      return roundedAverage;
+    } else return 0;
   }
 
   function getRatingElements() {
@@ -174,9 +153,9 @@ export default function DocCards(props) {
               ? // if expanded:
                 mouseOverStar >= index + 2
                 ? { opacity: "100%", transition: "0s ease-in-out all" }
-                : { transition: "0s ease-in-out all", opacity:" 40%" }
+                : { transition: "0s ease-in-out all", opacity: " 40%" }
               : //if not expanded:
-                { opacity:" 40%"}
+                { opacity: " 40%" }
           }
         />
       );
@@ -454,8 +433,7 @@ export default function DocCards(props) {
             >
               {getRatingElements()}
             </div>
-
-            <div className="rating">{getAverageRating(apiDoc.ratings)}</div>
+            <div className="rating">{getAverageRating(apiDoc.ratings.reviews)}</div>
           </div>
         </div>
 

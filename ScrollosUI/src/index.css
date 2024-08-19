@@ -606,12 +606,17 @@ button:hover {
     flex: 2;
     .updated {
       /* margin-right: 0px; */
+      padding-left: 10px;
+
     }
     .rating-container {
       display: flex;
       align-items: center;
       justify-content: end;
-
+      padding-right: 10px;
+      /* &:hover{
+        transform: scale(1.05);
+      } */
       .add-rating-container {
         overflow: hidden;
         display: flex;
@@ -632,9 +637,6 @@ button:hover {
         width: 1em;
         transform: translate(0, -0.1em);
         transition: 0.5s ease-in-out all;
-      }
-      .star-popout{
-        /* opacity: 40% */
       }
     }
   }
@@ -675,6 +677,10 @@ button:hover {
         filter: brightness(100);
       }
     }
+    /* .inactive-container:hover{
+      background-color: rgb(238, 238, 238)
+    } */
+
     .active-container {
       background-color: var(--primary);
     }

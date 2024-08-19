@@ -14,11 +14,12 @@ import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
 import userIcon from "../../assets/sidebar-icons/user.svg";
-
 import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
+import PageSelection from "./PageSelection";
 export default function Discover() {
   const { loadedDocs, userData } = useLoaderData();
+  // load x amount of docs on discover page navigation and display as page 1
   //make sure values are defined to prevent errors after creating account or if no data
   const userDataSchema = {
     recents: [],
@@ -32,7 +33,18 @@ export default function Discover() {
 
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
+
+  //loads then stores docIds assigned to each page
+  // "initital" value set by useEffect below after recieiving database response
+  const [docsByPage, setDocsByPage] = useState();
+
+  console.log("STATE LOADED:", docsByPage);
+
   const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
+
+  // //store all doc ids for filter type, used to set display based
+  // const [currentDocIds, setCurrentDocIds] = useState()
+  
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
@@ -54,10 +66,59 @@ export default function Discover() {
         "66aeb79e4d74dc0a686c2a0a",
         "66aeb7a34d74dc0a686c2a0b",
       ],
-    }
+    },
   ]);
 
   const [active, setActive] = useState("all docs");
+
+  // useEffect(() => {
+  //   //on change to display, update page buttons to match new data
+  //   setDocsByPage(getDocsPerPage(apiDocsDisplay));
+  // }, [apiDocsDisplay]);
+
+  useEffect(() => {
+    getAllDocIds();
+  }, []);
+  async function getAllDocIds() {
+    // get all doc ids to be used in determining page assingment for id
+    const results = await fetch(`http://localhost:3001/getAllDocIds`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((results) => results.json())
+      .then((json) => {
+        const docsPerPage = getDocsPerPage(json);
+        setDocsByPage(docsPerPage);
+      });
+    return results;
+  }
+
+  function getDocsPerPage(docIds) {
+    if (docIds) {
+      const numbOfDocsPerPage = 12;
+      let docsGroupedByPage = [];
+      let docsForPage = [];
+      let currentPage = 1;
+      docIds.map((doc, index) => {
+        docsForPage.push(doc._id);
+        if (index + 1 === numbOfDocsPerPage * currentPage) {
+          docsGroupedByPage.push(docsForPage);
+          docsForPage = [];
+          //reset docs for next page
+          currentPage++;
+        } else if (docIds.length === index + 1) {
+          //if last doc, push partial array
+          docsGroupedByPage.push(docsForPage);
+        }
+      });
+      console.log("docsGroupedByPage", docsGroupedByPage);
+
+      return docsGroupedByPage;
+    }
+  }
+
   useEffect(() => {
     //deterimine display option based on active selection
     if (active) {
@@ -101,7 +162,6 @@ export default function Discover() {
         setDisplayApiDocs(json);
       });
   }
-
 
   function handleSelectedDoc(e) {
     const selectedDocId = e.currentTarget.id;
@@ -198,11 +258,11 @@ export default function Discover() {
             setDisplayApiDocs={setDisplayApiDocs}
             clientUserData={clientUserData}
           /> */}
-          <div className="page-container">
-            <div className="page">1</div>
-            <div className="page">2</div>
-            <div className="page">3</div>
-          </div>
+          <PageSelection
+            setDisplayApiDocs={setDisplayApiDocs}
+            apiDocsDisplay={apiDocsDisplay}
+            docsByPage={docsByPage}
+          />
         </div>
       </div>
       <div className="discover">
