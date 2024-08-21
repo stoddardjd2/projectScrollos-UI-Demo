@@ -10,9 +10,7 @@ export default function FilterOption(props) {
     sortOption1,
     sortOption2,
     sortImg,
-    clientUserData,
     activeId,
-    text,
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
@@ -29,9 +27,6 @@ export default function FilterOption(props) {
       }}
     >
       <div
-        // id={lowerCaseName}
-        // onMouseEnter={handleMouseEnter}
-        // onMouseLeave={handleMouseLeave}
         className="option-container"
       >
         <div

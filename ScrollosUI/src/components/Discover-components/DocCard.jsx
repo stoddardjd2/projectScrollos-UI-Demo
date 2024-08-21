@@ -17,11 +17,11 @@ export default function DocCards(props) {
     setClientUserData,
     apiDoc,
     loadIsSaved,
-    handleSelectedDoc,
     userID,
     loadIsFlagged,
     projects,
     setProjects,
+    clientUserData,
   } = props;
   const [isSaved, setIsSaved] = useState(loadIsSaved);
   // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
@@ -32,7 +32,37 @@ export default function DocCards(props) {
   const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+  function handleSelectedDoc(e) {
+    const selectedDocId = e.currentTarget.id;
+    //update recents in db with updated recents array
+    let recentDocIds = [];
+    recentDocIds.push(selectedDocId);
+    clientUserData.recents.map((recentId) => {
+      if (!(selectedDocId == recentId)) {
+        recentDocIds.push(recentId);
+      }
+    });
+    
+    console.log("updated client data")
+    setClientUserData((prev) => ({ ...prev, recents: recentDocIds }));
 
+    //update recents with new recents array
+    //make sure array is not empty
+    if (!(recentDocIds[0] == "")) {
+      fetch(
+        `http://localhost:3001/user/${clientUserData._id}/saveArray/recents`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ docIds: recentDocIds }),
+        }
+      ).then(() => {
+        window.location.href = `/ApiDocViewer/${selectedDocId}`;
+      });
+    }
+  }
 
   function handleSave(e) {
     e.stopPropagation();
@@ -106,7 +136,6 @@ export default function DocCards(props) {
     const rating = e.currentTarget.id;
     console.log("adding rating of :", rating);
 
-    
     // FETCH DATABASE AND ADD RATING!
   }
   function handleMouseOverStar(e) {
@@ -433,7 +462,9 @@ export default function DocCards(props) {
             >
               {getRatingElements()}
             </div>
-            <div className="rating">{getAverageRating(apiDoc.ratings.reviews)}</div>
+            <div className="rating">
+              {getAverageRating(apiDoc.ratings.reviews)}
+            </div>
           </div>
         </div>
 

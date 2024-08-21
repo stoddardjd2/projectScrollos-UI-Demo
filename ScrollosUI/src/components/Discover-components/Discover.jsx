@@ -18,8 +18,7 @@ import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
 import PageSelection from "./PageSelection";
 export default function Discover() {
-  const { loadedDocs, userData } = useLoaderData();
-  // load x amount of docs on discover page navigation and display as page 1
+  const { loadedDocs, userData, allDocIds } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
   const userDataSchema = {
     recents: [],
@@ -34,17 +33,12 @@ export default function Discover() {
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
 
+  const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
+  //alter amount of docs loaded at start using main fetch limit
+
   //loads then stores docIds assigned to each page
   // "initital" value set by useEffect below after recieiving database response
-  const [docsByPage, setDocsByPage] = useState();
-
-  console.log("STATE LOADED:", docsByPage);
-
-  const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
-
-  // //store all doc ids for filter type, used to set display based
-  // const [currentDocIds, setCurrentDocIds] = useState()
-  
+  const [idsForPage, setidsForPage] = useState(getIdsPerPage(allDocIds));
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +48,7 @@ export default function Discover() {
   const [rightColumnDisplay, setRightColumnDisplay] = useState("documents");
   // Store all projects for current user:
   //temporary values to test:
+
   const [projects, setProjects] = useState([
     {
       id: "Project One",
@@ -69,84 +64,93 @@ export default function Discover() {
     },
   ]);
 
-  const [active, setActive] = useState("all docs");
-
-  // useEffect(() => {
-  //   //on change to display, update page buttons to match new data
-  //   setDocsByPage(getDocsPerPage(apiDocsDisplay));
-  // }, [apiDocsDisplay]);
+  const [active, setActive] = useState("documents");
 
   useEffect(() => {
-    getAllDocIds();
-  }, []);
-  async function getAllDocIds() {
-    // get all doc ids to be used in determining page assingment for id
-    const results = await fetch(`http://localhost:3001/getAllDocIds`, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((results) => results.json())
-      .then((json) => {
-        const docsPerPage = getDocsPerPage(json);
-        setDocsByPage(docsPerPage);
-      });
-    return results;
-  }
+    //For setting page buttons data
+    //if displaying anything else, it will be in client data as array of all the ids
 
-  function getDocsPerPage(docIds) {
+    if (active === "documents") {
+      //if displaying all documents, use loaded allDocIds
+      const idsForPage = getIdsPerPage(allDocIds);
+      setidsForPage(getIdsPerPage(idsForPage));
+      getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+      //display first page
+    } else {
+      const idsForPage = getIdsPerPage(clientUserData[active]);
+      setidsForPage(idsForPage);
+      getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+    }
+  }, [active]);
+
+  // async function getAllDocIds() {
+  //   // get all doc ids to be used in determining page assingment for id
+
+  // const results = await fetch(`http://localhost:3001/getAllDocIds`, {
+  //   method: "get",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // })
+  //   .then((results) => results.json())
+  //   .then((json) => {
+  //       const docsPerPage = getDocsPerPage(json);
+  //       setidsForPage(docsPerPage);
+  //     });
+  //   return results;
+  // }
+
+  function getIdsPerPage(docIds) {
     if (docIds) {
-      const numbOfDocsPerPage = 12;
-      let docsGroupedByPage = [];
-      let docsForPage = [];
+      const numbOfIdsPerPage = 8;
+      let idsGroupedByPage = [];
+      let idsForPage = [];
       let currentPage = 1;
-      docIds.map((doc, index) => {
-        docsForPage.push(doc._id);
-        if (index + 1 === numbOfDocsPerPage * currentPage) {
-          docsGroupedByPage.push(docsForPage);
-          docsForPage = [];
-          //reset docs for next page
+      docIds.map((docId, index) => {
+        idsForPage.push(docId);
+        if (index + 1 === numbOfIdsPerPage * currentPage) {
+          idsGroupedByPage.push(idsForPage);
+          idsForPage = [];
+          //reset ids for next page
           currentPage++;
         } else if (docIds.length === index + 1) {
           //if last doc, push partial array
-          docsGroupedByPage.push(docsForPage);
+          idsGroupedByPage.push(idsForPage);
         }
       });
-      console.log("docsGroupedByPage", docsGroupedByPage);
 
-      return docsGroupedByPage;
+      return idsGroupedByPage;
     }
   }
 
-  useEffect(() => {
-    //deterimine display option based on active selection
-    if (active) {
-      switch (active) {
-        case "bookmarks":
-          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);
-          break;
-        case "recents":
-          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.recents);
-          break;
-        case "flagged":
-          getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.flags);
-        case "documents":
-          // NO REQUEST. Set display to have loaded docs at start
-          setDisplayApiDocs(loadedDocs);
-          break;
-        case "ratings":
-          getDocsByArrayOfIdsAndUpdateDisplay([]);
-          break;
-        case "doc age":
-          getDocsByArrayOfIdsAndUpdateDisplay([]);
-          break;
-        case "last project":
-          getDocsByArrayOfIdsAndUpdateDisplay(projects[0].documentIds);
-          break;
-      }
-    }
-  }, [active]);
+  // useEffect(() => {
+  //   //deterimine display option based on active selection
+  //   if (active) {
+  //     switch (active) {
+  //       case "bookmarks":
+  //         getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);
+  //         break;
+  //       case "recents":
+  //         // getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.recents);
+  //         break;
+  //       case "flags":
+  //         getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.flags);
+  //       case "documents":
+  //         // NO REQUEST. Set display to have loaded docs at start
+  //         setDisplayApiDocs(loadedDocs);
+  //         break;
+  //       case "ratings":
+  //         getDocsByArrayOfIdsAndUpdateDisplay([]);
+  //         break;
+  //       case "docAge":
+  //         getDocsByArrayOfIdsAndUpdateDisplay([]);
+  //         break;
+  //       case "lastProject":
+  //         getDocsByArrayOfIdsAndUpdateDisplay(projects[0].documentIds);
+  //         break;
+  //     }
+  //   }
+  // }, [active]);
 
   //for determine display type using active selection
   async function getDocsByArrayOfIdsAndUpdateDisplay(idsArray) {
@@ -158,38 +162,18 @@ export default function Discover() {
       body: JSON.stringify(idsArray),
     })
       .then((results) => results.json())
-      .then((json) => {
-        setDisplayApiDocs(json);
+      .then((res) => {
+        // mongodb sends back array of documents in order of first in their database-
+        //must sort their response to match with our array that was sent(for recents to work)
+        let sortedResponse = new Array(idsArray.length);
+        res.map((responseItem) => {
+          const index = idsArray.indexOf(responseItem._id);
+          sortedResponse.splice(index, 1, responseItem);
+        });
+        setDisplayApiDocs(sortedResponse);
       });
   }
 
-  function handleSelectedDoc(e) {
-    const selectedDocId = e.currentTarget.id;
-
-    //update recents in db with updated recents array
-    let recentDocIds = [];
-    recentDocIds.push(selectedDocId);
-    clientUserData.recents.map((recentId) => {
-      if (!(selectedDocId == recentId)) {
-        recentDocIds.push(recentId);
-      }
-    });
-    setDisplayApiDocs;
-    //update recents with new recents array
-    //make sure array is not empty
-    if (!(recentDocIds[0] == "")) {
-      fetch(
-        `http://localhost:3001/user/${clientUserData._id}/saveArray/recents`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ docIds: recentDocIds }),
-        }
-      ).then((window.location.href = `/ApiDocViewer/${selectedDocId}`));
-    }
-  }
   function toggleSidebar() {
     setIsOpen(!isOpen);
   }
@@ -204,11 +188,11 @@ export default function Discover() {
         apiDoc={doc}
         loadIsSaved={loadIsSaved}
         loadIsFlagged={loadIsFlagged}
-        handleSelectedDoc={handleSelectedDoc}
         userID={clientUserData._id}
         setClientUserData={setClientUserData}
         projects={projects}
         setProjects={setProjects}
+        clientUserData={clientUserData}
       />
     );
   });
@@ -261,7 +245,7 @@ export default function Discover() {
           <PageSelection
             setDisplayApiDocs={setDisplayApiDocs}
             apiDocsDisplay={apiDocsDisplay}
-            docsByPage={docsByPage}
+            idsForPage={idsForPage}
           />
         </div>
       </div>

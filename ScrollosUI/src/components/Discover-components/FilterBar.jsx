@@ -13,16 +13,7 @@ export default function FilterBar(props) {
     active,
     setDisplayApiDocs,
     clientUserData,
-    loadedDocs,
-    projects,
   } = props;
-  const [hover, setHover] = useState();
-
-  // function handleFilter(e) {
-  //   const id = e.currentTarget.id;
-
-  //   setFilter(id.toLowerCase());
-  // }
 
   function handleClick(e) {
     setActive(e.currentTarget.id.toLowerCase());
@@ -59,7 +50,7 @@ export default function FilterBar(props) {
         clientUserData={clientUserData}
       />
       <FilterOption
-        activeId="last project"
+        activeId="lastProject"
         displayName="Last Project"
         img={LastProjectIcon}
         handleClick={handleClick}
@@ -86,7 +77,7 @@ export default function FilterBar(props) {
         clientUserData={clientUserData}
       />
       <FilterOption
-        activeId="doc age"
+        activeId="docAge"
         displayName="Doc Age"
         img={newDocIcon}
         handleClick={handleClick}
