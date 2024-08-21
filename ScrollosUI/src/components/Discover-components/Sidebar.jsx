@@ -9,6 +9,7 @@ import logoutIcon from "../../assets/sidebar-icons/logout.svg";
 import dropdownIcon from "../../assets/sideExpand.svg";
 import { useEffect, useState } from "react";
 export default function Sidebar(props) {
+  const [sidebarSelection, setSidebarSelection] = useState();
   const {
     isOpen,
     setRightColumnDisplay,
@@ -17,8 +18,6 @@ export default function Sidebar(props) {
     setProjects,
     setDisplayApiDocs,
     loadedDocs,
-    setActive,
-    active,
   } = props;
 
   function handleLogout() {
@@ -60,8 +59,8 @@ export default function Sidebar(props) {
           setRightColumnDisplay={setRightColumnDisplay}
           loadedDocs={loadedDocs}
           setProjects={setProjects}
-          active={active}
-          setActive={setActive}
+          sidebarSelection={sidebarSelection}
+          setSidebarSelection={setSidebarSelection}
         />
         <SidebarItem
           name="Projects"
@@ -71,9 +70,9 @@ export default function Sidebar(props) {
           setDisplayApiDocs={setDisplayApiDocs}
           setRightColumnDisplay={setRightColumnDisplay}
           setProjects={setProjects}
-          active={active}
-          setActive={setActive}
           dropdownIcon={dropdownIcon}
+          sidebarSelection={sidebarSelection}
+          setSidebarSelection={setSidebarSelection}
         />
 
         <SidebarItem
@@ -82,9 +81,9 @@ export default function Sidebar(props) {
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
           setProjects={setProjects}
-          active={active}
-          setActive={setActive}
           setRightColumnDisplay={setRightColumnDisplay}
+          sidebarSelection={sidebarSelection}
+          setSidebarSelection={setSidebarSelection}
         />
         <SidebarItem
           name="Notes"
@@ -92,9 +91,9 @@ export default function Sidebar(props) {
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
           setProjects={setProjects}
-          active={active}
-          setActive={setActive}
           setRightColumnDisplay={setRightColumnDisplay}
+          sidebarSelection={sidebarSelection}
+          setSidebarSelection={setSidebarSelection}
         />
         {/* border */}
         <div className="bottom-border"></div>
@@ -108,9 +107,9 @@ export default function Sidebar(props) {
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
             setProjects={setProjects}
-            active={active}
-            setActive={setActive}
             setRightColumnDisplay={setRightColumnDisplay}
+            sidebarSelection={sidebarSelection}
+            setSidebarSelection={setSidebarSelection}
           />
           <SidebarItem
             name="Notifications"
@@ -118,9 +117,9 @@ export default function Sidebar(props) {
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
             setProjects={setProjects}
-            active={active}
-            setActive={setActive}
             setRightColumnDisplay={setRightColumnDisplay}
+            sidebarSelection={sidebarSelection}
+            setSidebarSelection={setSidebarSelection}
           />
           <SidebarItem
             name="Logout"
@@ -128,9 +127,9 @@ export default function Sidebar(props) {
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
             setProjects={setProjects}
-            active={active}
-            setActive={setActive}
             setRightColumnDisplay={setRightColumnDisplay}
+            sidebarSelection={sidebarSelection}
+            setSidebarSelection={setSidebarSelection}
           />
         </div>
       </div>
@@ -145,12 +144,12 @@ function SidebarItem(props) {
     dropdownItems,
     setDisplayApiDocs,
     setProjects,
-    active,
     dropdownIcon,
-    setActive,
+    sidebarSelection,
+    setSidebarSelection,
   } = props;
   // const isSelected = rightColumnDisplay === name.toLowerCase();
-  const isSelected = name.toLowerCase() === active;
+  const isSelected = name.toLowerCase() === sidebarSelection;
   const [initialDropdownOrder, setInitialDropdownOrder] =
     useState(dropdownItems);
   //get initial dropdown order and prevent from changing when projects array changes.
@@ -164,7 +163,14 @@ function SidebarItem(props) {
 
     //reset dropdown selection on option selection
     // setDropdownSelection();
-    setActive(id);
+    // setActive(id);
+    if(id===sidebarSelection && sidebarSelection){
+      //if sidebar selection is already open and same sidebar option is selected
+      setSidebarSelection();
+    }else{
+      setSidebarSelection(id);
+
+    }
     setDropdownSelection();
   }
 
