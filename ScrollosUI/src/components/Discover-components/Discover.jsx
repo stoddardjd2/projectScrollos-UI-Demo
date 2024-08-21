@@ -253,20 +253,20 @@ export default function Discover() {
         <div className="left-column">
           <div className="divider">
             <div
-              style={
-                !isOpen
-                  ? {
-                      transition: ".5s ease-in-out all",
-                    }
-                  : { marginLeft: "0px", transition: "1s ease-in-out all" }
-              }
+              // style={
+              //   !isOpen
+              //     ? {
+              //         transition: ".2s ease-in-out all",
+              //       }
+              //     : { marginLeft: "0px", transition: "1s ease-in-out all" }
+              // }
               onClick={toggleSidebar}
               className="right-split"
             >
               <img
                 style={{
                   transform: !isOpen ? "rotate(0deg)" : "rotate(180deg)",
-                  transition: "1s ease-in-out all",
+                  transition: ".5s ease-in-out all",
                 }}
                 src={sideExpandIcon}
               />

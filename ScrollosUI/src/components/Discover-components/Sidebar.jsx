@@ -32,10 +32,10 @@ export default function Sidebar(props) {
           ? {
               width: "0px",
               // transform:"translate(-300px, 0)",
-              transition: ".5s ease-in-out all",
+              transition: "0s ease-in-out all",
             }
           : {
-              transition: ".5s ease-in-out all",
+              transition: "0s ease-in-out all",
             }
       }
     >
