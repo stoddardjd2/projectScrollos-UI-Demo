@@ -6,6 +6,7 @@ import notesIcon from "../../assets/sidebar-icons/notes.svg";
 import settingsIcon from "../../assets/sidebar-icons/settings.svg";
 import notificationsIcon from "../../assets/sidebar-icons/notifications.svg";
 import logoutIcon from "../../assets/sidebar-icons/logout.svg";
+import dropdownIcon from "../../assets/sideExpand.svg";
 import { useEffect, useState } from "react";
 export default function Sidebar(props) {
   const {
@@ -16,25 +17,9 @@ export default function Sidebar(props) {
     setProjects,
     setDisplayApiDocs,
     loadedDocs,
+    setActive,
+    active,
   } = props;
-  const [dropdownSelection, setDropdownSelection] = useState();
-
-  useEffect(() => {
-    console.log("projects", projects);
-  }, [projects]);
-
-  function handleOptionSelection(e) {
-    //changing display disabled in rightColumn.jsx!!!
-    const id = e.currentTarget.id.toLowerCase();
-
-    //if documents selected, set apiDocs to loaded docs
-    if (loadedDocs) {
-      setDisplayApiDocs(loadedDocs);
-    }
-    setRightColumnDisplay(id);
-    //reset dropdown selection on option selection
-    setDropdownSelection();
-  }
 
   function handleLogout() {
     window.location.href = "/";
@@ -74,9 +59,9 @@ export default function Sidebar(props) {
           setDisplayApiDocs={setDisplayApiDocs}
           setRightColumnDisplay={setRightColumnDisplay}
           loadedDocs={loadedDocs}
-          handleOptionSelection={handleOptionSelection}
-          setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
+          setActive={setActive}
         />
         <SidebarItem
           name="Projects"
@@ -84,11 +69,11 @@ export default function Sidebar(props) {
           rightColumnDisplay={rightColumnDisplay}
           dropdownItems={projects}
           setDisplayApiDocs={setDisplayApiDocs}
-          handleOptionSelection={handleOptionSelection}
           setRightColumnDisplay={setRightColumnDisplay}
-          setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
-          dropdownSelection={dropdownSelection}
+          active={active}
+          setActive={setActive}
+          dropdownIcon={dropdownIcon}
         />
 
         <SidebarItem
@@ -96,10 +81,9 @@ export default function Sidebar(props) {
           img={discussionsIcon}
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
-          handleOptionSelection={handleOptionSelection}
-          dropdownSelection={dropdownSelection}
-          setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
+          setActive={setActive}
           setRightColumnDisplay={setRightColumnDisplay}
         />
         <SidebarItem
@@ -107,10 +91,9 @@ export default function Sidebar(props) {
           img={notesIcon}
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
-          handleOptionSelection={handleOptionSelection}
-          dropdownSelection={dropdownSelection}
-          setDropdownSelection={setDropdownSelection}
           setProjects={setProjects}
+          active={active}
+          setActive={setActive}
           setRightColumnDisplay={setRightColumnDisplay}
         />
         {/* border */}
@@ -124,10 +107,9 @@ export default function Sidebar(props) {
             img={settingsIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
-            handleOptionSelection={handleOptionSelection}
-            dropdownSelection={dropdownSelection}
-            setDropdownSelection={setDropdownSelection}
             setProjects={setProjects}
+            active={active}
+            setActive={setActive}
             setRightColumnDisplay={setRightColumnDisplay}
           />
           <SidebarItem
@@ -135,10 +117,9 @@ export default function Sidebar(props) {
             img={notificationsIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
-            handleOptionSelection={handleOptionSelection}
-            dropdownSelection={dropdownSelection}
-            setDropdownSelection={setDropdownSelection}
             setProjects={setProjects}
+            active={active}
+            setActive={setActive}
             setRightColumnDisplay={setRightColumnDisplay}
           />
           <SidebarItem
@@ -146,10 +127,9 @@ export default function Sidebar(props) {
             img={logoutIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
-            handleOptionSelection={handleOptionSelection}
-            dropdownSelection={dropdownSelection}
-            setDropdownSelection={setDropdownSelection}
             setProjects={setProjects}
+            active={active}
+            setActive={setActive}
             setRightColumnDisplay={setRightColumnDisplay}
           />
         </div>
@@ -164,12 +144,45 @@ function SidebarItem(props) {
     rightColumnDisplay,
     dropdownItems,
     setDisplayApiDocs,
-    handleOptionSelection,
-    dropdownSelection,
-    setDropdownSelection,
     setProjects,
+    active,
+    dropdownIcon,
+    setActive,
   } = props;
-  const isSelected = rightColumnDisplay === name.toLowerCase();
+  // const isSelected = rightColumnDisplay === name.toLowerCase();
+  const isSelected = name.toLowerCase() === active;
+  const [initialDropdownOrder, setInitialDropdownOrder] =
+    useState(dropdownItems);
+  //get initial dropdown order and prevent from changing when projects array changes.
+  //only change when adding new projects
+
+  const [dropdownSelection, setDropdownSelection] = useState();
+
+  function handleOptionSelection(e) {
+    //changing display disabled in rightColumn.jsx!!!
+    const id = e.currentTarget.id.toLowerCase();
+
+    //reset dropdown selection on option selection
+    // setDropdownSelection();
+    setActive(id);
+    setDropdownSelection();
+  }
+
+  useEffect(() => {
+    //if project created, get that project from array and add to initial array
+    if (dropdownItems) {
+      //check if dropdown exists for current option
+      if (dropdownItems.length > initialDropdownOrder.length) {
+        //check if dropdownItems length is greater, indicating project was added
+        setInitialDropdownOrder((prev) => {
+          //add new project to front of array(new item will be first value in array)
+          prev.unshift(dropdownItems[0]);
+          // prev.splice(1, 0, dropdownItems[0]);
+          return [...prev];
+        });
+      }
+    }
+  }, [dropdownItems]);
 
   function handleDropdownSelection(e) {
     const id = e.currentTarget.id;
@@ -227,24 +240,58 @@ function SidebarItem(props) {
           style={isSelected ? { filter: "brightness(100)" } : {}}
         />
         <div className="sidebar-item">{name}</div>
+        {dropdownIcon && (
+          <img
+            src={dropdownIcon}
+            className="dropdown-icon"
+            style={
+              isSelected
+                ? {
+                    transform: "rotate(-90deg)",
+                    transition: ".3s ease-in-out transform",
+                  }
+                : {
+                    transition: ".3s ease-in-out transform",
+                    transform: "rotate(90deg)",
+                    filter: "brightness(0)",
+                  }
+            }
+          />
+        )}
       </div>
-      {/*show dropdown if exists and selected */}
-      {dropdownItems && isSelected && (
-        <>
-          {dropdownItems.map((item, index) => {
+      {/*render dropdown if exists */}
+      {initialDropdownOrder && (
+        // <div className="dropdown-items-container-restricter">
+        <div
+          className="dropdown-items-container"
+          style={
+            !isSelected
+              ? {
+                  // height: "0px",
+                  transition: ".3s linear all",
+                  maxHeight: "0px",
+                }
+              : {
+                  // height: "auto",
+                  maxHeight: "100px",
+                  transition: ".3s linear all",
+                }
+          }
+        >
+          {initialDropdownOrder.map((item, index) => {
             return (
               //if dropdown item selected, add selection styling
               <div
                 style={
-                  dropdownSelection === dropdownItems[index].id
+                  dropdownSelection === initialDropdownOrder[index].id
                     ? {
                         backgroundColor: "var(--primary-light)",
                         color: "white",
                       }
                     : {}
                 }
-                id={dropdownItems[index].id}
-                key={dropdownItems[index].id}
+                id={initialDropdownOrder[index].id}
+                key={initialDropdownOrder[index].id}
                 onClick={handleDropdownSelection}
                 className="dropdown-item"
               >
@@ -252,7 +299,8 @@ function SidebarItem(props) {
               </div>
             );
           })}
-        </>
+        </div>
+        // </div>
       )}
     </div>
   );

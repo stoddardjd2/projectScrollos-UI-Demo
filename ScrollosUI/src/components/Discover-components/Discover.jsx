@@ -14,32 +14,41 @@ import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
 import userIcon from "../../assets/sidebar-icons/user.svg";
-
 import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
+import PageSelection from "./PageSelection";
 export default function Discover() {
-  const { loadedDocs, userData } = useLoaderData();
+  const { loadedDocs, userData, allDocIds } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
-  const userDataSchema = { recents: [], bookmarks: [], notes: [], flags: [] };
+  const userDataSchema = {
+    recents: [],
+    bookmarks: [],
+    notes: [],
+    flags: [],
+    recentProjects: [],
+  };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
+
   const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
+  //alter amount of docs loaded at start using main fetch limit
+
+  //loads then stores docIds assigned to each page
+  // "initital" value set by useEffect below after recieiving database response
+  const [idsForPage, setidsForPage] = useState(getIdsPerPage(allDocIds));
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    console.log("disc. DISPLAY CHANGE:", apiDocsDisplay);
-  }, [apiDocsDisplay]);
 
   // for controlling right column display:
   //Changed by sidebar selection
   const [rightColumnDisplay, setRightColumnDisplay] = useState("documents");
   // Store all projects for current user:
   //temporary values to test:
+
   const [projects, setProjects] = useState([
     {
       id: "Project One",
@@ -55,33 +64,116 @@ export default function Discover() {
     },
   ]);
 
-  function handleSelectedDoc(e) {
-    const selectedDocId = e.currentTarget.id;
+  const [active, setActive] = useState("documents");
 
-    //update recents in db with updated recents array
-    let recentDocIds = [];
-    recentDocIds.push(selectedDocId);
-    clientUserData.recents.map((recentId) => {
-      if (!(selectedDocId == recentId)) {
-        recentDocIds.push(recentId);
-      }
-    });
-    setDisplayApiDocs;
-    //update recents with new recents array
-    //make sure array is not empty
-    if (!(recentDocIds[0] == "")) {
-      fetch(
-        `http://localhost:3001/user/${clientUserData._id}/saveArray/recents`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ docIds: recentDocIds }),
+  useEffect(() => {
+    //For setting page buttons data
+    //if displaying anything else, it will be in client data as array of all the ids
+
+    if (active === "documents") {
+      //if displaying all documents, use loaded allDocIds
+      const idsForPage = getIdsPerPage(allDocIds);
+      setidsForPage(getIdsPerPage(idsForPage));
+      getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+      //display first page
+    } else {
+      const idsForPage = getIdsPerPage(clientUserData[active]);
+      setidsForPage(idsForPage);
+      getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+    }
+  }, [active]);
+
+  // async function getAllDocIds() {
+  //   // get all doc ids to be used in determining page assingment for id
+
+  // const results = await fetch(`http://localhost:3001/getAllDocIds`, {
+  //   method: "get",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  // })
+  //   .then((results) => results.json())
+  //   .then((json) => {
+  //       const docsPerPage = getDocsPerPage(json);
+  //       setidsForPage(docsPerPage);
+  //     });
+  //   return results;
+  // }
+
+  function getIdsPerPage(docIds) {
+    if (docIds) {
+      const numbOfIdsPerPage = 8;
+      let idsGroupedByPage = [];
+      let idsForPage = [];
+      let currentPage = 1;
+      docIds.map((docId, index) => {
+        idsForPage.push(docId);
+        if (index + 1 === numbOfIdsPerPage * currentPage) {
+          idsGroupedByPage.push(idsForPage);
+          idsForPage = [];
+          //reset ids for next page
+          currentPage++;
+        } else if (docIds.length === index + 1) {
+          //if last doc, push partial array
+          idsGroupedByPage.push(idsForPage);
         }
-      ).then((window.location.href = `/ApiDocViewer/${selectedDocId}`));
+      });
+
+      return idsGroupedByPage;
     }
   }
+
+  // useEffect(() => {
+  //   //deterimine display option based on active selection
+  //   if (active) {
+  //     switch (active) {
+  //       case "bookmarks":
+  //         getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);
+  //         break;
+  //       case "recents":
+  //         // getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.recents);
+  //         break;
+  //       case "flags":
+  //         getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.flags);
+  //       case "documents":
+  //         // NO REQUEST. Set display to have loaded docs at start
+  //         setDisplayApiDocs(loadedDocs);
+  //         break;
+  //       case "ratings":
+  //         getDocsByArrayOfIdsAndUpdateDisplay([]);
+  //         break;
+  //       case "docAge":
+  //         getDocsByArrayOfIdsAndUpdateDisplay([]);
+  //         break;
+  //       case "lastProject":
+  //         getDocsByArrayOfIdsAndUpdateDisplay(projects[0].documentIds);
+  //         break;
+  //     }
+  //   }
+  // }, [active]);
+
+  //for determine display type using active selection
+  async function getDocsByArrayOfIdsAndUpdateDisplay(idsArray) {
+    fetch(`http://localhost:3001/read/ids/${1000}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(idsArray),
+    })
+      .then((results) => results.json())
+      .then((res) => {
+        // mongodb sends back array of documents in order of first in their database-
+        //must sort their response to match with our array that was sent(for recents to work)
+        let sortedResponse = new Array(idsArray.length);
+        res.map((responseItem) => {
+          const index = idsArray.indexOf(responseItem._id);
+          sortedResponse.splice(index, 1, responseItem);
+        });
+        setDisplayApiDocs(sortedResponse);
+      });
+  }
+
   function toggleSidebar() {
     setIsOpen(!isOpen);
   }
@@ -96,11 +188,11 @@ export default function Discover() {
         apiDoc={doc}
         loadIsSaved={loadIsSaved}
         loadIsFlagged={loadIsFlagged}
-        handleSelectedDoc={handleSelectedDoc}
         userID={clientUserData._id}
         setClientUserData={setClientUserData}
         projects={projects}
         setProjects={setProjects}
+        clientUserData={clientUserData}
       />
     );
   });
@@ -142,17 +234,19 @@ export default function Discover() {
             loadedDocs={loadedDocs}
             clientUserData={clientUserData}
             projects={projects}
+            active={active}
+            setActive={setActive}
           />
           {/* <Sort
             allApiDocs={loadedDocs}
             setDisplayApiDocs={setDisplayApiDocs}
             clientUserData={clientUserData}
           /> */}
-          <div className="page-container">
-            <div className="page">1</div>
-            <div className="page">2</div>
-            <div className="page">3</div>
-          </div>
+          <PageSelection
+            setDisplayApiDocs={setDisplayApiDocs}
+            apiDocsDisplay={apiDocsDisplay}
+            idsForPage={idsForPage}
+          />
         </div>
       </div>
       <div className="discover">
@@ -188,6 +282,8 @@ export default function Discover() {
                 rightColumnDisplay={rightColumnDisplay}
                 setRightColumnDisplay={setRightColumnDisplay}
                 loadedDocs={loadedDocs}
+                setActive={setActive}
+                active={active}
               />
             </div>
           </div>

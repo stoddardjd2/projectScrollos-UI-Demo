@@ -17,20 +17,52 @@ export default function DocCards(props) {
     setClientUserData,
     apiDoc,
     loadIsSaved,
-    handleSelectedDoc,
     userID,
     loadIsFlagged,
     projects,
-    setProjects
+    setProjects,
+    clientUserData,
   } = props;
   const [isSaved, setIsSaved] = useState(loadIsSaved);
   // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
   const [action, setAction] = useState({ active: false, type: "none" });
   // const [IsinfoFlipped, setIsInfoFlipped] = useState(false);
 
+  const [mouseOverStar, setMouseOverStar] = useState();
+  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+  function handleSelectedDoc(e) {
+    const selectedDocId = e.currentTarget.id;
+    //update recents in db with updated recents array
+    let recentDocIds = [];
+    recentDocIds.push(selectedDocId);
+    clientUserData.recents.map((recentId) => {
+      if (!(selectedDocId == recentId)) {
+        recentDocIds.push(recentId);
+      }
+    });
+    
+    console.log("updated client data")
+    setClientUserData((prev) => ({ ...prev, recents: recentDocIds }));
 
+    //update recents with new recents array
+    //make sure array is not empty
+    if (!(recentDocIds[0] == "")) {
+      fetch(
+        `http://localhost:3001/user/${clientUserData._id}/saveArray/recents`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ docIds: recentDocIds }),
+        }
+      ).then(() => {
+        window.location.href = `/ApiDocViewer/${selectedDocId}`;
+      });
+    }
+  }
 
   function handleSave(e) {
     e.stopPropagation();
@@ -39,7 +71,6 @@ export default function DocCards(props) {
     //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
     //save:
     if (!isSaved) {
-
       setClientUserData((prev) => ({
         ...prev,
         bookmarks: [...prev.bookmarks, apiDoc._id],
@@ -72,33 +103,6 @@ export default function DocCards(props) {
     }
   }
 
-  // //have flags visable for entire company
-  // function handleFlag(e) {
-  //   e.stopPropagation();
-  //   setIsFlagged(!isFlagged);
-  //   //save changes to database:
-  //   //add to database if saving
-  //   //NOTE: use opposite of isSaved since toggling value to opposite on click stylingAfter function runs
-  //   if (!isFlagged) {
-  //     fetch(`http://localhost:3001/user/${userID}/save/flags`, {
-  //       method: "PATCH",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ docID: apiDoc._id }),
-  //     });
-  //     //remove from database if unsaving
-  //   } else if (isFlagged) {
-  //     fetch(`http://localhost:3001/user/${userID}/remove/flags`, {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ docID: apiDoc._id }),
-  //     });
-  //   }
-  // }
-
   async function handleAction(e) {
     const id = e.currentTarget.id;
     // if switching to new action view when different action view is open-
@@ -123,6 +127,68 @@ export default function DocCards(props) {
         });
       }
     }
+  }
+
+  function handleToggleAddRating() {
+    setIsAddRatingExpanded(!isAddRatingExpanded);
+  }
+  function handleAddRating(e) {
+    const rating = e.currentTarget.id;
+    console.log("adding rating of :", rating);
+
+    // FETCH DATABASE AND ADD RATING!
+  }
+  function handleMouseOverStar(e) {
+    const id = e.currentTarget.id;
+    setMouseOverStar(id);
+  }
+
+  function getAverageRating(ratings) {
+    if (ratings) {
+      if (ratings.length === 0) {
+        return { sum: 0, average: 0 };
+      }
+
+      let totalSum = ratings.reduce(
+        (acc, ratingObj) => acc + parseFloat(ratingObj.rating),
+        0
+      );
+      let average = totalSum / ratings.length;
+
+      // Rounding the average to the nearest tenth
+      let roundedAverage = Math.round(average * 10) / 10;
+
+      return roundedAverage;
+    } else return 0;
+  }
+
+  function getRatingElements() {
+    const ratingDelays = [
+      { enter: "0.4s", exit: "0s" },
+      { enter: "0.3s", exit: "0.1s" },
+      { enter: "0.2s", exit: "0.2s" },
+      { enter: "0.1s", exit: "0.3s" },
+    ];
+    return ratingDelays.map((ratingDelay, index) => {
+      return (
+        <img
+          key={index}
+          src={starIcon}
+          className="star"
+          onClick={handleAddRating}
+          id={index + 2}
+          style={
+            isAddRatingExpanded
+              ? // if expanded:
+                mouseOverStar >= index + 2
+                ? { opacity: "100%", transition: "0s ease-in-out all" }
+                : { transition: "0s ease-in-out all", opacity: " 40%" }
+              : //if not expanded:
+                { opacity: " 40%" }
+          }
+        />
+      );
+    });
   }
 
   function getStyleForAction(target) {
@@ -202,7 +268,7 @@ export default function DocCards(props) {
           minHeight: "0em",
           // transform: "translate(40px 40px)",
           marginTop: "-80px",
-          marginLeft:"20px",
+          marginLeft: "20px",
           // marginBottom: "-50px",
           padding: "0px",
         };
@@ -362,10 +428,43 @@ export default function DocCards(props) {
               : { transition: ".5s ease-in-out all", overflow: "hidden" }
           }
         >
-          <div className="updated">8/8/2024 </div>
-          <div className="rating-container">
-            <img src={starIcon} className="star" />
-            <div className="rating">5.0 (15)</div>
+          <div className="updated">Opened 8/8/2024 </div>
+          <div
+            className="rating-container"
+            onClick={handleToggleAddRating}
+            onMouseOver={(e) => setMouseOverStar(e.target.id)}
+            onMouseLeave={() => setMouseOverStar()}
+          >
+            <img
+              src={starIcon}
+              id={1}
+              // onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
+              // onMouseLeave={() => setMouseOverStar()}
+              className="star"
+              style={
+                isAddRatingExpanded
+                  ? // if expanded:
+                    mouseOverStar >= 1
+                    ? { opacity: "100%", transition: "0s ease-in-out all" }
+                    : { transition: "0s ease-in-out all", opacity: "40%" }
+                  : //if not expanded:
+                    {}
+              }
+              onClick={(e) => {
+                //only set rating if expanded
+                isAddRatingExpanded && handleAddRating(e);
+              }}
+            />
+
+            <div
+              className="add-rating-container"
+              style={!isAddRatingExpanded ? { width: "0%" } : { width: "100%" }}
+            >
+              {getRatingElements()}
+            </div>
+            <div className="rating">
+              {getAverageRating(apiDoc.ratings.reviews)}
+            </div>
           </div>
         </div>
 
@@ -381,7 +480,13 @@ export default function DocCards(props) {
         <NotesView getStyleForAction={getStyleForAction} action={action} />
 
         {/* if add is clicked: */}
-        <AddView apiDoc={apiDoc} projects={projects} setProjects={setProjects} action={action} getStyleForAction={getStyleForAction} />
+        <AddView
+          apiDoc={apiDoc}
+          projects={projects}
+          setProjects={setProjects}
+          action={action}
+          getStyleForAction={getStyleForAction}
+        />
 
         <div
           className="actions-container"
@@ -429,10 +534,24 @@ export default function DocCards(props) {
               onClick={handleAction}
             />
           </div> */}
-          <ActionButton type="comment" img={commentIcon} handleAction={handleAction} action={action} />
-          <ActionButton type="add" img={addIcon} handleAction={handleAction} action={action} />
-          <ActionButton type="info" img={infoIcon} handleAction={handleAction} action={action} />
-        
+          <ActionButton
+            type="comment"
+            img={commentIcon}
+            handleAction={handleAction}
+            action={action}
+          />
+          <ActionButton
+            type="add"
+            img={addIcon}
+            handleAction={handleAction}
+            action={action}
+          />
+          <ActionButton
+            type="info"
+            img={infoIcon}
+            handleAction={handleAction}
+            action={action}
+          />
         </div>
       </div>
 
