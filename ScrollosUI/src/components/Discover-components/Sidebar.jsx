@@ -18,7 +18,8 @@ export default function Sidebar(props) {
     setClientUserData,
     setDisplayApiDocs,
     loadedDocs,
-    setActive
+    setActive,
+    allDocIds,
   } = props;
 
   function handleLogout() {
@@ -62,6 +63,8 @@ export default function Sidebar(props) {
           setClientUserData={setClientUserData}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
+          allDocIds={allDocIds}
+          setActive={setActive}
         />
         <SidebarItem
           name="Projects"
@@ -149,7 +152,8 @@ function SidebarItem(props) {
     dropdownIcon,
     sidebarSelection,
     setSidebarSelection,
-    setActive
+    setActive,
+    allDocIds,
   } = props;
   // const isSelected = rightColumnDisplay === name.toLowerCase();
   const isSelected = name.toLowerCase() === sidebarSelection;
@@ -167,12 +171,16 @@ function SidebarItem(props) {
     //reset dropdown selection on option selection
     // setDropdownSelection();
     // setActive(id);
-    if(id===sidebarSelection && sidebarSelection){
+    if (id === sidebarSelection && sidebarSelection) {
       //if sidebar selection is already open and same sidebar option is selected
       setSidebarSelection();
-    }else{
+    } else {
       setSidebarSelection(id);
-
+      //control docs to display on option selection:
+      if (id === "documents") {
+        console.log("setting to", allDocIds)
+        setActive(allDocIds);
+      }
     }
     setDropdownSelection();
   }
@@ -204,7 +212,6 @@ function SidebarItem(props) {
         indexOfCurrentProject = index;
       }
     });
-    
 
     //push selected proejct to front of array
     // setProjects();
@@ -214,7 +221,7 @@ function SidebarItem(props) {
       prevProjectsCopy.splice(indexOfCurrentProject, 1);
       prevProjectsCopy.unshift(prev.projects[indexOfCurrentProject]);
       // const recentOrderArray = prevProjects.concat(prevProjectsCopy)
-      return ({...prev, projects: [...prevProjectsCopy]});
+      return { ...prev, projects: [...prevProjectsCopy] };
     });
 
     // const documentsArray = dropdownItems[id].documentIds;
@@ -229,9 +236,7 @@ function SidebarItem(props) {
     // })
     //   .then((results) => results.json())
     //   .then((json) => setActive(json));
-    console.log("docs arrray", documentsArray
-    )
-    setActive(documentsArray)
+    setActive(documentsArray);
   }
 
   return (

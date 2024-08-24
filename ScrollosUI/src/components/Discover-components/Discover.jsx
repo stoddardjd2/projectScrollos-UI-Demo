@@ -245,6 +245,7 @@ export default function Discover() {
                 loadedDocs={loadedDocs}
                 setActive={setActive}
                 active={active}
+                allDocIds={allDocIds}
               />
             </div>
           </div>

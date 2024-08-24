@@ -5,7 +5,7 @@ export default function FilterOption(props) {
     displayName,
     img,
     handleClick,
-    active,
+    activeFilter,
     slider,
     sortOption1,
     sortOption2,
@@ -25,7 +25,7 @@ export default function FilterOption(props) {
         <div
           //   className="option"
           className={
-            slider && active === activeId
+            slider && activeFilter === activeId
               ? "option option-if-slidebar-active"
               : "option option-if-slidebar-inactive"
           }
@@ -37,7 +37,7 @@ export default function FilterOption(props) {
         <div
           onClick={handleSort}
           className={
-            slider && active === activeId
+            slider && activeFilter === activeId
               ? "sort-container sort-active"
               : "sort-container sort-inactive"
           }
@@ -63,7 +63,7 @@ export default function FilterOption(props) {
         </div>
         <div
           className={
-            active === activeId
+            activeFilter === activeId
               ? "bottom-border active"
               : "bottom-border inactive"
           }

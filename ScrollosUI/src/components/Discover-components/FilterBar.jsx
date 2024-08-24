@@ -14,7 +14,8 @@ export default function FilterBar(props) {
   const [activeFilter, setActiveFilter] = useState("all docs");
 
   function handleClick(e) {
-    const activeId = e.currentTarget.id.toLowerCase();
+    const activeId = e.currentTarget.id
+    setActiveFilter(activeId);
     if (activeId === "documents") {
       setActive(allDocIds);
     } else if (activeId === "recents") {
@@ -22,12 +23,9 @@ export default function FilterBar(props) {
     } else if (activeId === "bookmarks") {
       setActive(clientUserData.bookmarks);
     } else if (activeId === "lastproject") {
-      console.log("lastproject:", clientUserData.projects[0].documentIds)
       setActive(clientUserData.projects[0].documentIds);
     } else if (activeId === "ratings") {
-
     } else if (activeId === "docage") {
-      
     }
   }
 
@@ -39,7 +37,7 @@ export default function FilterBar(props) {
         displayName="All Docs"
         img={allDocsIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
@@ -48,7 +46,7 @@ export default function FilterBar(props) {
         displayName="Recents"
         img={recentsIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
@@ -57,16 +55,16 @@ export default function FilterBar(props) {
         displayName="Bookmarks"
         img={bookmarkIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
       <FilterOption
-        activeId="lastProject"
+        activeId="lastproject"
         displayName="Last Project"
         img={LastProjectIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
@@ -79,7 +77,7 @@ export default function FilterBar(props) {
         displayName="Ratings"
         img={starIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         slider={true}
         sortByIcon={sortByIcon}
         sortImg={sortByIcon}
@@ -89,11 +87,11 @@ export default function FilterBar(props) {
         clientUserData={clientUserData}
       />
       <FilterOption
-        activeId="docAge"
+        activeId="docage"
         displayName="Doc Age"
         img={newDocIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         slider={true}
         sortByIcon={sortByIcon}
         sortImg={sortByIcon}
