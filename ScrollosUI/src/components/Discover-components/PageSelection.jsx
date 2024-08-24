@@ -121,7 +121,7 @@ export default function PageSelection(props) {
   return (
     <>
       <div className="page-container">
-        {currentPage >= 2 && (
+        {currentPage >= 2 && idsForPage.length >= 4 && (
           <button onClick={handlePrevClick} className="prev-page">
             <div>Prev</div>
           </button>
@@ -142,28 +142,32 @@ export default function PageSelection(props) {
         >
           {1}
         </div>
-        {currentPage >= 2 && idsForPage.length >= 4 && (
-          <div className="spacing">...</div>
+        {idsForPage.length >= 2 && (
+          <>
+            {currentPage >= 2 && idsForPage.length >= 4 && (
+              <div className="spacing">...</div>
+            )}
+            {allPageElements}
+            {idsForPage.length >= 4 && <div className="spacing">...</div>}
+            {/* display last page option possible */}
+            <div
+              onClick={handleSetPage}
+              className="page"
+              key={idsForPage.length - 1}
+              id={idsForPage.length - 1}
+              style={
+                currentPage == idsForPage.length - 1
+                  ? {
+                      backgroundColor: "white",
+                      color: "black",
+                    }
+                  : {}
+              }
+            >
+              {idsForPage.length}
+            </div>
+          </>
         )}
-        {allPageElements}
-        {idsForPage.length >= 4 && <div className="spacing">...</div>}
-        {/* display last page option possible */}
-        <div
-          onClick={handleSetPage}
-          className="page"
-          key={idsForPage.length - 1}
-          id={idsForPage.length - 1}
-          style={
-            currentPage == idsForPage.length - 1
-              ? {
-                  backgroundColor: "white",
-                  color: "black",
-                }
-              : {}
-          }
-        >
-          {idsForPage.length}
-        </div>
       </div>
     </>
   );

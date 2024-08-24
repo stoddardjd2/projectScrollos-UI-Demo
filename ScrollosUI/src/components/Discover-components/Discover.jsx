@@ -92,7 +92,7 @@ export default function Discover() {
 
   function getIdsPerPage(docIds) {
     if (docIds) {
-      const numbOfIdsPerPage = 1;
+      const numbOfIdsPerPage = 2;
       let idsGroupedByPage = [];
       let idsForPage = [];
       let currentPage = 1;
