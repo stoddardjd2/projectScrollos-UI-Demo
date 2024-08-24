@@ -436,6 +436,7 @@ button:hover {
           animation: expand 0.2s ease-in-out;
         }
         .icon {
+        user-select: none;
           width: 24px;
           max-width: 1.5em;
           max-height: 1.5em;
@@ -574,6 +575,8 @@ button:hover {
   /* card items */
   .bookmark-container {
     min-height: 1em;
+    user-select: none;
+
   }
   .save {
     width: 1.5em;
@@ -664,6 +667,8 @@ button:hover {
         width: 1em;
         transform: translate(0, -0.1em);
         transition: 0.5s ease-in-out all;
+        user-select: none;
+
       }
     }
   }
@@ -678,6 +683,7 @@ button:hover {
     }
     .status-icon {
       flex: 0.4;
+      user-select: none;
     }
   }
 
@@ -690,7 +696,7 @@ button:hover {
     margin: 0.5em 0em;
     align-items: center;
     justify-content: space-around;
-
+    user-select: none;
     .container:hover {
       transform: scale(1.1);
     }
@@ -731,6 +737,7 @@ button:hover {
     }
 
     .loading {
+      user-select: none;
       animation: rotate 1.5s ease-in-out infinite;
     }
 
@@ -767,6 +774,7 @@ button:hover {
         }
         .status {
           width: 1em;
+          user-select: none;
           /* crop deny icon (and all others) */
         }
       }
@@ -896,6 +904,7 @@ button:hover {
         }
       }
       .icon {
+        user-select: none;
       }
       input {
         /* font-family: "Inter", sans-serif; */
@@ -947,6 +956,8 @@ button:hover {
       }
     }
     .icon {
+      user-select: none;
+
       width: 20px;
       height: 20px;
       margin-right: 0.4em;
