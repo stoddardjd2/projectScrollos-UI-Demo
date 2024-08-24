@@ -547,7 +547,7 @@ button:hover {
   grid-template-columns: repeat(auto-fit, minmax(18.25em, 18.25em));
   column-gap: 2em;
   row-gap: 4em;
-  justify-content: center;
+  justify-content: left;
 }
 .doc-card:hover {
   /* background-color: var(--card-hover); */

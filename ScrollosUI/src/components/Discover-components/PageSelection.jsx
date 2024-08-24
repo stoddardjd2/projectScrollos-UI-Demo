@@ -62,7 +62,6 @@ export default function PageSelection(props) {
         currentPage >= idsForPage.length - 4 &&
         index >= idsForPage.length - 4
       ) {
-        console.log("length:", idsForPage.length - 3);
         return (
           <div
             onClick={handleSetPage}

@@ -92,7 +92,7 @@ export default function Discover() {
 
   function getIdsPerPage(docIds) {
     if (docIds) {
-      const numbOfIdsPerPage = 2;
+      const numbOfIdsPerPage = 8;
       let idsGroupedByPage = [];
       let idsForPage = [];
       let currentPage = 1;
@@ -171,7 +171,7 @@ export default function Discover() {
 
           {/* <div style={{display:"flex", alignItems: "center"}}> */}
           <Search
-            setDisplayApiDocs={setDisplayApiDocs}
+            setActive={setActive}
             allApiDocs={loadedDocs}
             apiDocsDisplay={apiDocsDisplay}
           />
