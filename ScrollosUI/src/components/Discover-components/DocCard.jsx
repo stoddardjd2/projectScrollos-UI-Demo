@@ -20,7 +20,6 @@ export default function DocCards(props) {
     userID,
     loadIsFlagged,
     projects,
-    setProjects,
     clientUserData,
   } = props;
   const [isSaved, setIsSaved] = useState(loadIsSaved);
@@ -468,8 +467,10 @@ export default function DocCards(props) {
           </div>
         </div>
 
-        {/* if info is clicked*/}
 
+
+
+        {/* if info is clicked*/}
         <InfoView
           getStyleForAction={getStyleForAction}
           apiDoc={apiDoc}
@@ -483,7 +484,7 @@ export default function DocCards(props) {
         <AddView
           apiDoc={apiDoc}
           projects={projects}
-          setProjects={setProjects}
+          setClientUserData={setClientUserData}
           action={action}
           getStyleForAction={getStyleForAction}
         />

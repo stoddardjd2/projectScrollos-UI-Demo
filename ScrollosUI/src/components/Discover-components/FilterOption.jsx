@@ -14,21 +14,14 @@ export default function FilterOption(props) {
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
+
   function handleSort(e) {
     setSort((prev) => !prev);
   }
 
   return (
-    <div
-      id={activeId}
-      className="sort-main-container"
-      onClick={(e) => {
-        handleClick(e);
-      }}
-    >
-      <div
-        className="option-container"
-      >
+    <div id={activeId} className="sort-main-container" onClick={handleClick}>
+      <div className="option-container">
         <div
           //   className="option"
           className={
@@ -70,7 +63,9 @@ export default function FilterOption(props) {
         </div>
         <div
           className={
-            active === activeId ? "bottom-border active" : "bottom-border inactive"
+            active === activeId
+              ? "bottom-border active"
+              : "bottom-border inactive"
           }
         ></div>
       </div>

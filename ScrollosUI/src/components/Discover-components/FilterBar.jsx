@@ -8,15 +8,27 @@ import FilterOption from "./FilterOption";
 import LastProjectIcon from "../../assets/filter-bar-icons/last-project.svg";
 import { useState, useEffect, act } from "react";
 export default function FilterBar(props) {
-  const {
-    setActive,
-    active,
-    setDisplayApiDocs,
-    clientUserData,
-  } = props;
+  const { setActive, active, setDisplayApiDocs, clientUserData, allDocIds } =
+    props;
+
+  const [activeFilter, setActiveFilter] = useState("all docs");
 
   function handleClick(e) {
-    setActive(e.currentTarget.id.toLowerCase());
+    const activeId = e.currentTarget.id.toLowerCase();
+    if (activeId === "documents") {
+      setActive(allDocIds);
+    } else if (activeId === "recents") {
+      setActive(clientUserData.recents);
+    } else if (activeId === "bookmarks") {
+      setActive(clientUserData.bookmarks);
+    } else if (activeId === "lastproject") {
+      console.log("lastproject:", clientUserData.projects[0].documentIds)
+      setActive(clientUserData.projects[0].documentIds);
+    } else if (activeId === "ratings") {
+
+    } else if (activeId === "docage") {
+      
+    }
   }
 
   return (

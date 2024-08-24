@@ -5,7 +5,8 @@ import emptyCheckboxIcon from "../../../assets/emptyCheckbox.svg";
 import plusIcon from "../../../assets/plus.svg";
 import cancelIcon from "../../../assets/cancel.svg";
 export default function AddView(props) {
-  const { getStyleForAction, action, projects, setProjects, apiDoc } = props;
+  const { getStyleForAction, action, projects, setClientUserData, apiDoc } =
+    props;
   const [isAddingProject, setIsAddingProject] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [invalidName, setInvalidName] = useState(false);
@@ -39,10 +40,10 @@ export default function AddView(props) {
         //insert new project at start of projects array
         setIsAddingProject(false);
         setInvalidName(false);
-        setProjects((prev) => {
-          let insertAtStart = prev;
+        setClientUserData((prev) => {
+          let insertAtStart = prev.projects;
           insertAtStart.unshift({ id: input, documentIds: [apiDoc._id] });
-          return [...insertAtStart];
+          return { ...prev, projects: [...insertAtStart] };
         });
       } else {
         setInvalidName(true);
@@ -78,7 +79,7 @@ export default function AddView(props) {
           projectsCopy.splice(index, 1, project);
         }
       }
-      setProjects([...projectsCopy]);
+      setClientUserData((prev) => ({ ...prev, projects: [...projectsCopy] }));
     });
   }
 

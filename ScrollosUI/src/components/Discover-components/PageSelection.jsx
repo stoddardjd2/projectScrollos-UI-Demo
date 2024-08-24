@@ -18,6 +18,7 @@ export default function PageSelection(props) {
       });
     // add functionality when clicking
   }
+  console.log("pages: ",idsForPage)
   // wait for idsForPage to be loaded and calculated
   const allPageElements =
     idsForPage &&

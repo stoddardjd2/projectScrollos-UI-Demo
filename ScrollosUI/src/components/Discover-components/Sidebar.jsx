@@ -15,9 +15,10 @@ export default function Sidebar(props) {
     setRightColumnDisplay,
     rightColumnDisplay,
     projects,
-    setProjects,
+    setClientUserData,
     setDisplayApiDocs,
     loadedDocs,
+    setActive
   } = props;
 
   function handleLogout() {
@@ -58,7 +59,7 @@ export default function Sidebar(props) {
           setDisplayApiDocs={setDisplayApiDocs}
           setRightColumnDisplay={setRightColumnDisplay}
           loadedDocs={loadedDocs}
-          setProjects={setProjects}
+          setClientUserData={setClientUserData}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
         />
@@ -69,10 +70,11 @@ export default function Sidebar(props) {
           dropdownItems={projects}
           setDisplayApiDocs={setDisplayApiDocs}
           setRightColumnDisplay={setRightColumnDisplay}
-          setProjects={setProjects}
+          setClientUserData={setClientUserData}
           dropdownIcon={dropdownIcon}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
+          setActive={setActive}
         />
 
         <SidebarItem
@@ -80,7 +82,7 @@ export default function Sidebar(props) {
           img={discussionsIcon}
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
-          setProjects={setProjects}
+          setClientUserData={setClientUserData}
           setRightColumnDisplay={setRightColumnDisplay}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
@@ -90,7 +92,7 @@ export default function Sidebar(props) {
           img={notesIcon}
           rightColumnDisplay={rightColumnDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
-          setProjects={setProjects}
+          setClientUserData={setClientUserData}
           setRightColumnDisplay={setRightColumnDisplay}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
@@ -106,7 +108,7 @@ export default function Sidebar(props) {
             img={settingsIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
-            setProjects={setProjects}
+            setClientUserData={setClientUserData}
             setRightColumnDisplay={setRightColumnDisplay}
             sidebarSelection={sidebarSelection}
             setSidebarSelection={setSidebarSelection}
@@ -116,7 +118,7 @@ export default function Sidebar(props) {
             img={notificationsIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
-            setProjects={setProjects}
+            setClientUserData={setClientUserData}
             setRightColumnDisplay={setRightColumnDisplay}
             sidebarSelection={sidebarSelection}
             setSidebarSelection={setSidebarSelection}
@@ -126,7 +128,7 @@ export default function Sidebar(props) {
             img={logoutIcon}
             rightColumnDisplay={rightColumnDisplay}
             setDisplayApiDocs={setDisplayApiDocs}
-            setProjects={setProjects}
+            setClientUserData={setClientUserData}
             setRightColumnDisplay={setRightColumnDisplay}
             sidebarSelection={sidebarSelection}
             setSidebarSelection={setSidebarSelection}
@@ -143,10 +145,11 @@ function SidebarItem(props) {
     rightColumnDisplay,
     dropdownItems,
     setDisplayApiDocs,
-    setProjects,
+    setClientUserData,
     dropdownIcon,
     sidebarSelection,
     setSidebarSelection,
+    setActive
   } = props;
   // const isSelected = rightColumnDisplay === name.toLowerCase();
   const isSelected = name.toLowerCase() === sidebarSelection;
@@ -201,30 +204,34 @@ function SidebarItem(props) {
         indexOfCurrentProject = index;
       }
     });
+    
 
     //push selected proejct to front of array
     // setProjects();
-    setProjects((prevProjects) => {
+    setClientUserData((prev) => {
       //make copy of values not by reference to prevProjects so that it may be mutated seperately
-      const prevProjectsCopy = [...prevProjects];
+      const prevProjectsCopy = [...prev.projects];
       prevProjectsCopy.splice(indexOfCurrentProject, 1);
-      prevProjectsCopy.unshift(prevProjects[indexOfCurrentProject]);
+      prevProjectsCopy.unshift(prev.projects[indexOfCurrentProject]);
       // const recentOrderArray = prevProjects.concat(prevProjectsCopy)
-      return [...prevProjectsCopy];
+      return ({...prev, projects: [...prevProjectsCopy]});
     });
 
     // const documentsArray = dropdownItems[id].documentIds;
     setDropdownSelection(id);
     //update display to show documents included in dropdown selection
-    fetch(`http://localhost:3001/read/ids`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(documentsArray),
-    })
-      .then((results) => results.json())
-      .then((json) => setDisplayApiDocs(json));
+    // fetch(`http://localhost:3001/read/ids`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(documentsArray),
+    // })
+    //   .then((results) => results.json())
+    //   .then((json) => setActive(json));
+    console.log("docs arrray", documentsArray
+    )
+    setActive(documentsArray)
   }
 
   return (

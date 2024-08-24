@@ -26,6 +26,20 @@ export default function Discover() {
     notes: [],
     flags: [],
     recentProjects: [],
+    projects: [
+      {
+        id: "Project One",
+        documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
+      },
+      {
+        id: "Project Two",
+        documentIds: [
+          "66aeb7944d74dc0a686c2a08",
+          "66aeb79e4d74dc0a686c2a0a",
+          "66aeb7a34d74dc0a686c2a0b",
+        ],
+      },
+    ],
   };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
@@ -49,56 +63,28 @@ export default function Discover() {
   // Store all projects for current user:
   //temporary values to test:
 
-  const [projects, setProjects] = useState([
-    {
-      id: "Project One",
-      documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
-    },
-    {
-      id: "Project Two",
-      documentIds: [
-        "66aeb7944d74dc0a686c2a08",
-        "66aeb79e4d74dc0a686c2a0a",
-        "66aeb7a34d74dc0a686c2a0b",
-      ],
-    },
-  ]);
+  // const [projects, setProjects] = useState([
+  //   {
+  //     id: "Project One",
+  //     documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
+  //   },
+  //   {
+  //     id: "Project Two",
+  //     documentIds: [
+  //       "66aeb7944d74dc0a686c2a08",
+  //       "66aeb79e4d74dc0a686c2a0a",
+  //       "66aeb7a34d74dc0a686c2a0b",
+  //     ],
+  //   },
+  // ]);
 
-  const [active, setActive] = useState("documents");
+  const [active, setActive] = useState(allDocIds);
 
   useEffect(() => {
-    //For setting page buttons data
-    //if displaying anything else, it will be in client data as array of all the ids
-
-    if (active === "documents") {
-      //if displaying all documents, use loaded allDocIds
-      const idsForPage = getIdsPerPage(allDocIds);
-      setidsForPage(getIdsPerPage(idsForPage));
-      getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
-      //display first page
-    } else {
-      const idsForPage = getIdsPerPage(clientUserData[active]);
-      setidsForPage(idsForPage);
-      getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
-    }
+    const idsForPage = getIdsPerPage(active);
+    setidsForPage(idsForPage);
+    getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
   }, [active]);
-
-  // async function getAllDocIds() {
-  //   // get all doc ids to be used in determining page assingment for id
-
-  // const results = await fetch(`http://localhost:3001/getAllDocIds`, {
-  //   method: "get",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // })
-  //   .then((results) => results.json())
-  //   .then((json) => {
-  //       const docsPerPage = getDocsPerPage(json);
-  //       setidsForPage(docsPerPage);
-  //     });
-  //   return results;
-  // }
 
   function getIdsPerPage(docIds) {
     if (docIds) {
@@ -123,55 +109,31 @@ export default function Discover() {
     }
   }
 
-  // useEffect(() => {
-  //   //deterimine display option based on active selection
-  //   if (active) {
-  //     switch (active) {
-  //       case "bookmarks":
-  //         getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.bookmarks);
-  //         break;
-  //       case "recents":
-  //         // getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.recents);
-  //         break;
-  //       case "flags":
-  //         getDocsByArrayOfIdsAndUpdateDisplay(clientUserData.flags);
-  //       case "documents":
-  //         // NO REQUEST. Set display to have loaded docs at start
-  //         setDisplayApiDocs(loadedDocs);
-  //         break;
-  //       case "ratings":
-  //         getDocsByArrayOfIdsAndUpdateDisplay([]);
-  //         break;
-  //       case "docAge":
-  //         getDocsByArrayOfIdsAndUpdateDisplay([]);
-  //         break;
-  //       case "lastProject":
-  //         getDocsByArrayOfIdsAndUpdateDisplay(projects[0].documentIds);
-  //         break;
-  //     }
-  //   }
-  // }, [active]);
-
   //for determine display type using active selection
   async function getDocsByArrayOfIdsAndUpdateDisplay(idsArray) {
-    fetch(`http://localhost:3001/read/ids/${1000}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(idsArray),
-    })
-      .then((results) => results.json())
-      .then((res) => {
-        // mongodb sends back array of documents in order of first in their database-
-        //must sort their response to match with our array that was sent(for recents to work)
-        let sortedResponse = new Array(idsArray.length);
-        res.map((responseItem) => {
-          const index = idsArray.indexOf(responseItem._id);
-          sortedResponse.splice(index, 1, responseItem);
+    if (idsArray === undefined) {
+      //if emtpy, show nothing
+      setDisplayApiDocs([]);
+    } else {
+      fetch(`http://localhost:3001/read/ids/${1000}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(idsArray),
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          let sortedResponse = new Array(idsArray.length);
+          res.map((responseItem) => {
+            const index = idsArray.indexOf(responseItem._id);
+            sortedResponse.splice(index, 1, responseItem);
+          });
+          setDisplayApiDocs(sortedResponse);
         });
-        setDisplayApiDocs(sortedResponse);
-      });
+    }
   }
 
   function toggleSidebar() {
@@ -190,8 +152,7 @@ export default function Discover() {
         loadIsFlagged={loadIsFlagged}
         userID={clientUserData._id}
         setClientUserData={setClientUserData}
-        projects={projects}
-        setProjects={setProjects}
+        projects={clientUserData.projects}
         clientUserData={clientUserData}
       />
     );
@@ -231,9 +192,9 @@ export default function Discover() {
           /> */}
           <FilterBar
             setDisplayApiDocs={setDisplayApiDocs}
-            loadedDocs={loadedDocs}
+            allDocIds={allDocIds}
             clientUserData={clientUserData}
-            projects={projects}
+            projects={clientUserData.projects}
             active={active}
             setActive={setActive}
           />
@@ -276,8 +237,8 @@ export default function Discover() {
             <div className="left-split">
               <Sidebar
                 setDisplayApiDocs={setDisplayApiDocs}
-                projects={projects}
-                setProjects={setProjects}
+                projects={clientUserData.projects}
+                setClientUserData={setClientUserData}
                 isOpen={isOpen}
                 rightColumnDisplay={rightColumnDisplay}
                 setRightColumnDisplay={setRightColumnDisplay}
