@@ -77,12 +77,16 @@ export default function Discover() {
   //     ],
   //   },
   // ]);
+  const [currentPage, setCurrentPage] = useState(0);
+  //had to move out of page selection since was rerendering in same position and keeping
+  //-prev currentPage state
 
   const [active, setActive] = useState(allDocIds);
 
   useEffect(() => {
     const idsForPage = getIdsPerPage(active);
     setidsForPage(idsForPage);
+    setCurrentPage(0);
     getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
   }, [active]);
 
@@ -207,6 +211,8 @@ export default function Discover() {
             setDisplayApiDocs={setDisplayApiDocs}
             apiDocsDisplay={apiDocsDisplay}
             idsForPage={idsForPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </div>
       </div>

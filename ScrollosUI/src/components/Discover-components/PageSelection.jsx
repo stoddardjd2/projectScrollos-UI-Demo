@@ -1,8 +1,13 @@
 import { useState } from "react";
 
 export default function PageSelection(props) {
-  const { setDisplayApiDocs, apiDocsDisplay, idsForPage } = props;
-  const [currentPage, setCurrentPage] = useState(0);
+  const {
+    setDisplayApiDocs,
+    apiDocsDisplay,
+    idsForPage,
+    currentPage,
+    setCurrentPage,
+  } = props;
 
   function handleSetPage(e) {
     const index = e.currentTarget.id;
@@ -67,9 +72,9 @@ export default function PageSelection(props) {
             style={
               currentPage == index
                 ? {
-                  opacity: "100%",
-                  backgroundColor: "white",
-                  color: "black",
+                    opacity: "100%",
+                    backgroundColor: "white",
+                    color: "black",
                     // backgroundColor: "var(--primary-light)",
                     // boxShadow: " 0 0px 5px white",
                     // color: "white"
@@ -137,15 +142,25 @@ export default function PageSelection(props) {
         >
           {1}
         </div>
-        {currentPage >= 2 && <div className="spacing">...</div>}
+        {currentPage >= 2 && idsForPage.length >= 4 && (
+          <div className="spacing">...</div>
+        )}
         {allPageElements}
-        <div className="spacing">...</div>
+        {idsForPage.length >= 4 && <div className="spacing">...</div>}
         {/* display last page option possible */}
         <div
           onClick={handleSetPage}
           className="page"
           key={idsForPage.length - 1}
           id={idsForPage.length - 1}
+          style={
+            currentPage == idsForPage.length - 1
+              ? {
+                  backgroundColor: "white",
+                  color: "black",
+                }
+              : {}
+          }
         >
           {idsForPage.length}
         </div>
