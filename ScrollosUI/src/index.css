@@ -331,7 +331,7 @@ button:hover {
     }
 
     .left-margin {
-      width: 139px;
+      width: 340px;
       height: 100%;
     }
     .filter-bar {
@@ -458,23 +458,50 @@ button:hover {
         }
       }
     }
-
-    .page-container {
+    .prev-page {
       display: flex;
+      background-color:var(--primary-light);
+      /* background-color: white; */
+      color: rgb(255, 255, 255);
+      padding: 8px;
+      height: 34px;
+      border-radius: 5px;
       justify-content: center;
+      align-items: center;
+      border: 1px white solid;
+    }
+    .page-container {
+      
+      display: flex;
+      justify-content: right;
       column-gap: 1em;
       padding: 1em;
+      width: 340px;
       /* margin: 10px; */
+
       .page {
-        box-shadow: 0 0px 10px #00000081;
+        height: 34px;
+        /* box-shadow: 0 0px 3px #ffffff81; */
+        border: 1px white solid;
         border-radius: 5px;
         color: black;
-        background-color: white;
+        background-color:var(--primary-light);
+        color:white;
+        
         text-align: center;
         width: 25px;
+        /* opacity: 75%; */
+
         /* border: 1px white solid; */
         padding: 4px;
         cursor: pointer;
+      }
+      .page:hover{
+        opacity: 100%;
+      }
+      .spacing {
+        color: white;
+        padding-top: 4px;
       }
     }
   }
