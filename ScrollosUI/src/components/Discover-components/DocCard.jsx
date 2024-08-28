@@ -135,6 +135,7 @@ export default function DocCards(props) {
     const rating = e.currentTarget.id;
     console.log("adding rating of :", rating);
 
+    
     // FETCH DATABASE AND ADD RATING!
   }
   function handleMouseOverStar(e) {

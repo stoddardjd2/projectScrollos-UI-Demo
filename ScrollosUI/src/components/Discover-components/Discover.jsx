@@ -44,9 +44,11 @@ export default function Discover() {
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
+
+  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(8);
+
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
-
   const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
   //alter amount of docs loaded at start using main fetch limit
 
@@ -77,6 +79,8 @@ export default function Discover() {
   //     ],
   //   },
   // ]);
+
+
   const [currentPage, setCurrentPage] = useState(0);
   //had to move out of page selection since was rerendering in same position and keeping
   //-prev currentPage state
@@ -92,7 +96,7 @@ export default function Discover() {
 
   function getIdsPerPage(docIds) {
     if (docIds) {
-      const numbOfIdsPerPage = 8;
+      const numbOfIdsPerPage = numbOfDocsPerPage;
       let idsGroupedByPage = [];
       let idsForPage = [];
       let currentPage = 1;
@@ -174,6 +178,7 @@ export default function Discover() {
             setActive={setActive}
             allApiDocs={loadedDocs}
             apiDocsDisplay={apiDocsDisplay}
+            allDocIds={allDocIds}
           />
 
           <div className="user-info-container">

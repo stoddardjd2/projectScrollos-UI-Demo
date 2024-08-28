@@ -436,7 +436,7 @@ button:hover {
           animation: expand 0.2s ease-in-out;
         }
         .icon {
-        user-select: none;
+          user-select: none;
           width: 24px;
           max-width: 1.5em;
           max-height: 1.5em;
@@ -461,7 +461,7 @@ button:hover {
     }
     .prev-page {
       display: flex;
-      background-color:var(--primary-light);
+      background-color: var(--primary-light);
       /* background-color: white; */
       color: rgb(255, 255, 255);
       padding: 8px;
@@ -472,7 +472,6 @@ button:hover {
       border: 1px white solid;
     }
     .page-container {
-      
       display: flex;
       justify-content: right;
       column-gap: 1em;
@@ -486,9 +485,9 @@ button:hover {
         border: 1px white solid;
         border-radius: 5px;
         color: black;
-        background-color:var(--primary-light);
-        color:white;
-        
+        background-color: var(--primary-light);
+        color: white;
+
         text-align: center;
         width: 25px;
         /* opacity: 75%; */
@@ -497,7 +496,7 @@ button:hover {
         padding: 4px;
         cursor: pointer;
       }
-      .page:hover{
+      .page:hover {
         opacity: 100%;
       }
       .spacing {
@@ -549,13 +548,16 @@ button:hover {
   column-gap: 2em;
   row-gap: 4em;
   justify-content: left;
+  padding-left: 7em;
 }
 .doc-card:hover {
   /* background-color: var(--card-hover); */
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .doc-card {
+  cursor: pointer;
+
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
@@ -576,7 +578,9 @@ button:hover {
   .bookmark-container {
     min-height: 1em;
     user-select: none;
-
+  }
+  .save:hover {
+    cursor: pointer;
   }
   .save {
     width: 1.5em;
@@ -640,6 +644,8 @@ button:hover {
       padding-left: 10px;
     }
     .rating-container {
+      cursor: pointer;
+
       display: flex;
       align-items: center;
       justify-content: end;
@@ -668,7 +674,6 @@ button:hover {
         transform: translate(0, -0.1em);
         transition: 0.5s ease-in-out all;
         user-select: none;
-
       }
     }
   }
@@ -705,7 +710,9 @@ button:hover {
       padding: 5px;
       .action-icon {
         width: 24px;
+        cursor: pointer;
       }
+
       .active {
         filter: brightness(100);
       }

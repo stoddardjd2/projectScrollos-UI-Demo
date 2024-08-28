@@ -100,6 +100,20 @@ export default function FilterBar(props) {
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
+         <FilterOption
+        activeId="popular"
+        displayName="Popular"
+        img={newDocIcon}
+        handleClick={handleClick}
+        activeFilter={activeFilter}
+        slider={true}
+        sortByIcon={sortByIcon}
+        sortImg={sortByIcon}
+        sortOption1="Oldest"
+        sortOption2="Newest"
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+      />
     </div>
   );
 }
