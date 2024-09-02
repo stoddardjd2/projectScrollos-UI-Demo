@@ -8,6 +8,8 @@ import notificationsIcon from "../../assets/sidebar-icons/notifications.svg";
 import logoutIcon from "../../assets/sidebar-icons/logout.svg";
 import dropdownIcon from "../../assets/sideExpand.svg";
 import { useEffect, useState } from "react";
+import AddView from "./Card-components/AddView";
+import Popup from "./Popup";
 export default function Sidebar(props) {
   const [sidebarSelection, setSidebarSelection] = useState();
   const {
@@ -89,6 +91,7 @@ export default function Sidebar(props) {
           setRightColumnDisplay={setRightColumnDisplay}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
+          popup={true}
         />
         <SidebarItem
           name="Notes"
@@ -154,7 +157,9 @@ function SidebarItem(props) {
     setSidebarSelection,
     setActive,
     allDocIds,
+    popup,
   } = props;
+  const [isPopupActive, setIsPopupActive] = useState(false)
   // const isSelected = rightColumnDisplay === name.toLowerCase();
   const isSelected = name.toLowerCase() === sidebarSelection;
   const [initialDropdownOrder, setInitialDropdownOrder] =
@@ -171,6 +176,11 @@ function SidebarItem(props) {
     //reset dropdown selection on option selection
     // setDropdownSelection();
     // setActive(id);
+    if (popup) {
+      console.log("popup");
+      setIsPopupActive(!isPopupActive);
+    }
+
     if (id === sidebarSelection && sidebarSelection) {
       //if sidebar selection is already open and same sidebar option is selected
       setSidebarSelection();
@@ -178,7 +188,7 @@ function SidebarItem(props) {
       setSidebarSelection(id);
       //control docs to display on option selection:
       if (id === "documents") {
-        console.log("setting to", allDocIds)
+        console.log("setting to", allDocIds);
         setActive(allDocIds);
       }
     }
@@ -214,7 +224,6 @@ function SidebarItem(props) {
     });
 
     //push selected proejct to front of array
-    // setProjects();
     setClientUserData((prev) => {
       //make copy of values not by reference to prevProjects so that it may be mutated seperately
       const prevProjectsCopy = [...prev.projects];
@@ -224,18 +233,7 @@ function SidebarItem(props) {
       return { ...prev, projects: [...prevProjectsCopy] };
     });
 
-    // const documentsArray = dropdownItems[id].documentIds;
     setDropdownSelection(id);
-    //update display to show documents included in dropdown selection
-    // fetch(`http://localhost:3001/read/ids`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(documentsArray),
-    // })
-    //   .then((results) => results.json())
-    //   .then((json) => setActive(json));
     setActive(documentsArray);
   }
 
@@ -320,6 +318,8 @@ function SidebarItem(props) {
         </div>
         // </div>
       )}
+      {/* popups: */}
+      {isPopupActive && <Popup setIsPopupActive={setIsPopupActive}/>}
     </div>
   );
 }

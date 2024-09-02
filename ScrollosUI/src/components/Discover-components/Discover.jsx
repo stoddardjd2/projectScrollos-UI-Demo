@@ -17,6 +17,7 @@ import userIcon from "../../assets/sidebar-icons/user.svg";
 import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
 import PageSelection from "./PageSelection";
+import Projects from "./Popup-components/Projects";
 export default function Discover() {
   const { loadedDocs, userData, allDocIds } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
@@ -45,7 +46,7 @@ export default function Discover() {
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
 
-  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(8);
+  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(15);
 
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
@@ -267,6 +268,7 @@ export default function Discover() {
           apiDocsDisplay={apiDocsDisplay}
         />
       </div>
+      
     </div>
   );
 }

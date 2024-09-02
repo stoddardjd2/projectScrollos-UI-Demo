@@ -113,6 +113,7 @@ https://angel-rs.github.io/css-color-filter-generator/
 body {
   height: 100%;
   margin: 0px;
+  overflow: hidden;
 }
 html {
   height: 100%;
@@ -614,7 +615,7 @@ button:hover {
     .title {
       /* min-width:4.6em; */
       /* min-width: 100%; */
-      font-size: 3.4em;
+      font-size: 3em;
       display: block;
       overflow-y: auto;
       scrollbar-width: none;
@@ -1146,6 +1147,9 @@ button:hover {
           align-items: left;
           height: 100%;
           gap: 1em;
+
+        
+
           img {
             max-width: 24px;
             min-width: 24px;
@@ -1519,3 +1523,71 @@ button:hover {
     letter-spacing: 0.1em;
   }
 }
+
+  /* popups */
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    .popup-card {
+      background-color: white;
+      width: 60%;
+      height: 60%;
+      box-shadow: 0 0px 10px rgb(31, 31, 31);
+      border-radius: 10px;
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        padding-top: 10px;
+        padding-bottom: 7px;
+
+        .options{
+          background-color: rgb(231, 231, 231);
+          border-radius: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 30px;
+          .option{
+            border-radius: 20px;
+            padding: 10px 20px
+          
+
+          }
+          .selected{
+            background-color: var(--primary-light);
+            color:white;
+            padding: 10px 20px
+          }
+    
+        }
+        .filler {
+          width: 19.8px;
+          height: auto;
+        }
+        button {
+          font-size: 25px;
+          font-weight: 400;
+          transform: scale(1.2, 1);
+        }
+        button:hover {
+          opacity: 50%;
+        }
+        .header {
+        }
+      }
+      .content {
+        height: auto;
+        background-color: orange;
+      }
+    }
+  }
