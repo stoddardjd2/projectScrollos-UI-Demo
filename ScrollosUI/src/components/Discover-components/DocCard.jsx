@@ -12,7 +12,7 @@ import InfoView from "./Card-components/InfoView";
 
 import ActionButton from "./Card-components/ActionButton";
 // import getStyleForAction from "./Card-components/getStyleForAction";
-export default function DocCards(props) {
+export default function DocCard(props) {
   const {
     setClientUserData,
     apiDoc,

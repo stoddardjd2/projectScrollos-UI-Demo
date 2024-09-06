@@ -31,6 +31,7 @@ export default function Discover() {
       {
         id: "Project One",
         documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
+        notes: "Proj one notes!"
       },
       {
         id: "Project Two",
@@ -39,6 +40,7 @@ export default function Discover() {
           "66aeb79e4d74dc0a686c2a0a",
           "66aeb7a34d74dc0a686c2a0b",
         ],
+        notes: "Project two notes!"
       },
     ],
   };
@@ -87,6 +89,13 @@ export default function Discover() {
   //-prev currentPage state
 
   const [active, setActive] = useState(allDocIds);
+
+  console.log("userdata DSISOVER", clientUserData.projects)
+
+  useEffect(()=>{
+    console.log("USERDATA CHANGESD")
+    console.log("userdata DSISOVER", clientUserData)
+  }, [clientUserData])
 
   useEffect(() => {
     const idsForPage = getIdsPerPage(active);
@@ -149,7 +158,7 @@ export default function Discover() {
     setIsOpen(!isOpen);
   }
 
-  //api Document Bar
+  //api Documents
   const docCards = apiDocsDisplay.map((doc) => {
     const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
     const loadIsFlagged = clientUserData.flags.includes(doc._id);
@@ -258,6 +267,7 @@ export default function Discover() {
                 setActive={setActive}
                 active={active}
                 allDocIds={allDocIds}
+                clientUserData = {clientUserData}
               />
             </div>
           </div>

@@ -22,6 +22,7 @@ export default function Sidebar(props) {
     loadedDocs,
     setActive,
     allDocIds,
+    clientUserData,
   } = props;
 
   function handleLogout() {
@@ -92,6 +93,7 @@ export default function Sidebar(props) {
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
           popup={true}
+          clientUserData={clientUserData}
         />
         <SidebarItem
           name="Notes"
@@ -151,15 +153,16 @@ function SidebarItem(props) {
     rightColumnDisplay,
     dropdownItems,
     setDisplayApiDocs,
-    setClientUserData,
     dropdownIcon,
     sidebarSelection,
     setSidebarSelection,
     setActive,
     allDocIds,
     popup,
+    clientUserData,
+    setClientUserData,
   } = props;
-  const [isPopupActive, setIsPopupActive] = useState(false)
+  const [isPopupActive, setIsPopupActive] = useState(false);
   // const isSelected = rightColumnDisplay === name.toLowerCase();
   const isSelected = name.toLowerCase() === sidebarSelection;
   const [initialDropdownOrder, setInitialDropdownOrder] =
@@ -319,7 +322,13 @@ function SidebarItem(props) {
         // </div>
       )}
       {/* popups: */}
-      {isPopupActive && <Popup setIsPopupActive={setIsPopupActive}/>}
+      {isPopupActive && (
+        <Popup
+          setIsPopupActive={setIsPopupActive}
+          clientUserData={clientUserData}
+          setClientUserData={setClientUserData}
+        />
+      )}
     </div>
   );
 }
