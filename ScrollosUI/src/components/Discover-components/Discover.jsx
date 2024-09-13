@@ -31,7 +31,37 @@ export default function Discover() {
       {
         id: "Project One",
         documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
-        notes: "Proj one notes!"
+        notes: "Proj one notes!",
+        discussions: [
+          {
+            name: "jared",
+            comment: "I like this",
+            likes: 2,
+            timePosted: { date: "9/6/24", time: "4:56" },
+            replies: [
+              { name: "bob", reply: "I second this" },
+              { name: "kevin", reply: "I third this" },
+            ],
+          },
+          {
+            name: "bob2",
+            comment: "I hate this",
+            likes: 2,
+            replies: [
+              { name: "jared", reply: "I like this" },
+              { name: "kevin", reply: "I hate this" },
+            ],
+          },
+          {
+            name: "bob",
+            comment: "I hate this",
+            likes: 2,
+            replies: [
+              { name: "jared", reply: "I like this" },
+              { name: "kevin", reply: "I hate this" },
+            ],
+          },
+        ],
       },
       {
         id: "Project Two",
@@ -40,13 +70,12 @@ export default function Discover() {
           "66aeb79e4d74dc0a686c2a0a",
           "66aeb7a34d74dc0a686c2a0b",
         ],
-        notes: "Project two notes!"
+        notes: "Project two notes!",
       },
     ],
   };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
-
 
   const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(15);
 
@@ -83,19 +112,18 @@ export default function Discover() {
   //   },
   // ]);
 
-
   const [currentPage, setCurrentPage] = useState(0);
   //had to move out of page selection since was rerendering in same position and keeping
   //-prev currentPage state
 
   const [active, setActive] = useState(allDocIds);
 
-  console.log("userdata DSISOVER", clientUserData.projects)
+  console.log("userdata DSISOVER", clientUserData.projects);
 
-  useEffect(()=>{
-    console.log("USERDATA CHANGESD")
-    console.log("userdata DSISOVER", clientUserData)
-  }, [clientUserData])
+  useEffect(() => {
+    console.log("USERDATA CHANGESD");
+    console.log("userdata DSISOVER", clientUserData);
+  }, [clientUserData]);
 
   useEffect(() => {
     const idsForPage = getIdsPerPage(active);
@@ -267,7 +295,7 @@ export default function Discover() {
                 setActive={setActive}
                 active={active}
                 allDocIds={allDocIds}
-                clientUserData = {clientUserData}
+                clientUserData={clientUserData}
               />
             </div>
           </div>
@@ -278,7 +306,6 @@ export default function Discover() {
           apiDocsDisplay={apiDocsDisplay}
         />
       </div>
-      
     </div>
   );
 }

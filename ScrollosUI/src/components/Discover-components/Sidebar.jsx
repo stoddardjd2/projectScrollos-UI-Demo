@@ -255,6 +255,7 @@ function SidebarItem(props) {
       >
         {/* change color of image when selected */}
         <img
+        className="sidebar-icon"
           src={img}
           style={isSelected ? { filter: "brightness(100)" } : {}}
         />

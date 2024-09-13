@@ -927,24 +927,6 @@ button:hover {
         font-size: 14px;
       }
     }
-    .add-project-body {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      background: white;
-      padding: 8px;
-      border-radius: 20px;
-    }
-    .add-project-body:hover {
-      div,
-      img {
-        filter: brightness(0%);
-        /* font-weight: 500; */
-      }
-      filter: brightness(95%);
-      opacity: 60%;
-    }
 
     .add-project-button {
       max-height: 37px;
@@ -958,13 +940,34 @@ button:hover {
       display: flex;
       justify-content: left;
       align-items: center;
+      .add-project-body {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        background: white;
+        padding: 8px;
+        border-radius: 20px;
+      }
+      .add-project-body:hover {
+        div,
+        img {
+          filter: brightness(0%);
+          /* font-weight: 500; */
+        }
+        filter: brightness(95%);
+        opacity: 60%;
+      }
+
       div {
         color: rgb(148, 148, 148);
         font-size: 14px;
       }
       .add-icon {
         filter: brightness(5);
-        width: 10px;
+        max-width: 10px;
+        max-height: 10px;
         /* padding-bottom: 1.5px; */
       }
     }
@@ -1153,9 +1156,8 @@ button:hover {
           height: 100%;
           gap: 1em;
 
-          img {
-            max-width: 24px;
-            min-width: 24px;
+          .sidebar-icon{
+            width: 24px;
           }
 
           .dropdown-items-container-restricter {
@@ -1643,6 +1645,7 @@ button:hover {
 
         .projects-grid {
           padding-top: 16px;
+          padding-bottom: 16px;
           height: fit-content;
           border-radius: 10px;
           display: grid;
@@ -1660,10 +1663,42 @@ button:hover {
         flex-direction: column;
         flex: 2.3;
         .discussions {
+          scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
+
           flex: 3;
+          display: flex;
+          flex-direction: column;
+          overflow-y: auto;
+          .input-comment-container{
+            /* position: fixed; */
+            /* background-color: #cccccc; */
+            /* top:500px; */
+            left:1;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 10px;
+            border-radius: 10px;
+            align-items: center;
+            font-weight: 400;
+            /* box-shadow: 0 0px 5px #00000081; */
+            border: 1px rgb(194, 194, 194) solid ;
+            .input-comment{
+              resize: none;
+              text-align: left;
+              border-radius: 10px;
+              padding: 5px 10px;
+              height:30px;
+              width: 50%;
+            }
+            .reply-container{
+              display: flex;
+              gap: 10px
+            }
+          }
+         
         }
         .notes {
-          flex: 1;
+          flex: .6;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -1672,15 +1707,15 @@ button:hover {
             height: 100%;
             resize: none;
           }
-          .save{
+          .save {
             background-color: var(--primary-light);
-      
           }
           .button-container {
             display: flex;
             justify-content: space-around;
             gap: 30px;
-            .save, .undo{
+            .save,
+            .undo {
               border-radius: 10px;
               padding: 5px 20px;
               cursor: pointer;
@@ -1688,18 +1723,63 @@ button:hover {
             .save {
               flex: 1;
               background-color: var(--primary-light);
-              color:white;
-
+              color: white;
             }
             .undo {
               border-radius: 10px;
               flex: 1;
-              
-              background-color: var(--sidebar-card-item-hover)
+
+              background-color: var(--sidebar-card-item-hover);
             }
           }
         }
       }
+    }
+  }
+}
+.comment-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  .reply{
+    padding-left: 30px;
+  }
+  .comment {
+    text-align: left;
+    width: 100%;
+    resize: none;
+    background-color: rgb(204, 204, 204);
+    border-radius: 10px;
+    padding: 5px 10px;
+    .comment-text {
+      font-weight: 400;
+    }
+    .name {
+    }
+  }
+  .actions-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    .subactions-container {
+      gap: 20px;
+      display: flex;
+      .action-number-container{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        img{
+          width: 24px;
+          height: 24px;
+          cursor: pointer;
+        }
+      }
+    }
+    .time{
+      font-weight: 400;
+      color:grey
     }
   }
 }

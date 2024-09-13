@@ -1,18 +1,35 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Discussions from "./Popup-components/Discussions";
 import AddView from "./Card-components/AddView";
 import exitIcon from "../../assets/exit.svg";
 import DocCard from "./DocCard";
+import Comment from "../Comment";
+import InputComment from "./Popup-components/InputComment";
 export default function Popup(props) {
   const { setIsPopupActive, clientUserData, setClientUserData } = props;
   const [optionSelection, setOptionSelection] = useState("projects");
   const [projectDocs, setProjectDocs] = useState([]);
-  const currentProjIndex = 0
-  const currentProj =  clientUserData.projects[currentProjIndex]
+  const currentProjIndex = 0;
+  const currentProj = clientUserData.projects[currentProjIndex];
   const loadedNotes = currentProj.notes;
   const [inputValue, setInputValue] = useState(loadedNotes);
-  console.log("userdata POPOUP", clientUserData.projects)
+  const inputRef = useRef(null);
+  const [replyInputValue, setReplyInputValue] = useState();
 
+  function handleAddReply() {}
+
+  function handleReplyComment(e) {
+    //for useRef when commenting
+    inputRef.current.focus();
+  }
+
+  function handleSave() {
+    setClientUserData((prev) => {
+      let prevCopy = { ...prev };
+      prevCopy.projects[currentProjIndex].notes = inputValue;
+      return prevCopy;
+    });
+  }
   function handleInputValue(e) {
     const value = e.target.value;
     setInputValue(value);
@@ -50,7 +67,6 @@ export default function Popup(props) {
   }
 
   useEffect(() => {
-
     fetch(`http://localhost:3001/read/ids`, {
       method: "POST",
       headers: {
@@ -104,7 +120,61 @@ export default function Popup(props) {
               </div>
             </div>
             <div className="popup--right-column">
-              <div className="discussions">Discussions</div>
+              <div className="discussions">
+                Discussions
+                <div className="discussions-comments-container"></div>
+                {clientUserData.projects[currentProjIndex].discussions.map(
+                  (comment, index) => {
+                    return (
+                      <Comment
+                        key={index}
+                        clientUserData={clientUserData}
+                        setClientUserData={setClientUserData}
+                        name={comment.name}
+                        text={comment.comment}
+                        likes={comment.likes}
+                        replies={comment.replies}
+                        time={10}
+                        setReplyInputValue={setReplyInputValue}
+                      />
+                    );
+                  }
+                )}
+                {/* input */}
+                <div className="input-comment-container">
+                  <input
+                    ref={inputRef}
+                    className="input-comment"
+                    placeholder="add a comment..."
+                    value={replyInputValue}
+                    onChange={(e) => {
+                      setReplyInputValue(e.target.value);
+                    }}
+                  ></input>
+                  {replyInputValue && (
+                    <div onClick={handleAddReply} className="reply-container">
+                      <svg
+                        style={{ cursor: "pointer" }}
+                        width="24"
+                        height="24"
+                        viewBox="0 0 192 128"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M181.333 117.333V104.533C181.333 86.6112 181.333 77.6512 177.845 70.8054C174.778 64.784 169.883 59.8891 163.861 56.8214C157.015 53.3334 148.055 53.3334 130.133 53.3334H10.6667M10.6667 53.3334L53.3333 10.6667M10.6667 53.3334L53.3333 96"
+                          stroke="#1D1B20"
+                          stroke-width="21.3333"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                      {/* <div>Reply</div> */}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="notes">
                 <div>Notes</div>
 
@@ -117,14 +187,15 @@ export default function Popup(props) {
                 {!(inputValue === loadedNotes) && (
                   // <div className="save">Save</div>
                   <div className="button-container">
-                    <button onClick={()=>setInputValue(loadedNotes)} className="undo">Undo</button>
-                    <button onClick={()=>{setClientUserData((prev)=>{
-                      let projectsCopy = prev.projects
-                      let copy = [...prev.projects[currentProj]]
-                      copy.notes = inputValue;
-                      console.log("UptdCopy", copy)
-                      projectsCopy.splice(currentProjIndex, 1, copy)
-                      ({...prev, projects:[...UpdatedProjects]})})}} className="save">Save</button>
+                    <button
+                      onClick={() => setInputValue(loadedNotes)}
+                      className="undo"
+                    >
+                      Undo
+                    </button>
+                    <button onClick={handleSave} className="save">
+                      Save
+                    </button>
                     {/* <button onClick={()=>{setClientUserData((prev)=>({...prev,  [currentProj.notes]: inputValue}))}} className="save">Save</button> */}
                   </div>
                 )}
