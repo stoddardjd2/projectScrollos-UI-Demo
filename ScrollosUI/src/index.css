@@ -1156,7 +1156,7 @@ button:hover {
           height: 100%;
           gap: 1em;
 
-          .sidebar-icon{
+          .sidebar-icon {
             width: 24px;
           }
 
@@ -1618,6 +1618,16 @@ button:hover {
       height: auto;
       background-color: orange;
     }
+    .projects-loading-placeholder {
+      font-size: 100px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .loadingIcon {
+        animation: rotate 2s ease-in-out infinite;
+      }
+    }
     .flex {
       display: flex;
       justify-content: space-between;
@@ -1662,18 +1672,30 @@ button:hover {
         display: flex;
         flex-direction: column;
         flex: 2.3;
+        .overflow {
+          overflow-y: auto;
+        }
+
         .discussions {
           scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
+          overflow-y: hidden;
 
           flex: 3;
           display: flex;
           flex-direction: column;
-          overflow-y: auto;
-          .input-comment-container{
-            /* position: fixed; */
+          .reply-input {
+            margin-left: 30px;
+            margin-bottom: 10px;
+          }
+          .reply{
+            margin-left: 30px;
+          }
+          .input-comment-container {
             /* background-color: #cccccc; */
             /* top:500px; */
-            left:1;
+            background-color: var(--right-column);
+
+            left: 1;
             display: flex;
             justify-content: space-between;
             padding: 5px 10px;
@@ -1681,24 +1703,25 @@ button:hover {
             align-items: center;
             font-weight: 400;
             /* box-shadow: 0 0px 5px #00000081; */
-            border: 1px rgb(194, 194, 194) solid ;
-            .input-comment{
+            border: 1px rgb(194, 194, 194) solid;
+            margin-top: auto;
+
+            .input-comment {
               resize: none;
               text-align: left;
               border-radius: 10px;
               padding: 5px 10px;
-              height:30px;
+              height: 30px;
               width: 50%;
             }
-            .reply-container{
+            .reply-container {
               display: flex;
-              gap: 10px
+              gap: 10px;
             }
           }
-         
         }
         .notes {
-          flex: .6;
+          flex: 0.6;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -1741,7 +1764,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-  .reply{
+  .reply {
     padding-left: 30px;
   }
   .comment {
@@ -1765,21 +1788,26 @@ button:hover {
     .subactions-container {
       gap: 20px;
       display: flex;
-      .action-number-container{
+      .action-number-container {
         display: flex;
         gap: 10px;
         align-items: center;
         justify-content: center;
-        img{
+
+        img {
           width: 24px;
           height: 24px;
           cursor: pointer;
         }
+        div {
+          min-width: 25px;
+          text-align: left;
+        }
       }
     }
-    .time{
+    .time {
       font-weight: 400;
-      color:grey
+      color: grey;
     }
   }
 }

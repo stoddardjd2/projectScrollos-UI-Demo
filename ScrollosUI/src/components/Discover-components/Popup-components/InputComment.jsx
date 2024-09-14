@@ -1,23 +1,23 @@
 import { useState } from "react";
-export default function InputComment(props){
-
-  const {inputRef, } = props;
+export default function InputComment(props) {
+  const { inputRef } = props;
   function handleAddReply() {}
-    
-    return(
-        <div className="input-comment-container">
-        <input
+
+  return (
+    <div className="input-comment-container">
+      <input
         ref={inputRef}
-          className="input-comment"
-          placeholder="add a comment..."
-          value={replyInputValue}
-          onChange={(e) => {
-            setReplyInputValue(e.target.value);
-          }}
-        ></input>
-        {replyInputValue && <div onClick={handleAddReply} className="reply-container">
+        className="input-comment"
+        placeholder="add a comment..."
+        value={replyInputValue}
+        onChange={(e) => {
+          setReplyInputValue(e.target.value);
+        }}
+      ></input>
+      {replyInputValue && (
+        <div onClick={handleAddReply} className="reply-container">
           <svg
-            style={{cursor:"pointer"}}
+            style={{ cursor: "pointer" }}
             width="24"
             height="24"
             viewBox="0 0 192 128"
@@ -33,7 +33,8 @@ export default function InputComment(props){
             />
           </svg>
           {/* <div>Reply</div> */}
-        </div>}
-      </div>
-    )
+        </div>
+      )}
+    </div>
+  );
 }

@@ -27,6 +27,7 @@ export default function Discover() {
     notes: [],
     flags: [],
     recentProjects: [],
+    group: "DevTeam",
     projects: [
       {
         id: "Project One",
@@ -39,8 +40,18 @@ export default function Discover() {
             likes: 2,
             timePosted: { date: "9/6/24", time: "4:56" },
             replies: [
-              { name: "bob", reply: "I second this" },
-              { name: "kevin", reply: "I third this" },
+              {
+                name: "bob",
+                reply: "I second this",
+                likes: 3,
+                timePosted: { date: "9/6/24", time: "4:56" },
+              },
+              {
+                name: "kevin",
+                reply: "I third this",
+                likes: 3,
+                timePosted: { date: "9/6/24", time: "4:56" },
+              },
             ],
           },
           {
@@ -48,8 +59,18 @@ export default function Discover() {
             comment: "I hate this",
             likes: 2,
             replies: [
-              { name: "jared", reply: "I like this" },
-              { name: "kevin", reply: "I hate this" },
+              {
+                name: "jared",
+                reply: "I like this",
+                likes: 3,
+                timePosted: { date: "9/6/24", time: "4:56" },
+              },
+              {
+                name: "kevin",
+                reply: "I hate this",
+                likes: 3,
+                timePosted: { date: "9/6/24", time: "4:56" },
+              },
             ],
           },
           {
@@ -57,8 +78,18 @@ export default function Discover() {
             comment: "I hate this",
             likes: 2,
             replies: [
-              { name: "jared", reply: "I like this" },
-              { name: "kevin", reply: "I hate this" },
+              {
+                name: "jared",
+                reply: "I like this",
+                likes: 3,
+                timePosted: { date: "9/6/24", time: "4:56" },
+              },
+              {
+                name: "kevin",
+                reply: "I hate this",
+                likes: 3,
+                timePosted: { date: "9/6/24", time: "4:56" },
+              },
             ],
           },
         ],
