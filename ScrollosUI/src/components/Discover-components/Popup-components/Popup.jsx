@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import Discussions from "./Discussions";
+// import Discussions from "./Discussions";
 import AddView from "../Card-components/AddView";
 import exitIcon from "../../../assets/exit.svg";
 import DocCard from "../DocCard";
@@ -145,7 +145,7 @@ export default function Popup(props) {
                 <div className="popup--right-column">
                   <div className="discussions">
                     <div className="overflow">
-                      Discussions
+                      <div className="discussions-header">Discussions</div>
                       {/* <div className="discussions-comments-container"></div> */}
                       {clientUserData.projects[
                         currentProjIndex

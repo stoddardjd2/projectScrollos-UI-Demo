@@ -28,7 +28,6 @@ export default function Comment(props) {
   }
   function handleReply() {
     setIsReply(!isReply);
-    console.log("IS REPLY!");
   }
 
   return (
@@ -93,7 +92,6 @@ export default function Comment(props) {
                     stroke-linejoin="round"
                   />
                 </svg>
-                {/* <div>Reply</div> */}
               </div>
             )}
           </div>

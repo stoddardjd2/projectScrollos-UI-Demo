@@ -1705,6 +1705,10 @@ button:hover {
         display: flex;
         flex-direction: column;
         flex: 2.3;
+        .discussions-header{
+          text-align: center;
+          font-size: 16px;
+        }
         .overflow {
           overflow-y: auto;
         }
@@ -1808,9 +1812,10 @@ button:hover {
     border-radius: 10px;
     padding: 5px 10px;
     .comment-text {
-      font-weight: 400;
+      font-weight: 350;
     }
     .name {
+      font-weight: 500;
     }
   }
   .actions-container {
