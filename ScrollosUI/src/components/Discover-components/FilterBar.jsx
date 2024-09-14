@@ -6,15 +6,22 @@ import starIcon from "../../assets/filter-bar-icons/star.svg";
 import sortByIcon from "../../assets/filter-bar-icons/sortby.svg";
 import FilterOption from "./FilterOption";
 import LastProjectIcon from "../../assets/filter-bar-icons/last-project.svg";
-import { useState, useEffect, act } from "react";
+import Popup from "./Popup-components/Popup";
+import { useState } from "react";
 export default function FilterBar(props) {
-  const { setActive, active, setDisplayApiDocs, clientUserData, allDocIds } =
-    props;
+  const {
+    setClientUserData,
+    setActive,
+    active,
+    setDisplayApiDocs,
+    clientUserData,
+    allDocIds,
+  } = props;
 
   const [activeFilter, setActiveFilter] = useState("all docs");
 
   function handleClick(e) {
-    const activeId = e.currentTarget.id
+    const activeId = e.currentTarget.id;
     setActiveFilter(activeId);
     if (activeId === "documents") {
       setActive(allDocIds);
@@ -41,6 +48,9 @@ export default function FilterBar(props) {
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
+
+      <div className="vertical-border"></div>
+
       <FilterOption
         activeId="recents"
         displayName="Recents"
@@ -100,7 +110,7 @@ export default function FilterBar(props) {
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
-         <FilterOption
+      <FilterOption
         activeId="popular"
         displayName="Popular"
         img={newDocIcon}

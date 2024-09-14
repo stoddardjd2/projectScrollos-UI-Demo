@@ -9,7 +9,7 @@ import logoutIcon from "../../assets/sidebar-icons/logout.svg";
 import dropdownIcon from "../../assets/sideExpand.svg";
 import { useEffect, useState } from "react";
 import AddView from "./Card-components/AddView";
-import Popup from "./Popup";
+import Popup from "./Popup-components/Popup";
 export default function Sidebar(props) {
   const [sidebarSelection, setSidebarSelection] = useState();
   const {

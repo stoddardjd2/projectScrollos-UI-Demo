@@ -276,7 +276,7 @@ button:hover {
   background-color: var(--primary-light);
   .search-bar {
     position: relative;
-    z-index: 4;
+    z-index: 3;
     /* border-radius: 10px; */
     box-shadow: 0 0px 5px #00000081;
     font-size: 0.7em;
@@ -311,7 +311,7 @@ button:hover {
   }
   .page-info-bar {
     position: relative;
-    z-index: 3;
+    z-index: 2;
     box-shadow: 0 2px 10px #00000081;
 
     padding-top: 0.6em;
@@ -334,6 +334,38 @@ button:hover {
     .left-margin {
       width: 340px;
       height: 100%;
+      padding-left: 10px;
+      margin-bottom: 9.6px;
+      display: flex;
+      .container {
+        display: flex;
+        background-color: white;
+        margin: 10px;
+        padding: 8px;
+        border-radius: 10px;
+        .projects-container:hover{
+          opacity: 50%;
+        }
+        .projects-container {
+          color:black;
+          transition: .3s ease-in-out all;
+          cursor: pointer;
+          display: flex;
+          flex-direction: row;
+          justify-content: left;
+          align-items: center;
+          width: fit-content;
+          gap: 10px;
+          .projects-icon {
+            width: 24px;
+            /* filter: brightness(100); */
+          }
+          div {
+            font-size: 14px;
+            font-family: "Inter", sans-serif;
+          }
+        }
+      }
     }
     .filter-bar {
       margin-left: auto;
@@ -1531,6 +1563,7 @@ button:hover {
 
 /* popups */
 .popup {
+  color: black;
   position: fixed;
   top: 0;
   left: 0;
@@ -1548,7 +1581,7 @@ button:hover {
 
     position: fixed;
     top: 0;
-    left: 98%;
+    left: 97%;
     font-size: 32px;
     color: white;
     /* background-color: grey; */
@@ -1687,7 +1720,7 @@ button:hover {
             margin-left: 30px;
             margin-bottom: 10px;
           }
-          .reply{
+          .reply {
             margin-left: 30px;
           }
           .input-comment-container {

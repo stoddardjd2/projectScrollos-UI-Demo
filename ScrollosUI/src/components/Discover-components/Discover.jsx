@@ -18,6 +18,9 @@ import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
 import PageSelection from "./PageSelection";
 import Projects from "./Popup-components/Projects";
+import Popup from "./Popup-components/Popup";
+import projectsIcon from "../../assets/projects.svg";
+
 export default function Discover() {
   const { loadedDocs, userData, allDocIds } = useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
@@ -148,6 +151,7 @@ export default function Discover() {
   //-prev currentPage state
 
   const [active, setActive] = useState(allDocIds);
+  const [isPopupActive, setIsPopupActive] = useState(false);
 
   console.log("userdata DSISOVER", clientUserData.projects);
 
@@ -237,6 +241,14 @@ export default function Discover() {
 
   return (
     <div className="discover-page">
+      {/* POPUPS here for z-index to work properly*/}
+      {isPopupActive && (
+        <Popup
+          setIsPopupActive={setIsPopupActive}
+          clientUserData={clientUserData}
+          setClientUserData={setClientUserData}
+        />
+      )}
       <div className="header-container">
         <div className="search-bar">
           <div className="header">API Library </div>
@@ -262,7 +274,14 @@ export default function Discover() {
         </div>
         <div className="page-info-bar">
           {/* <div className="found">10 docs found</div> */}
-          <div className="left-margin"></div>
+          <div className="left-margin">
+            <div className="container">
+              <div onClick={()=>setIsPopupActive(true)} className="projects-container">
+                <img className="projects-icon" src={projectsIcon} />
+                <div>Projects</div>
+              </div>
+            </div>
+          </div>
           {/* <Search
             setDisplayApiDocs={setDisplayApiDocs}
             allApiDocs={loadedDocs}
@@ -272,9 +291,11 @@ export default function Discover() {
             setDisplayApiDocs={setDisplayApiDocs}
             allDocIds={allDocIds}
             clientUserData={clientUserData}
+            setClientUserData={setClientUserData}
             projects={clientUserData.projects}
             active={active}
             setActive={setActive}
+            setIsPopupActive={setIsPopupActive}
           />
           {/* <Sort
             allApiDocs={loadedDocs}

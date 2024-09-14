@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from "react";
-import Discussions from "./Popup-components/Discussions";
-import AddView from "./Card-components/AddView";
-import exitIcon from "../../assets/exit.svg";
-import DocCard from "./DocCard";
-import Comment from "./Popup-components/Comment";
-import InputComment from "./Popup-components/InputComment";
-import loadingIcon from "../../assets/loading.svg";
+import Discussions from "./Discussions";
+import AddView from "../Card-components/AddView";
+import exitIcon from "../../../assets/exit.svg";
+import DocCard from "../DocCard";
+import Comment from "./Comment";
+import InputComment from "./InputComment";
+import loadingIcon from "../../../assets/loading.svg";
 export default function Popup(props) {
   const { setIsPopupActive, clientUserData, setClientUserData } = props;
   const [optionSelection, setOptionSelection] = useState("projects");
