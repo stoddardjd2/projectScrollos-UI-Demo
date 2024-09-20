@@ -1522,6 +1522,34 @@ button:hover {
     }
   }
 }
+
+.user-settings-popup {
+  position: fixed;
+  left: 85.4%;
+  top: 6%;
+  color: black;
+  background-color: white;
+  box-shadow: 0 0px 10px rgb(31, 31, 31);
+  border-radius: 5px;
+
+  .content {
+    width: 200px;
+    padding: 10px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .triangle {
+    content: "";
+    rotate: 180deg;
+    position: absolute;
+    top: -26%;
+    left: 89%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+  }
+}
 .user-info-container {
   align-self: center;
   display: flex;
@@ -1539,16 +1567,25 @@ button:hover {
   .user-icon {
     width: 32px;
   }
-  .username {
-    font-size: 1.1em;
-    color: black;
-  }
-  .email {
-    font-size: 1em;
-    color: #9b9b9b;
-    /* font-size: 0.8em; */
+  .flex {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    .username {
+      font-size: 1.1em;
+      color: black;
+    }
+    .email {
+      font-size: 1em;
+      color: #9b9b9b;
+      /* font-size: 0.8em; */
+    }
   }
   .ellipsis {
+    user-select: none;
+    cursor: pointer;
     color: #1d1b20;
     font-size: 2em;
     line-height: 1dvh;

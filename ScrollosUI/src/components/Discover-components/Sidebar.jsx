@@ -180,7 +180,6 @@ function SidebarItem(props) {
     // setDropdownSelection();
     // setActive(id);
     if (popup) {
-      console.log("popup");
       setIsPopupActive(!isPopupActive);
     }
 
@@ -191,7 +190,6 @@ function SidebarItem(props) {
       setSidebarSelection(id);
       //control docs to display on option selection:
       if (id === "documents") {
-        console.log("setting to", allDocIds);
         setActive(allDocIds);
       }
     }

@@ -1,5 +1,5 @@
 export default function ProjectSelection(props) {
-  const { selectedProject, handleProjectSelection, loadedProjects } = props;
+  const {  handleProjectSelection, loadedProjects } = props;
   return (
     <div>
       <div className="project-selection">

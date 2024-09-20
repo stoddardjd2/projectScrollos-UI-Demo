@@ -55,7 +55,6 @@ export default function Comment(props) {
       </div>
       {isReply && (
         <>
-          {" "}
           {replies.map((reply, index) => {
             return (
               <Reply

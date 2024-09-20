@@ -16,7 +16,6 @@ export default function Popup(props) {
   const currentProjIndex = 0;
 
   useEffect(() => {
-    console.log("CLIENT GROUP", clientUserData.group);
     fetch(`http://localhost:3001/getProjectsByGroup/${clientUserData.group}`, {
       method: "GET",
       headers: {
@@ -93,7 +92,6 @@ export default function Popup(props) {
   }
 
   function handleProjectSelection(e) {
-    console.log("target:", e.target.id);
     setSelectedProject(e.target.id);
   }
 
@@ -195,6 +193,7 @@ export default function Popup(props) {
                                 key={index}
                                 projects={loadedProjects}
                                 setClientUserData={setClientUserData}
+                                comment = {comment}
                                 name={comment.name}
                                 text={comment.comment}
                                 likes={comment.likes}

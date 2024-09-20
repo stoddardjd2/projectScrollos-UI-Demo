@@ -13,13 +13,13 @@ import Logout from "./Logout";
 import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
-import userIcon from "../../assets/sidebar-icons/user.svg";
 import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
 import PageSelection from "./PageSelection";
 import Projects from "./Popup-components/Projects";
 import Popup from "./Popup-components/Popup";
 import projectsIcon from "../../assets/projects.svg";
+import UserSettingsBar from "./UserSettingsBar";
 
 export default function Discover() {
   const { loadedDocs, userData, allDocIds } = useLoaderData();
@@ -153,12 +153,10 @@ export default function Discover() {
   const [active, setActive] = useState(allDocIds);
   const [isPopupActive, setIsPopupActive] = useState(false);
 
-  console.log("userdata DSISOVER", clientUserData.projects);
+  const [isSettings, setIsSettings] = useState(false);
+  //for user settings popup/dropdown(need at this level to hide it when clicking off on discover page)
 
-  useEffect(() => {
-    console.log("USERDATA CHANGESD");
-    console.log("userdata DSISOVER", clientUserData);
-  }, [clientUserData]);
+  useEffect(() => {}, [clientUserData]);
 
   useEffect(() => {
     const idsForPage = getIdsPerPage(active);
@@ -221,6 +219,16 @@ export default function Discover() {
     setIsOpen(!isOpen);
   }
 
+  function handleDiscoverClick(e) {
+    //hide user setting popup if click on page
+    console.log("discover clicked!");
+    console.log(e.target.id);
+    if (!(e.target.id === "userSettings")) {
+      //only hide if not clicking on user settings button
+      setIsSettings(false);
+    }
+  }
+
   //api Documents
   const docCards = apiDocsDisplay.map((doc) => {
     const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
@@ -240,7 +248,7 @@ export default function Discover() {
   });
 
   return (
-    <div className="discover-page">
+    <div onClick={handleDiscoverClick} className="discover-page">
       {/* POPUPS here for z-index to work properly*/}
       {isPopupActive && (
         <Popup
@@ -261,22 +269,22 @@ export default function Discover() {
             apiDocsDisplay={apiDocsDisplay}
             allDocIds={allDocIds}
           />
+          <UserSettingsBar
+            clientUserData={clientUserData}
+            isSettings={isSettings}
+            setIsSettings={setIsSettings}
+          />
 
-          <div className="user-info-container">
-            <img className="user-icon" src={userIcon} />
-            <div>
-              <div className="username">Jared Stoddard</div>
-              <div className="email">stoddardjd2@gmail.com</div>
-            </div>
-            <div className="ellipsis">...</div>
-          </div>
           {/* </div> */}
         </div>
         <div className="page-info-bar">
           {/* <div className="found">10 docs found</div> */}
           <div className="left-margin">
             <div className="container">
-              <div onClick={()=>setIsPopupActive(true)} className="projects-container">
+              <div
+                onClick={() => setIsPopupActive(true)}
+                className="projects-container"
+              >
                 <img className="projects-icon" src={projectsIcon} />
                 <div>Projects</div>
               </div>
