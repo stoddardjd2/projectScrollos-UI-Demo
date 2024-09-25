@@ -31,6 +31,7 @@ export default function Popup(props) {
 
   useEffect(() => {
     //load after projects are loaded
+    console.log("change", loadedProjects, selectedProject)
     if (loadedProjects && selectedProject) {
       fetch(`http://localhost:3001/read/ids`, {
         method: "POST",
@@ -40,7 +41,9 @@ export default function Popup(props) {
         body: JSON.stringify(loadedProjects[selectedProject].documentIds),
       })
         .then((res) => res.json())
-        .then((json) => setProjectDocs(json));
+        .then((json) => {
+          setProjectDocs(json);
+        });
     }
   }, [selectedProject]);
 
@@ -92,7 +95,9 @@ export default function Popup(props) {
   }
 
   function handleProjectSelection(e) {
-    setSelectedProject(e.target.id);
+    console.log(e.currentTarget.id);
+
+    setSelectedProject(e.currentTarget.id);
   }
 
   function getSelectionContent() {
@@ -193,7 +198,7 @@ export default function Popup(props) {
                                 key={index}
                                 projects={loadedProjects}
                                 setClientUserData={setClientUserData}
-                                comment = {comment}
+                                comment={comment}
                                 name={comment.name}
                                 text={comment.comment}
                                 likes={comment.likes}

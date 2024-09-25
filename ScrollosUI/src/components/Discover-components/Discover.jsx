@@ -248,7 +248,9 @@ export default function Discover() {
   });
 
   return (
-    <div onClick={handleDiscoverClick} className="discover-page">
+    <div 
+    // onClick={handleDiscoverClick}
+     className="discover-page">
       {/* POPUPS here for z-index to work properly*/}
       {isPopupActive && (
         <Popup

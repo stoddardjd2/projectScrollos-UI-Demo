@@ -9,7 +9,6 @@ export default function Reply(props) {
   function handleReplyLiked() {
     setIsReplyLiked(!isReplyLiked);
   }
-  console.log("reply!", reply);
   return (
     <div className="reply">
       <div className="comment-container">
