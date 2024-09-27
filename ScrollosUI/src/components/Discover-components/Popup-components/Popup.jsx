@@ -7,31 +7,41 @@ import Comment from "./Comment";
 import InputComment from "./InputComment";
 import loadingIcon from "../../../assets/loading.svg";
 import ProjectSelection from "./ProjectSelection";
+import backIcon from "../../../assets/back.svg";
+import editIcon from "../../../assets/project-icons/edit.svg";
+import checkIcon from "../../../assets/project-icons/check.svg";
+import cancelIcon from "../../../assets/project-icons/cancel.svg";
+import AddDocuments from "./AddDocuments";
+import AddDocsPopover from "./AddDocsPopover";
+import settingsIcon from "../../../assets/project-icons/settings.svg";
+import AddMembersBtn from "./AddMembersBtn";
 export default function Popup(props) {
   const { setIsPopupActive, clientUserData, setClientUserData } = props;
   const [optionSelection, setOptionSelection] = useState("projects");
   const [projectDocs, setProjectDocs] = useState([]);
   const [loadedProjects, setLoadedProjects] = useState();
   const [selectedProject, setSelectedProject] = useState();
+  const [isEditingProjName, setIsEditingProjName] = useState(false);
+  const [projectNameInput, setProjectNameInput] = useState();
+  const [isAddingDocument, setIsAddingDocument] = useState(false);
   const currentProjIndex = 0;
 
   useEffect(() => {
-    fetch(`http://localhost:3001/getProjectsByGroup/${clientUserData.group}`, {
-      method: "GET",
+    fetch(`http://localhost:3001/getProjectsByArrayOfIds`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(clientUserData.projects),
     })
       .then((res) => res.json())
       .then((json) => {
-        setLoadedProjects(json[0].projects);
-        setInputValue(json[0].projects[currentProjIndex].notes);
+        setLoadedProjects(json);
       });
   }, []);
 
   useEffect(() => {
     //load after projects are loaded
-    console.log("change", loadedProjects, selectedProject)
     if (loadedProjects && selectedProject) {
       fetch(`http://localhost:3001/read/ids`, {
         method: "POST",
@@ -48,15 +58,17 @@ export default function Popup(props) {
   }, [selectedProject]);
 
   const [inputValue, setInputValue] = useState();
+  const nameInputRef = useRef(null);
   const inputRef = useRef(null);
+
   const [replyInputValue, setReplyInputValue] = useState();
 
   function handleAddReply() {}
 
-  function handleReplyComment(e) {
-    //for useRef when commenting
-    inputRef.current.focus();
-  }
+  // function handleReplyComment(e) {
+  //   //for useRef when commenting
+  //   inputRef.current.focus();
+  // }
 
   function handleSave() {
     setClientUserData((prev) => {
@@ -95,9 +107,90 @@ export default function Popup(props) {
   }
 
   function handleProjectSelection(e) {
-    console.log(e.currentTarget.id);
-
     setSelectedProject(e.currentTarget.id);
+
+    setInputValue(loadedProjects[e.currentTarget.id].notes);
+  }
+
+  function handleEditProjectName(e) {
+    setProjectNameInput(loadedProjects[selectedProject].name);
+    setIsEditingProjName(!isEditingProjName);
+    nameInputRef.current.focus();
+  }
+  function handleSaveProjName(e) {
+    e.preventDefault();
+
+    setLoadedProjects((prev) => {
+      let prevCopy = [...prev];
+      prevCopy.splice(selectedProject, 1, {
+        ...prev[selectedProject],
+        name: projectNameInput,
+      });
+      return [...prevCopy];
+    });
+    setIsEditingProjName(false);
+
+    //update database to match updated project name
+    if (!(projectNameInput === loadedProjects[selectedProject].name)) {
+      //check if name is different from prev name before sending request to update database
+      fetch(
+        `http://localhost:3001/updateProjectNameById/${loadedProjects[selectedProject]._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ projectNameInput }),
+        }
+      )
+        .then((res) => res.json())
+        .then((json) => {});
+    }
+  }
+
+  function handleAddDocument(e) {
+    if (e.currentTarget.id == "add-doc-button") {
+      setIsAddingDocument(!isAddingDocument);
+    }
+  }
+
+  function handleLeaveProject() {
+    fetch(
+      `http://localhost:3001/leaveProject/${loadedProjects[selectedProject]._id}/${clientUserData._id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ test: "test" }),
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("leaving proj", json);
+      });
+
+    setClientUserData((prev) => {
+      let projectsCopy = [...prev.projects];
+      let index = prev.projects.indexOf(loadedProjects[selectedProject]);
+      projectsCopy.splice(index, 1);
+      return { ...prev, projects: [...projectsCopy] };
+    });
+
+    setSelectedProject();
+    //return to selection page by removing selection
+
+    setLoadedProjects((prev) => {
+      let copy = [...prev];
+      copy.splice(selectedProject, 1);
+      return [...copy];
+    });
+  }
+
+  function handleNameClick(e) {
+    if (e.detail === 2) {
+      handleEditProjectName();
+    }
   }
 
   function getSelectionContent() {
@@ -130,29 +223,12 @@ export default function Popup(props) {
 
   return (
     <>
-      <div id="close" className="popup" onClick={handleClosePopup}>
+      <div id="close" className="popup" onMouseDown={handleClosePopup}>
         {/* <div className="header">
             <div className="filler"></div> */}
         {selectedProject && (
           <button onClick={handleBack} className="back">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  d="M4 10L3.29289 10.7071L2.58579 10L3.29289 9.29289L4 10ZM21 18C21 18.5523 20.5523 19 20 19C19.4477 19 19 18.5523 19 18L21 18ZM8.29289 15.7071L3.29289 10.7071L4.70711 9.29289L9.70711 14.2929L8.29289 15.7071ZM3.29289 9.29289L8.29289 4.29289L9.70711 5.70711L4.70711 10.7071L3.29289 9.29289ZM4 9L14 9L14 11L4 11L4 9ZM21 16L21 18L19 18L19 16L21 16ZM14 9C17.866 9 21 12.134 21 16L19 16C19 13.2386 16.7614 11 14 11L14 9Z"
-                  fill="#33363F"
-                ></path>
-              </g>
-            </svg>
+            <img className="back-icon" src={backIcon} />
           </button>
         )}
         <button id="close" className="exit" onClick={handleClosePopup}>
@@ -173,109 +249,207 @@ export default function Popup(props) {
                   <ProjectSelection
                     handleProjectSelection={handleProjectSelection}
                     loadedProjects={loadedProjects}
+                    setLoadedProjects={setLoadedProjects}
+                    clientUserData={clientUserData}
+                    setClientUserData={setClientUserData}
                   />
                 )}
                 {/* display after project selected: */}
-                {selectedProject && !projectDocs.length == 0 && (
-                  <div className="flex">
-                    <div className="popup--left-column">
-                      <div className="projects-grid">
-                        {docCards}
-                        {docCards}
-                        {docCards}
+                {selectedProject && (
+                  <div className="project-selection">
+                    <div className="projects-main-header-container">
+                      {!isEditingProjName && (
+                        <h2 onClick={handleNameClick} className="projects-name">
+                          {loadedProjects[selectedProject].name}
+                        </h2>
+                      )}
+                      <form onSubmit={handleSaveProjName}>
+                        <input
+                          ref={nameInputRef}
+                          id="txt"
+                          type="text"
+                          className={
+                            isEditingProjName ? "project-name-input" : "hidden"
+                          }
+                          value={projectNameInput}
+                          onChange={(e) => {
+                            setProjectNameInput(e.target.value);
+                          }}
+                        ></input>
+                      </form>
+
+                      {/* <input
+                        ref={nameInputRef}
+                        id="txt"
+                        type="text"
+                        className="project-name-input"
+                        value={projectNameInput}
+                        onChange={(e) => {
+                          setProjectNameInput(e.target.value);
+                        }}
+                      ></input> */}
+                      {!isEditingProjName ? (
+                        <img
+                          onClick={handleEditProjectName}
+                          className="edit-icon"
+                          src={editIcon}
+                        />
+                      ) : (
+                        <div className="btns-flex">
+                          <img
+                            onClick={handleSaveProjName}
+                            className="project-name-edit-btns check"
+                            src={checkIcon}
+                          />
+                          <img
+                            onClick={() => {
+                              setIsEditingProjName(false);
+                            }}
+                            className="project-name-edit-btns"
+                            src={cancelIcon}
+                          />
+                        </div>
+                      )}
+                      <div className="header-subcontainer">
+                        <button onClick={handleLeaveProject}>
+                          <img className="settings-icon" src={settingsIcon} />
+                        </button>
                       </div>
                     </div>
-                    <div className="popup--right-column">
-                      <div className="discussions">
-                        <div className="overflow">
-                          <div className="discussions-header">Discussions</div>
-                          {/* <div className="discussions-comments-container"></div> */}
-                          {clientUserData.projects[
-                            currentProjIndex
-                          ].discussions.map((comment, index) => {
-                            return (
-                              <Comment
-                                key={index}
-                                projects={loadedProjects}
-                                setClientUserData={setClientUserData}
-                                comment={comment}
-                                name={comment.name}
-                                text={comment.comment}
-                                likes={comment.likes}
-                                replies={comment.replies}
-                                time={10}
-                                setReplyInputValue={setReplyInputValue}
-                              />
-                            );
-                          })}
-                        </div>
-                        {/* input */}
-                        <div className="input-comment-container">
-                          <input
-                            ref={inputRef}
-                            className="input-comment"
-                            placeholder="add a comment..."
-                            value={replyInputValue}
-                            onChange={(e) => {
-                              setReplyInputValue(e.target.value);
-                            }}
-                          ></input>
-                          {replyInputValue && (
-                            <div
-                              onClick={handleAddReply}
-                              className="reply-container"
+
+                    <div className="flex">
+                      <div className="popup--left-column">
+                        <div className="projects-header-container">
+                          <div className="documents-title">API Documents</div>
+                          <div className="add-document-btn-container">
+                            <button
+                              onClick={handleAddDocument}
+                              className="add-document-btn"
+                              id="add-doc-button"
                             >
-                              <svg
-                                style={{ cursor: "pointer" }}
-                                width="24"
-                                height="24"
-                                viewBox="0 0 192 128"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M181.333 117.333V104.533C181.333 86.6112 181.333 77.6512 177.845 70.8054C174.778 64.784 169.883 59.8891 163.861 56.8214C157.015 53.3334 148.055 53.3334 130.133 53.3334H10.6667M10.6667 53.3334L53.3333 10.6667M10.6667 53.3334L53.3333 96"
-                                  stroke="#1D1B20"
-                                  stroke-width="21.3333"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-                              {/* <div>Reply</div> */}
-                            </div>
-                          )}
+                              <div className="btn-inner-container">
+                                <div className="plus">+</div>
+                                <div>Add document</div>
+                              </div>
+                            </button>
+                            {isAddingDocument && (
+                              <AddDocuments
+                                currentProject={loadedProjects[selectedProject]}
+                                clientUserData={clientUserData}
+                                setLoadedProjects={setLoadedProjects}
+                                selectedProject={selectedProject}
+                              />
+                            )}
+                          </div>
+                        </div>
+                        <div className="overflow">
+                          <div className="projects-grid">{docCards}</div>
                         </div>
                       </div>
+                      <div className="popup--right-column">
+                        <div className="discussions">
+                          <div className="overflow">
+                            <div className="discussions-header-container">
+                              <h2 className="discussions-header">
+                                Discussions
+                              </h2>
 
-                      <div className="notes">
-                        <div>Notes</div>
-                        <textarea
-                          value={inputValue}
-                          onChange={handleInputValue}
-                          className="notes-text-input"
-                          placeholder="Your notes..."
-                        ></textarea>
-                        {!(
-                          inputValue === loadedProjects[currentProjIndex].notes
-                        ) && (
-                          // <div className="save">Save</div>
-                          <div className="button-container">
-                            <button
-                              onClick={() =>
-                                setInputValue(
-                                  loadedProjects[currentProjIndex].notes
-                                )
+                              <AddMembersBtn
+                                loadedProjects={loadedProjects}
+                                selectedProject={selectedProject}
+                              />
+                            </div>
+                            {/* <div className="discussions-comments-container"></div> */}
+
+                            {loadedProjects[selectedProject].discussions.map(
+                              (comment, index) => {
+                                return (
+                                  <Comment
+                                    key={index}
+                                    projects={loadedProjects}
+                                    setClientUserData={setClientUserData}
+                                    name={comment.name}
+                                    text={comment.comment}
+                                    likes={comment.likes.$numberInt}
+                                    replies={comment.replies}
+                                    time={10}
+                                    setReplyInputValue={setReplyInputValue}
+                                  />
+                                );
                               }
-                              className="undo"
-                            >
-                              Undo
-                            </button>
-                            <button onClick={handleSave} className="save">
-                              Save
-                            </button>
-                            {/* <button onClick={()=>{setClientUserData((prev)=>({...prev,  [currentProj.notes]: inputValue}))}} className="save">Save</button> */}
+                            )}
                           </div>
-                        )}
+                          {/* input */}
+                          <div className="input-comment-container">
+                            <input
+                              ref={inputRef}
+                              className="input-comment"
+                              placeholder="add a comment..."
+                              value={replyInputValue}
+                              onChange={(e) => {
+                                setReplyInputValue(e.target.value);
+                              }}
+                            ></input>
+                            {replyInputValue && (
+                              <div
+                                onClick={handleAddReply}
+                                className="reply-container"
+                              >
+                                <svg
+                                  style={{ cursor: "pointer" }}
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 192 128"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M181.333 117.333V104.533C181.333 86.6112 181.333 77.6512 177.845 70.8054C174.778 64.784 169.883 59.8891 163.861 56.8214C157.015 53.3334 148.055 53.3334 130.133 53.3334H10.6667M10.6667 53.3334L53.3333 10.6667M10.6667 53.3334L53.3333 96"
+                                    stroke="#1D1B20"
+                                    stroke-width="21.3333"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  />
+                                </svg>
+                                {/* <div>Reply</div> */}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="notes">
+                          <div className="notes-header-container">
+                            <div className="notes-header">Notes</div>
+                            {!(
+                              inputValue ===
+                              loadedProjects[selectedProject].notes
+                            ) && (
+                              // <div className="save">Save</div>
+                              <div className="button-container">
+                                <button
+                                  onClick={() => {
+                                    setInputValue(
+                                      loadedProjects[selectedProject].notes
+                                    );
+                                  }}
+                                  className="undo"
+                                >
+                                  Undo
+                                </button>
+                                <button onClick={handleSave} className="save">
+                                  Save
+                                </button>
+                                {/* <button onClick={()=>{setClientUserData((prev)=>({...prev,  [currentProj.notes]: inputValue}))}} className="save">Save</button> */}
+                              </div>
+                            )}
+                          </div>
+                          <textarea
+                            value={inputValue}
+                            onChange={handleInputValue}
+                            className="notes-text-input"
+                            placeholder="Your notes..."
+                          ></textarea>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -42,7 +42,6 @@ export default function DocCard(props) {
       }
     });
     
-    console.log("updated client data")
     setClientUserData((prev) => ({ ...prev, recents: recentDocIds }));
 
     //update recents with new recents array
