@@ -10,11 +10,9 @@ export default function UserSettingsBar(props) {
 
     // setIsHovering(true)
   }
-  function handleClickOutside(){
-    console.log("outside click!")
-  } 
-
-
+  function handleClickOutside() {
+    console.log("outside click!");
+  }
 
   //   function handleHoverPopup() {
   //     console.log("hovering over popup");
@@ -26,6 +24,22 @@ export default function UserSettingsBar(props) {
   //   }
   return (
     <div>
+      <div className="user-info-container">
+        <img className="user-icon" src={userIcon} />
+        <div className="flex">
+          <div className="username">
+            {clientUserData.username.toUpperCase()}
+          </div>
+          <div className="email">{"email@gmail.com"}</div>
+        </div>
+        <div
+          id="userSettings"
+          onClick={handleSettingsClick}
+          className="ellipsis"
+        >
+          ...
+        </div>
+      </div>
       {/* Popup here */}
       {isSettings && (
         <div
@@ -45,22 +59,6 @@ export default function UserSettingsBar(props) {
           </div>
         </div>
       )}
-      <div className="user-info-container">
-        <img className="user-icon" src={userIcon} />
-        <div className="flex">
-          <div className="username">
-            {clientUserData.username.toUpperCase()}
-          </div>
-          <div className="email">{"email@gmail.com"}</div>
-        </div>
-        <div
-          id="userSettings"
-          onClick={handleSettingsClick}
-          className="ellipsis"
-        >
-          ...
-        </div>
-      </div>
     </div>
   );
 }

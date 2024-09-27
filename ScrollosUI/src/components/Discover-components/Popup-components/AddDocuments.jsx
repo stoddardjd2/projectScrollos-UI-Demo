@@ -111,6 +111,7 @@ export default function AddDocuments(props) {
           src={searchIcon}
         />
       </div>
+      <div className="triangle"></div>
 
       {loadedDocs.length > 0 ? (
         <>
@@ -143,8 +144,10 @@ export default function AddDocuments(props) {
         </>
       ) : (
         <>
-          {!searchInput && (
+          {!loadedRecentDocs ? (
             <img className="add-docs-loading-placeholder" src={loadingIcon} />
+          ) : (
+            <div>No results</div>
           )}
         </>
       )}

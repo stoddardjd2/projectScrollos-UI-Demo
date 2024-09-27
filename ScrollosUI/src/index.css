@@ -1524,9 +1524,10 @@ button:hover {
 }
 
 .user-settings-popup {
-  position: fixed;
-  left: 85.4%;
-  top: 6%;
+  position: absolute;
+  /* left: 85.4%; */
+  /* top: 6%; */
+  top:60px;
   color: black;
   background-color: white;
   box-shadow: 0 0px 10px rgb(31, 31, 31);
@@ -1542,8 +1543,8 @@ button:hover {
     content: "";
     rotate: 180deg;
     position: absolute;
-    top: -26%;
-    left: 89%;
+    top: -8px;
+    left: 180px;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
@@ -1947,7 +1948,7 @@ button:hover {
           .documents-title {
             align-self: end;
           }
-        
+
           .add-document-btn-container {
             .add-documents-popup {
               color: black;
@@ -1965,6 +1966,17 @@ button:hover {
               flex-direction: column;
               gap: 4px;
               box-shadow: 0 0px 5px #00000081;
+              .triangle {
+                content: "";
+                rotate: 180deg;
+                position: absolute;
+                top: -9px;
+                left: 160px;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: rgb(228, 228, 228) transparent transparent transparent;
+              }
               .search-container {
                 display: flex;
                 justify-content: space-between;
@@ -2001,7 +2013,7 @@ button:hover {
                 align-self: center;
               }
             }
-            .add-document-btn:hover{
+            .add-document-btn:hover {
               opacity: 80%;
             }
             .add-document-btn {
@@ -2014,7 +2026,7 @@ button:hover {
               border-radius: 10px;
               padding: 0px 7px;
               margin-bottom: 5px;
-            
+
               .btn-inner-container {
                 display: flex;
                 align-items: center;
@@ -2076,7 +2088,18 @@ button:hover {
               border-radius: 10px;
 
               gap: 4px;
-              box-shadow: 0 0px 5px #00000081;
+              box-shadow: 0 -0px 5px #00000081;
+              .triangle {
+                content: "";
+                rotate: 180deg;
+                position: absolute;
+                top: -9px;
+                left: 160px;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: rgb(228, 228, 228) transparent transparent transparent;
+              }
               .members-list {
                 /* padding-top: 10px; */
               }
@@ -2096,7 +2119,7 @@ button:hover {
                 flex-direction: column;
                 padding-bottom: 5px;
                 cursor: pointer;
-                
+
                 .username-container {
                   display: flex;
                   justify-content: space-between;
@@ -2120,7 +2143,8 @@ button:hover {
               img {
                 width: 18px;
               }
-            }.add-members-btn:hover{
+            }
+            .add-members-btn:hover {
               opacity: 80%;
             }
             .add-members-btn {
@@ -2134,7 +2158,7 @@ button:hover {
               border-radius: 10px;
               padding: 0px 7px;
               margin-bottom: 5px;
-              
+
               .btn-inner-container {
                 display: flex;
                 align-items: center;

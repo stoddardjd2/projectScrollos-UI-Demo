@@ -43,6 +43,8 @@ export default function AddMembersBtn(props) {
       {isAddingMembers && (
         <div className="add-members-popup">
           <form onSubmit={handleSearchMembers} className="add-members-form">
+            <div className="triangle"></div>
+
             <input
               onChange={handleSearchMembers}
               placeholder="add by username"
@@ -62,7 +64,10 @@ export default function AddMembersBtn(props) {
                   checked = true;
                 }
                 return (
-                  <div index={index} className={`members-item-container child-${index}`}>
+                  <div
+                    index={index}
+                    className={`members-item-container child-${index}`}
+                  >
                     <div>
                       <div className="username-container">
                         <div>{member.username}</div>
