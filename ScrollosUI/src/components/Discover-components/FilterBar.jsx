@@ -69,7 +69,7 @@ export default function FilterBar(props) {
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
-      <FilterOption
+      {/* <FilterOption
         activeId="lastproject"
         displayName="Last Project"
         img={LastProjectIcon}
@@ -77,7 +77,7 @@ export default function FilterBar(props) {
         activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
-      />
+      /> */}
 
       {/* <div></div> */}
       <div className="vertical-border"></div>

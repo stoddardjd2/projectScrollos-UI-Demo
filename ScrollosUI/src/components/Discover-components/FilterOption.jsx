@@ -50,12 +50,12 @@ export default function FilterOption(props) {
             }
             className="toggle-container"
           >
-            <div className={"container"}>
+            <div className={"filter-container"}>
               <img src={sortImg} style={{ transform: "rotateX(180deg)" }} />
               <div>{sortOption1}</div>
             </div>
 
-            <div className={"container"}>
+            <div className={"filter-container"}>
               <img src={sortImg} />
               <div>{sortOption2}</div>
             </div>

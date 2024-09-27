@@ -20,9 +20,11 @@ import Projects from "./Popup-components/Projects";
 import Popup from "./Popup-components/Popup";
 import projectsIcon from "../../assets/projects.svg";
 import UserSettingsBar from "./UserSettingsBar";
+import DocumentViewSelector from "./DocumentViewSelector";
 
 export default function Discover() {
-  const { loadedDocs, userData, allDocIds } = useLoaderData();
+  const { loadedDocs, userData, allDocIds, loadedLastViewMode } =
+    useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
   const userDataSchema = {
     recents: [],
@@ -111,7 +113,7 @@ export default function Discover() {
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
-  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(15);
+  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(12);
 
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
@@ -123,11 +125,12 @@ export default function Discover() {
   const [idsForPage, setidsForPage] = useState(getIdsPerPage(allDocIds));
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   // for controlling right column display:
   //Changed by sidebar selection
-  const [rightColumnDisplay, setRightColumnDisplay] = useState("documents");
+  const [rightColumnDisplay, setRightColumnDisplay] =
+    useState(loadedLastViewMode);
   // Store all projects for current user:
   //temporary values to test:
 
@@ -215,9 +218,9 @@ export default function Discover() {
     }
   }
 
-  function toggleSidebar() {
-    setIsOpen(!isOpen);
-  }
+  // function toggleSidebar() {
+  //   setIsOpen(!isOpen);
+  // }
 
   function handleDiscoverClick(e) {
     //hide user setting popup if click on page
@@ -248,9 +251,10 @@ export default function Discover() {
   });
 
   return (
-    <div 
-    // onClick={handleDiscoverClick}
-     className="discover-page">
+    <div
+      // onClick={handleDiscoverClick}
+      className="discover-page"
+    >
       {/* POPUPS here for z-index to work properly*/}
       {isPopupActive && (
         <Popup
@@ -282,11 +286,8 @@ export default function Discover() {
         <div className="page-info-bar">
           {/* <div className="found">10 docs found</div> */}
           <div className="left-margin">
-            <div className="container">
-              <div
-                onClick={() => setIsPopupActive(true)}
-                className="projects-container"
-              >
+            <div onClick={() => setIsPopupActive(true)} className="container">
+              <div className="projects-container">
                 <img className="projects-icon" src={projectsIcon} />
                 <div>Projects</div>
               </div>
@@ -312,18 +313,17 @@ export default function Discover() {
             setDisplayApiDocs={setDisplayApiDocs}
             clientUserData={clientUserData}
           /> */}
-          <PageSelection
-            setDisplayApiDocs={setDisplayApiDocs}
-            apiDocsDisplay={apiDocsDisplay}
-            idsForPage={idsForPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
+          <div className="actions-placeholder"></div>
+          <DocumentViewSelector
+            setClientUserData={setClientUserData}
+            setRightColumnDisplay={setRightColumnDisplay}
+            clientUserData={clientUserData}
           />
         </div>
       </div>
       <div className="discover">
-        <div className="left-column">
-          <div className="divider">
+        {/* <div className="left-column"> */}
+        {/* <div className="divider">
             <div
               // style={
               //   !isOpen
@@ -344,7 +344,6 @@ export default function Discover() {
               />
             </div>
 
-            {/* hide sidebar content if closed */}
             <div className="left-split">
               <Sidebar
                 setDisplayApiDocs={setDisplayApiDocs}
@@ -360,12 +359,18 @@ export default function Discover() {
                 clientUserData={clientUserData}
               />
             </div>
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
         <RightColumn
           rightColumnDisplay={rightColumnDisplay}
           docCards={docCards}
           apiDocsDisplay={apiDocsDisplay}
+          setDisplayApiDocs={setDisplayApiDocs}
+          idsForPage={idsForPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          clientUserData={clientUserData}
+          setClientUserData={setClientUserData}
         />
       </div>
     </div>

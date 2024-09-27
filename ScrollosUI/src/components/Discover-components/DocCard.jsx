@@ -2,13 +2,13 @@ import { useState, useTransition, useEffect } from "react";
 import saveFill from "../../assets/filledbookmark.svg";
 import saveEmpty from "../../assets/unfilledbookmark.svg";
 import infoIcon from "../../assets/info.svg";
-import starIcon from "../../assets/star.svg";
 import addIcon from "../../assets/add.svg";
 import commentIcon from "../../assets/comment.svg";
 
 import NotesView from "./Card-components/NotesView";
 import AddView from "./Card-components/AddView";
 import InfoView from "./Card-components/InfoView";
+import Rating from "./Rating";
 
 import ActionButton from "./Card-components/ActionButton";
 // import getStyleForAction from "./Card-components/getStyleForAction";
@@ -27,8 +27,7 @@ export default function DocCard(props) {
   const [action, setAction] = useState({ active: false, type: "none" });
   // const [IsinfoFlipped, setIsInfoFlipped] = useState(false);
 
-  const [mouseOverStar, setMouseOverStar] = useState();
-  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
+
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function handleSelectedDoc(e) {
@@ -41,7 +40,7 @@ export default function DocCard(props) {
         recentDocIds.push(recentId);
       }
     });
-    
+
     setClientUserData((prev) => ({ ...prev, recents: recentDocIds }));
 
     //update recents with new recents array
@@ -127,68 +126,7 @@ export default function DocCard(props) {
     }
   }
 
-  function handleToggleAddRating() {
-    setIsAddRatingExpanded(!isAddRatingExpanded);
-  }
-  function handleAddRating(e) {
-    const rating = e.currentTarget.id;
-    console.log("adding rating of :", rating);
 
-    
-    // FETCH DATABASE AND ADD RATING!
-  }
-  function handleMouseOverStar(e) {
-    const id = e.currentTarget.id;
-    setMouseOverStar(id);
-  }
-
-  function getAverageRating(ratings) {
-    if (ratings) {
-      if (ratings.length === 0) {
-        return { sum: 0, average: 0 };
-      }
-
-      let totalSum = ratings.reduce(
-        (acc, ratingObj) => acc + parseFloat(ratingObj.rating),
-        0
-      );
-      let average = totalSum / ratings.length;
-
-      // Rounding the average to the nearest tenth
-      let roundedAverage = Math.round(average * 10) / 10;
-
-      return roundedAverage;
-    } else return 0;
-  }
-
-  function getRatingElements() {
-    const ratingDelays = [
-      { enter: "0.4s", exit: "0s" },
-      { enter: "0.3s", exit: "0.1s" },
-      { enter: "0.2s", exit: "0.2s" },
-      { enter: "0.1s", exit: "0.3s" },
-    ];
-    return ratingDelays.map((ratingDelay, index) => {
-      return (
-        <img
-          key={index}
-          src={starIcon}
-          className="star"
-          onClick={handleAddRating}
-          id={index + 2}
-          style={
-            isAddRatingExpanded
-              ? // if expanded:
-                mouseOverStar >= index + 2
-                ? { opacity: "100%", transition: "0s ease-in-out all" }
-                : { transition: "0s ease-in-out all", opacity: " 40%" }
-              : //if not expanded:
-                { opacity: " 40%" }
-          }
-        />
-      );
-    });
-  }
 
   function getStyleForAction(target) {
     if (action.type === "info") {
@@ -428,47 +366,8 @@ export default function DocCard(props) {
           }
         >
           <div className="updated">Opened 8/8/2024 </div>
-          <div
-            className="rating-container"
-            onClick={handleToggleAddRating}
-            onMouseOver={(e) => setMouseOverStar(e.target.id)}
-            onMouseLeave={() => setMouseOverStar()}
-          >
-            <img
-              src={starIcon}
-              id={1}
-              // onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
-              // onMouseLeave={() => setMouseOverStar()}
-              className="star"
-              style={
-                isAddRatingExpanded
-                  ? // if expanded:
-                    mouseOverStar >= 1
-                    ? { opacity: "100%", transition: "0s ease-in-out all" }
-                    : { transition: "0s ease-in-out all", opacity: "40%" }
-                  : //if not expanded:
-                    {}
-              }
-              onClick={(e) => {
-                //only set rating if expanded
-                isAddRatingExpanded && handleAddRating(e);
-              }}
-            />
-
-            <div
-              className="add-rating-container"
-              style={!isAddRatingExpanded ? { width: "0%" } : { width: "100%" }}
-            >
-              {getRatingElements()}
-            </div>
-            <div className="rating">
-              {getAverageRating(apiDoc.ratings.reviews)}
-            </div>
-          </div>
+          <Rating apiDoc={apiDoc}/>
         </div>
-
-
-
 
         {/* if info is clicked*/}
         <InfoView

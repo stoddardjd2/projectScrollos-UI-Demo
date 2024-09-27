@@ -7,6 +7,7 @@ export default function PageSelection(props) {
     idsForPage,
     currentPage,
     setCurrentPage,
+    setRightColumnDisplay
   } = props;
 
   function handleSetPage(e) {
@@ -72,8 +73,9 @@ export default function PageSelection(props) {
               currentPage == index
                 ? {
                     opacity: "100%",
-                    backgroundColor: "white",
-                    color: "black",
+                    backgroundColor: "var(--primary-light)",
+                    color: "white",
+                    border: "none",
                     // backgroundColor: "var(--primary-light)",
                     // boxShadow: " 0 0px 5px white",
                     // color: "white"
@@ -87,7 +89,6 @@ export default function PageSelection(props) {
       }
 
       if (index >= 3 + currentPage) {
-        console.log("test");
         //only display at most 3 page buttons
         return;
       }
@@ -107,8 +108,9 @@ export default function PageSelection(props) {
             currentPage == index
               ? {
                   opacity: "100%",
-                  backgroundColor: "white",
-                  color: "black",
+                  backgroundColor: "var(--primary-light)",
+                  color: "white",
+                  border: "none",
                 }
               : {}
           }
@@ -133,8 +135,9 @@ export default function PageSelection(props) {
           style={
             currentPage == 0
               ? {
-                  backgroundColor: "white",
-                  color: "black",
+                  backgroundColor: "var(--primary-light)",
+                  color: "white",
+                  border: "none",
                 }
               : {}
           }
@@ -157,8 +160,9 @@ export default function PageSelection(props) {
               style={
                 currentPage == idsForPage.length - 1
                   ? {
-                      backgroundColor: "white",
-                      color: "black",
+                      backgroundColor: "var(--primary-light)",
+                      color: "white",
+                      border: "none",
                     }
                   : {}
               }
