@@ -672,6 +672,138 @@ button:hover {
     }
   }
 }
+/* cards-V2-view */
+.cards-v2-view {
+  height: 80vh;
+
+  .cards-v2-grid {
+    width: 100%;
+    height: 100%;
+    height: fit-content;
+    display: grid;
+    /* grid-template-rows: 15em; */
+    /* grid-auto-rows: 21.3em; */
+    grid-auto-rows: 240px;
+    grid-template-columns: repeat(auto-fit, minmax(163.3px, 150px));
+    column-gap: 20px;
+    row-gap: 30px;
+    .cards-v2-item {
+      display: flex;
+      flex-direction: column;
+      .bottom-description {
+        flex: 2;
+        margin: 0px 10px;
+        color: black;
+        display: flex;
+        flex-direction: column;
+
+        .name-container {
+          display: flex;
+          justify-content: space-between;
+          .bottom-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            cursor: pointer;
+          }
+          .more-options-container {
+            .more-options-popup {
+              display: flex;
+              flex-direction: column;
+              position: absolute;
+              translate: -65px;
+              background-color: #ffffff;
+              box-shadow: 0 -0.5px 5px #00000081;
+              padding: 10px;
+              border-radius: 10px;
+            }
+            .more-options-triangle {
+              content: "";
+              rotate: 180deg;
+              position: absolute;
+              translate: 12px -9px;
+
+              /* left: 145px; */
+              /* bottom: 413px; */
+              border-width: 5px;
+              border-style: solid;
+              border-color: #ffffff transparent transparent transparent;
+            }
+            .more-options:hover{
+              background-color: rgb(206, 206, 206);
+              border-radius: 20px;
+            }
+            .more-options {
+              margin-left: 5px;
+              padding: 5px 10px;
+            }
+          }
+        }
+
+        .bottom-extra-container {
+          display: flex;
+          cursor: pointer;
+          .rating-container {
+            flex: 1;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 0px;
+            .star-icon {
+              width: 12px;
+              margin-bottom: 2px;
+            }
+          }
+          .bottom-extra {
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+      .inner-card-grid {
+        /* box-shadow: 0 0px 5px #00000081; */
+        flex: 8;
+        padding: 10px;
+        background-color: #e2e2e2;
+        border-radius: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+        max-width: 600px;
+        /* margin: auto; */
+        .save-container {
+          cursor: pointer;
+        }
+        .grid-item-container {
+          color: black;
+          background-color: rgb(255, 255, 255);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          cursor: pointer;
+          .push-up {
+            margin-bottom: 3px;
+          }
+
+          .grid-icon {
+            height: 18px;
+            width: 18px;
+            user-select: none;
+          }
+        }
+      }
+    }
+  }
+}
+
 /* ROWS */
 .row-view {
   height: 80vh;
@@ -709,6 +841,7 @@ button:hover {
       display: flex;
       justify-content: center;
       flex: 0.1;
+      margin-right: 10px;
       img {
         width: 20px;
       }
@@ -718,24 +851,25 @@ button:hover {
         cursor: pointer;
       }
       .save {
-        width: 24px;
+        width: 15px;
       }
       .saveFill {
-        object-position: 0 -2.6px;
+        /* object-position: 0 -2.6px; */
 
         object-fit: fill;
 
         filter: brightness(0) saturate(100%) invert(39%) sepia(26%)
           saturate(1874%) hue-rotate(317deg) brightness(91%) contrast(91%);
+        /* filter: brightness(0%); */
       }
       .saveEmpty {
-        object-position: 0 -8px;
+        /* object-position: 0 -8px; */
         filter: brightness(0) saturate(100%) invert(9%) sepia(10%)
           saturate(735%) hue-rotate(222deg) brightness(94%) contrast(94%);
         transition: 0.2s ease-in-out all;
       }
       .saveEmpty:hover {
-        object-position: 0 -2.6px;
+        /* object-position: 0 -2.6px; */
         transition: 0.2s ease-in-out all;
       }
     }

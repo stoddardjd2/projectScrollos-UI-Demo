@@ -22,7 +22,7 @@ export default function DocCard(props) {
     projects,
     clientUserData,
   } = props;
-  const [isSaved, setIsSaved] = useState(loadIsSaved);
+  const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
   // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
   const [action, setAction] = useState({ active: false, type: "none" });
   // const [IsinfoFlipped, setIsInfoFlipped] = useState(false);
@@ -72,31 +72,39 @@ export default function DocCard(props) {
         ...prev,
         bookmarks: [...prev.bookmarks, apiDoc._id],
       }));
-      fetch(`http://localhost:3001/user/${userID}/save/bookmarks`, {
+      fetch(`http://localhost:3001/user/${clientUserData._id}/save/bookmarks`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ docID: apiDoc._id }),
       });
-      setIsSaved(!isSaved);
+      //   setIsSaved(!isSaved);
       //remove from database if unsaving
     } else if (isSaved) {
-      setIsSaved(!isSaved);
+      //   setIsSaved(!isSaved);
       //remove id of selected item from state
       setClientUserData((prev) => {
         const index = prev.bookmarks.indexOf(apiDoc._id);
-        prev.bookmarks.splice(index, 1);
+        let copy = [...prev.bookmarks];
+        copy.splice(index, 1);
+        console.log("removing", apiDoc.info.title);
 
-        return { ...prev, bookmarks: [...prev.bookmarks, apiDoc._id] };
+        return {
+          ...prev,
+          bookmarks: [...copy],
+        };
       });
-      fetch(`http://localhost:3001/user/${userID}/remove/bookmarks`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ docID: apiDoc._id }),
-      });
+      fetch(
+        `http://localhost:3001/user/${clientUserData._id}/remove/bookmarks`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ docID: apiDoc._id }),
+        }
+      );
     }
   }
 

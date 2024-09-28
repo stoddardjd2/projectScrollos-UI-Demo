@@ -4,6 +4,7 @@ import Projects from "./Right-column-sub-components/Projects";
 import PageSelection from "./PageSelection";
 
 import RowDocItem from "./RowDocItem";
+import CardsV2DocItem from "./CardsV2DocItem";
 
 export default function RightColumn(props) {
   const {
@@ -19,7 +20,6 @@ export default function RightColumn(props) {
   } = props;
 
   function getRightColumnDisplay() {
-    console.log("RIGTCOLDISPL!", rightColumnDisplay);
     switch (rightColumnDisplay) {
       case "cards":
         // OVERRIDE TO ALWAYS DISPLAY DOCUMENTS VVV
@@ -36,68 +36,60 @@ export default function RightColumn(props) {
         );
       case "rows":
         return (
-            <div className="row-view">
-              {/* if no search results */}
-              {!(apiDocsDisplay.length === 0) ? (
-                <>
-                  <div className="row-flex-container row-key">
-                    <div className="row-save save-container"></div>
-                    <div className="row-title ">Recent Docs</div>
-                    <div className="row-rating">Rating</div>
-                    <div className="row-date row-key">Last opened</div>
-                    <div className="row-version row-key">Document Version</div>
-                    <div className="row-api-type row-key">API Spec</div>
-                    <button className="more-options"></button>
-                  </div>
-                  {apiDocsDisplay.map((apiDoc) => {
-                    const loadIsSaved = clientUserData.bookmarks.includes(
-                      apiDoc._id
-                    );
+          <div className="row-view">
+            {/* if no search results */}
+            {!(apiDocsDisplay.length === 0) ? (
+              <>
+                <div className="row-flex-container row-key">
+                  <div className="row-save save-container"></div>
+                  <div className="row-title ">Recent Docs</div>
+                  <div className="row-rating">Rating</div>
+                  <div className="row-date row-key">Last opened</div>
+                  <div className="row-version row-key">Document Version</div>
+                  <div className="row-api-type row-key">API Spec</div>
+                  <button className="more-options"></button>
+                </div>
+                {apiDocsDisplay.map((apiDoc, index) => {
+                  const loadIsSaved = clientUserData.bookmarks.includes(
+                    apiDoc._id
+                  );
 
-                    return (
-                      <RowDocItem
-                        apiDoc={apiDoc}
-                        loadIsSaved={loadIsSaved}
-                        setClientUserData={setClientUserData}
-                        clientUserData={clientUserData}
-                      />
-                    );
-                  })}
-                </>
-              ) : (
-                <div className="no-results">NO RESULTS</div>
-              )}
-            </div>
+                  return (
+                    <RowDocItem
+                      apiDoc={apiDoc}
+                      loadIsSaved={loadIsSaved}
+                      setClientUserData={setClientUserData}
+                      clientUserData={clientUserData}
+                      key={index}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              <div className="no-results">NO RESULTS</div>
+            )}
+          </div>
           // <Projects />;
         );
       case "cards-v2":
         return (
-          <img
-            src={"https://fakeimg.pl/1700x1000?text=In+Development"}
-            style={{ width: "100%", height: "100%" }}
-          />
+          <div className="cards-v2-view">
+            <div className="cards-v2-grid">
+              {apiDocsDisplay.map((apiDoc, index) => {
+                console.log("checking if saved!");
+
+                return (
+                    <CardsV2DocItem
+                      clientUserData={clientUserData}
+                      apiDoc={apiDoc}
+                      setClientUserData={setClientUserData}
+                      key = {index}
+                    />
+                );
+              })}
+            </div>
+          </div>
         );
-      // case "notes":
-      //   return (
-      //     <img
-      //       src={"https://fakeimg.pl/1700x1000?text=In+Development"}
-      //       style={{ width: "100%", height: "100%" }}
-      //     />
-      //   );
-      // case "settings":
-      //   return (
-      //     <img
-      //       src={"https://fakeimg.pl/1700x1000?text=In+Development"}
-      //       style={{ width: "100%", height: "100%" }}
-      //     />
-      //   );
-      // case "notifications":
-      //   return (
-      //     <img
-      //       src={"https://fakeimg.pl/1700x1000?text=In+Development"}
-      //       style={{ width: "100%", height: "100%" }}
-      //     />
-      //   );
     }
   }
 

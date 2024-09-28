@@ -1,13 +1,15 @@
 import { useState } from "react";
-import saveFill from "../../assets/filledbookmark.svg";
-import saveEmpty from "../../assets/unfilledbookmark.svg";
+// import saveFill from "../../assets/filledbookmark.svg";
+// import saveEmpty from "../../assets/unfilledbookmark.svg";
+import saveFill from "../../assets/cards-v2-icons/bookmark.svg";
+import saveEmpty from "../../assets/cards-v2-icons/unfilled-bookmark.svg";
+
 import starIcon from "../../assets/star.svg";
 export default function RowDoc(props) {
-  const { loadIsSaved, apiDoc, setClientUserData, clientUserData } = props;
-  const [isSaved, setIsSaved] = useState(loadIsSaved);
+  const { apiDoc, setClientUserData, clientUserData } = props;
+  const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
 
   function handleSave(e) {
-    console.log("save", e.target);
     e.stopPropagation();
     //save changes to database:
     //add to database if saving
@@ -25,18 +27,20 @@ export default function RowDoc(props) {
         },
         body: JSON.stringify({ docID: apiDoc._id }),
       });
-      setIsSaved(!isSaved);
+      //   setIsSaved(!isSaved);
       //remove from database if unsaving
     } else if (isSaved) {
-      setIsSaved(!isSaved);
+      //   setIsSaved(!isSaved);
       //remove id of selected item from state
       setClientUserData((prev) => {
         const index = prev.bookmarks.indexOf(apiDoc._id);
-        prev.bookmarks.splice(index, 1);
+        let copy = [...prev.bookmarks];
+        copy.splice(index, 1);
+        console.log("removing", apiDoc.info.title);
 
         return {
           ...prev,
-          bookmarks: [...prev.bookmarks, apiDoc._id],
+          bookmarks: [...copy],
         };
       });
       fetch(
@@ -51,8 +55,10 @@ export default function RowDoc(props) {
       );
     }
   }
+
   function handleSelectedDoc(e) {
     const selectedDocId = e.currentTarget.id;
+    console.log("selkected doic!")
     //update recents in db with updated recents array
     let recentDocIds = [];
     recentDocIds.push(selectedDocId);
