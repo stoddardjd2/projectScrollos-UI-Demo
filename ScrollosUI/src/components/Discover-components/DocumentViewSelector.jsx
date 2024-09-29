@@ -1,8 +1,10 @@
 import { useState } from "react";
 import rowColumnIcon from "../../assets/row-column.svg";
+import viewTypeIcon from "../../assets/document-view-selector-icons/viewType.svg";
 import cardsIcon from "../../assets/document-view-selector-icons/cards.svg";
 import rowsIcon from "../../assets/document-view-selector-icons/rows.svg";
 import cardsV2Icon from "../../assets/document-view-selector-icons/cardsV2.svg";
+import gridIcon from "../../assets/document-view-selector-icons/grid.svg";
 export default function DocumentViewSelector(props) {
   const { clientUserData, setRightColumnDisplay, setClientUserData } = props;
   const [isViewClicked, setIsViewClicked] = useState(false);
@@ -47,8 +49,7 @@ export default function DocumentViewSelector(props) {
         }}
         className="view-filter-btn"
       >
-        <img src={rowColumnIcon} />
-        <div>View</div>
+        <img src={viewTypeIcon} />
       </div>
       {isViewClicked && (
         <div className="bottom-popup">
@@ -74,8 +75,8 @@ export default function DocumentViewSelector(props) {
               className="bottom-popup-item-container"
               id="cards-v2"
             >
-              <img src={cardsV2Icon} />
-              <div>Cards v2</div>
+              <img src={gridIcon} />
+              <div>Grid</div>
             </div>
           </div>
           <div className="triangle"></div>

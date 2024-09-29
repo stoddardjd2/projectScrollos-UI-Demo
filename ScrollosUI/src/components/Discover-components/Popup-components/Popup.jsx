@@ -15,6 +15,7 @@ import AddDocuments from "./AddDocuments";
 import AddDocsPopover from "./AddDocsPopover";
 import settingsIcon from "../../../assets/project-icons/settings.svg";
 import AddMembersBtn from "./AddMembersBtn";
+import CardsV2DocItem from "../CardsV2DocItem";
 export default function Popup(props) {
   const { setIsPopupActive, clientUserData, setClientUserData } = props;
   const [optionSelection, setOptionSelection] = useState("projects");
@@ -208,14 +209,10 @@ export default function Popup(props) {
     const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
     const loadIsFlagged = clientUserData.flags.includes(doc._id);
     return (
-      <DocCard
+      <CardsV2DocItem
         key={doc._id}
         apiDoc={doc}
-        loadIsSaved={loadIsSaved}
-        loadIsFlagged={loadIsFlagged}
-        userID={clientUserData._id}
         setClientUserData={setClientUserData}
-        projects={clientUserData.projects}
         clientUserData={clientUserData}
       />
     );
@@ -235,7 +232,6 @@ export default function Popup(props) {
           <img
             className="exit-icon"
             src={exitIcon}
-            onClick={handleClosePopup}
           />
         </button>
 
@@ -338,12 +334,14 @@ export default function Popup(props) {
                                 clientUserData={clientUserData}
                                 setLoadedProjects={setLoadedProjects}
                                 selectedProject={selectedProject}
+                                setClientUserData={setClientUserData}
                               />
                             )}
                           </div>
                         </div>
                         <div className="overflow">
-                          <div className="projects-grid">{docCards}</div>
+                          <div className="cards-v2-grid">{docCards}</div>
+                          <div></div>
                         </div>
                       </div>
                       <div className="popup--right-column">

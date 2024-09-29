@@ -9,13 +9,18 @@ import starIcon from "../../assets/cards-v2-icons/star.svg";
 import viewsIcon from "../../assets/cards-v2-icons/views.svg";
 import versionIcon from "../../assets/cards-v2-icons/version.svg";
 import messageIcon from "../../assets/cards-v2-icons/message.svg";
+import RatingV2 from "./RatingV2";
+
+import DocDiscussionsPopup from "./DocDiscussionsPopup";
 
 export default function CardsV2DocItem(props) {
-  const { apiDoc, clientUserData, setClientUserData } = props;
+  const { apiDoc, clientUserData, setClientUserData, setDisplayApiDocs, currentDocIndex } = props;
   //   const [isSaved, setIsSaved] = useState(false);
   const [isMoreOptions, setIsMoreOptions] = useState(false);
+  const [isRating, setIsRating] = useState(false);
+  const [isDiscussion, setIsDiscussion] = useState(false);
+
   const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
-  console.log("is saved for", isSaved, apiDoc.info.title);
 
   function handleSave(e) {
     e.stopPropagation();
@@ -44,7 +49,6 @@ export default function CardsV2DocItem(props) {
         const index = prev.bookmarks.indexOf(apiDoc._id);
         let copy = [...prev.bookmarks];
         copy.splice(index, 1);
-        console.log("removing", apiDoc.info.title);
 
         return {
           ...prev,
@@ -65,7 +69,6 @@ export default function CardsV2DocItem(props) {
   }
 
   function handleSelectedDoc(e) {
-    console.log("doc selected!", e.target);
     const selectedDocId = e.currentTarget.id;
     //update recents in db with updated recents array
     let recentDocIds = [];
@@ -101,10 +104,34 @@ export default function CardsV2DocItem(props) {
         })
           .then((res) => res.json())
           .then((json) => {
-            console.log("res!", json);
+            console.log(json);
           });
         window.location.href = `/ApiDocViewer/${selectedDocId}`;
       });
+    }
+  }
+
+  async function handleAddRating(e) {
+    // handle select star value and add rating to doc
+    const rating = e.currentTarget.id;
+    setIsRating(false);
+
+    // FETCH DATABASE AND ADD RATING!
+    fetch(`http://localhost:3001/addRating/${apiDoc._id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: clientUserData._id, rating: rating }),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log("res", json));
+  }
+
+  function handleExitPopup(e) {
+    e.stopPropagation();
+    if (e.target.id === "exit") {
+      setIsDiscussion(false);
     }
   }
 
@@ -115,17 +142,53 @@ export default function CardsV2DocItem(props) {
           <img className="grid-icon push-up" src={viewsIcon} />
           <div>{apiDoc.views ? apiDoc.views : "0"}</div>
         </div>
-        <div className="grid-item-container">
-          <img className="grid-icon" src={messageIcon} />
-          <div>13</div>
+        <div className="grid-item-container ">
+          <div
+            className="grid-item-container discussion-button hover-effect"
+            onClick={() => {
+              setIsDiscussion(!isDiscussion);
+            }}
+          >
+            <img className="grid-icon" src={messageIcon} />
+            <div>{apiDoc.discussions ? apiDoc.discussions.length : "0"}</div>
+          </div>
+
+          {isDiscussion && (
+            <DocDiscussionsPopup
+            setClientUserData={setClientUserData}
+              apiDoc={apiDoc}
+              handleExitPopup={handleExitPopup}
+              clientUserData={clientUserData}
+              setDisplayApiDocs={setDisplayApiDocs}
+              currentDocIndex={currentDocIndex}
+            />
+          )}
         </div>
-        <div className="grid-item-container">
-          <img className="grid-icon push-up" src={starIcon} />
-          <div>4.2</div>
+
+        <div className="grid-item-container hover-effect">
+          <div
+            className="sub-grid-item-container"
+            onClick={() => {
+              setIsRating(!isRating);
+            }}
+          >
+            <img className="grid-icon push-up" src={starIcon} />
+            <div>{apiDoc.averageRating}</div>
+          </div>
+
+          {isRating && (
+            <>
+              <div className="popup-action">
+                <RatingV2 handleAddRating={handleAddRating} />
+              </div>
+              <div className="triangle"></div>
+            </>
+          )}
         </div>
+
         <div
           onClick={handleSave}
-          className="grid-item-container save-container"
+          className="grid-item-container save-container hover-effect"
         >
           <img
             className={

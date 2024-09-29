@@ -2,22 +2,15 @@ import { useState } from "react";
 import starIcon from "../../assets/star.svg";
 
 export default function Rating(props) {
-  const { apiDoc } = props;
+  const { apiDoc, handleAddRating } = props;
   const [mouseOverStar, setMouseOverStar] = useState();
-  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
+  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(true);
   function handleToggleAddRating() {
     setIsAddRatingExpanded(!isAddRatingExpanded);
   }
   function handleMouseOverStar(e) {
     const id = e.currentTarget.id;
     setMouseOverStar(id);
-  }
-
-  function handleAddRating(e) {
-    const rating = e.currentTarget.id;
-    console.log("adding rating of :", rating);
-
-    // FETCH DATABASE AND ADD RATING!
   }
 
   // function getAverageRating(ratings) {
@@ -71,6 +64,7 @@ export default function Rating(props) {
   return (
     <div
       className="rating-container"
+      style={{ padding: "0" }}
       onClick={handleToggleAddRating}
       onMouseOver={(e) => setMouseOverStar(e.target.id)}
       onMouseLeave={() => setMouseOverStar()}
@@ -102,9 +96,7 @@ export default function Rating(props) {
       >
         {getRatingElements()}
       </div>
-      <div className="rating">{"3.2"
-      // getAverageRating(apiDoc.ratings.reviews)
-      }</div>
+      {/* <div className="rating">{getAverageRating(apiDoc.ratings.reviews)}</div> */}
     </div>
   );
 }

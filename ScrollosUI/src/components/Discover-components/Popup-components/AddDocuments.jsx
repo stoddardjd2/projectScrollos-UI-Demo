@@ -4,7 +4,7 @@ import uncheckedIcon from "../../../assets/emptyCheckbox.svg";
 import checkedIcon from "../../../assets/checked.svg";
 import searchIcon from "../../../assets/search.svg";
 export default function AddDocuments(props) {
-  const { clientUserData, currentProject, setLoadedProjects, selectedProject } =
+  const {setClientUserData, clientUserData, currentProject, setLoadedProjects, selectedProject } =
     props;
   const [loadedDocs, setLoadedDocs] = useState([]);
   const [searchInput, setSearchInput] = useState();
@@ -78,12 +78,14 @@ export default function AddDocuments(props) {
   }
 
   function handleAddToProject(e) {
+    console.log("adding to proj")
     const docId = e.currentTarget.id;
     setLoadedCurrentProject((prev) => {
       let docIdsCopy = [...prev.documentIds];
       docIdsCopy.push(docId);
       return { ...prev, documentIds: docIdsCopy };
     });
+    // setClientUserData
     //will remove or add to project depending on if is or is not included already
     fetch(`http://localhost:3001/addDocToProject/${loadedCurrentProject._id}`, {
       method: "PUT",

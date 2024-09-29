@@ -76,14 +76,14 @@ export default function RightColumn(props) {
           <div className="cards-v2-view">
             <div className="cards-v2-grid">
               {apiDocsDisplay.map((apiDoc, index) => {
-                console.log("checking if saved!");
-
                 return (
                     <CardsV2DocItem
                       clientUserData={clientUserData}
                       apiDoc={apiDoc}
                       setClientUserData={setClientUserData}
                       key = {index}
+                      setDisplayApiDocs={setDisplayApiDocs}
+                      currentDocIndex = {index}
                     />
                 );
               })}
