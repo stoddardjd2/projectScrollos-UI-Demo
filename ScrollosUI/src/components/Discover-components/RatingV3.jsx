@@ -2,7 +2,14 @@ import { useState } from "react";
 import starIcon from "../../assets/star.svg";
 
 export default function RatingV3(props) {
-  const { apiDoc, clientUserData, handleAddRating } = props;
+  const {
+    apiDoc,
+    clientUserData,
+    handleAddRating,
+    givenClassName,
+    locationMain,
+    locationTriangle,
+  } = props;
   const [hoverOverIndex, setHoverOverIndex] = useState();
   const getLoadedUserRating = () => {
     if (apiDoc.ratings[clientUserData._id]) {
@@ -22,7 +29,6 @@ export default function RatingV3(props) {
 
   let starsElements = [];
   for (let i = 1; i <= 5; i++) {
-    console.log("test", i);
     starsElements.push(
       <img
         key={i}
@@ -38,5 +44,22 @@ export default function RatingV3(props) {
     );
   }
 
-  return <div className="rating-container-v3">{starsElements}</div>;
+  return (
+    <>
+      <div
+        className="rating-popup"
+        style={{
+          transform: ` translate(${locationMain.x}px, ${locationMain.y}px)`,
+        }}
+      >
+        <div className="rating-container-v3">{starsElements}</div>
+      </div>
+      <div
+        className="triangle "
+        style={{
+          transform: ` translate(${locationTriangle.x}px, ${locationTriangle.y}px)`,
+        }}
+      ></div>
+    </>
+  );
 }

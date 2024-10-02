@@ -1,13 +1,51 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import saveFill from "../../assets/filledbookmark.svg";
 // import saveEmpty from "../../assets/unfilledbookmark.svg";
 import saveFill from "../../assets/cards-v2-icons/bookmark.svg";
 import saveEmpty from "../../assets/cards-v2-icons/unfilled-bookmark.svg";
-
-import starIcon from "../../assets/star.svg";
+import RatingV3 from "./RatingV3";
+import starFilledIcon from "../../assets/cards-v2-icons/starFilled.svg";
+import starIcon from "../../assets/cards-v2-icons/star.svg";
+import messageIcon from "../../assets/cards-v2-icons/message.svg";
+import loadingImg from "../../assets/loading.svg";
+import DocDiscussionsPopup from "./DocDiscussionsPopup";
 export default function RowDoc(props) {
-  const { apiDoc, setClientUserData, clientUserData } = props;
+  const {
+    apiDoc,
+    setClientUserData,
+    clientUserData,
+    setDisplayApiDocs,
+    apiDocIndex,
+    currentDocIndex,
+  } = props;
   const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
+  const [isRating, setIsRating] = useState(false);
+  const [isRated, setIsRated] = useState(() => {
+    return Object.keys(apiDoc.ratings).includes(clientUserData._id);
+  });
+  const [discussionsCount, setDiscussionsCount] = useState();
+  const [isDiscussion, setIsDiscussion] = useState(false);
+
+  // load disucussion length
+  useEffect(() => {
+    fetch(`http://localhost:3001/getDiscussionLength/${apiDoc._id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        setDiscussionsCount(results.discussions);
+      });
+  }, []);
+
+  function handleExitPopup(e) {
+    e.stopPropagation();
+    if (e.target.id === "exit") {
+      setIsDiscussion(false);
+    }
+  }
 
   function handleSave(e) {
     e.stopPropagation();
@@ -36,7 +74,6 @@ export default function RowDoc(props) {
         const index = prev.bookmarks.indexOf(apiDoc._id);
         let copy = [...prev.bookmarks];
         copy.splice(index, 1);
-        console.log("removing", apiDoc.info.title);
 
         return {
           ...prev,
@@ -56,9 +93,36 @@ export default function RowDoc(props) {
     }
   }
 
+  function handleAddRating(e) {
+    e.stopPropagation();
+
+    // handle select star value and add rating to doc
+    const rating = e.currentTarget.id;
+    setDisplayApiDocs((prev) => {
+      const copy = [...prev];
+      copy.splice(apiDocIndex, 1, {
+        ...prev[apiDocIndex],
+        ratings: { ...prev[apiDocIndex].ratings, [clientUserData._id]: rating },
+      });
+      return [...copy];
+    });
+
+    setIsRating(false);
+    setIsRated(true);
+    // FETCH DATABASE AND ADD RATING!
+    fetch(`http://localhost:3001/addRating/${apiDoc._id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: clientUserData._id, rating: rating }),
+    })
+      .then((res) => res.json())
+      .then((json) => {});
+  }
+
   function handleSelectedDoc(e) {
     const selectedDocId = e.currentTarget.id;
-    console.log("selkected doic!")
     //update recents in db with updated recents array
     let recentDocIds = [];
     recentDocIds.push(selectedDocId);
@@ -90,11 +154,7 @@ export default function RowDoc(props) {
   }
 
   return (
-    <div
-      onClick={handleSelectedDoc}
-      id={apiDoc._id}
-      className="row-flex-container document-container row-docs-container"
-    >
+    <div className="row-flex-container document-container row-docs-container">
       <div className="row-save save-container">
         <img
           className={isSaved ? "save saveFill" : "save saveEmpty"}
@@ -102,16 +162,65 @@ export default function RowDoc(props) {
           src={isSaved ? saveFill : saveEmpty}
         />
       </div>
-
-      <div className="row-title">
+      <div onClick={handleSelectedDoc} id={apiDoc._id} className="row-title">
         <div>{apiDoc.info.title}</div>
       </div>
       {/* maintains min height for flex box when bookmark animated */}
 
       <div className="row-rating">
-        <img className="star-icon" src={starIcon} />
-        <div>4.5</div>
+        <div
+          className="container"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsRating(!isRating);
+          }}
+        >
+          <img
+            className="star-icon"
+            src={!isRated ? starIcon : starFilledIcon}
+          />
+          <div>4.5</div>
+        </div>
       </div>
+
+      {isRating && (
+        <RatingV3
+          handleAddRating={handleAddRating}
+          clientUserData={clientUserData}
+          apiDoc={apiDoc}
+          locationMain={{ y: 30, x: 250 }}
+          locationTriangle={{ y: -10, x: -270 }}
+        />
+      )}
+
+      <div className="row-discussions row-value">
+        {discussionsCount ? (
+          <div
+            className="grid-item-container discussion-button hover-effect"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsDiscussion(!isDiscussion);
+            }}
+          >
+            <img className="grid-icon" src={messageIcon} />
+            <div>{discussionsCount}</div>
+          </div>
+        ) : (
+          <img className="loading-request-icon" src={loadingImg} />
+        )}
+
+        {isDiscussion && (
+          <DocDiscussionsPopup
+            setClientUserData={setClientUserData}
+            apiDoc={apiDoc}
+            handleExitPopup={handleExitPopup}
+            clientUserData={clientUserData}
+            setDisplayApiDocs={setDisplayApiDocs}
+            currentDocIndex={currentDocIndex}
+          />
+        )}
+      </div>
+
       <div className="row-date row-value">Opened 9/27/2024</div>
       <div className="row-version row-value">v{apiDoc.info.version}</div>
       <div className="row-api-type row-value">

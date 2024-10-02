@@ -44,6 +44,7 @@ export default function RightColumn(props) {
                   <div className="row-save save-container"></div>
                   <div className="row-title ">Recent Docs</div>
                   <div className="row-rating">Rating</div>
+                  <div className="row-discussion">Discussions</div>
                   <div className="row-date row-key">Last opened</div>
                   <div className="row-version row-key">Document Version</div>
                   <div className="row-api-type row-key">API Spec</div>
@@ -61,6 +62,9 @@ export default function RightColumn(props) {
                       setClientUserData={setClientUserData}
                       clientUserData={clientUserData}
                       key={index}
+                      setDisplayApiDocs={setDisplayApiDocs}
+                      apiDocIndex={index}
+                      currentDocIndex={index}
                     />
                   );
                 })}
@@ -77,15 +81,15 @@ export default function RightColumn(props) {
             <div className="cards-v2-grid">
               {apiDocsDisplay.map((apiDoc, index) => {
                 return (
-                    <CardsV2DocItem
-                      clientUserData={clientUserData}
-                      apiDoc={apiDoc}
-                      apiDocIndex = {index}
-                      setClientUserData={setClientUserData}
-                      key = {index}
-                      setDisplayApiDocs={setDisplayApiDocs}
-                      currentDocIndex = {index}
-                    />
+                  <CardsV2DocItem
+                    clientUserData={clientUserData}
+                    apiDoc={apiDoc}
+                    apiDocIndex={index}
+                    setClientUserData={setClientUserData}
+                    key={index}
+                    setDisplayApiDocs={setDisplayApiDocs}
+                    currentDocIndex={index}
+                  />
                 );
               })}
             </div>

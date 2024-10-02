@@ -153,7 +153,8 @@ export default function CardsV2DocItem(props) {
     }
   }
 
-  async function handleAddRating(e) {
+  function handleAddRating(e) {
+    e.stopPropagation();
     // handle select star value and add rating to doc
     const rating = e.currentTarget.id;
     setDisplayApiDocs((prev) => {
@@ -239,21 +240,11 @@ export default function CardsV2DocItem(props) {
           )}
 
           {isRating && (
-            <>
-              <div className="rating-popup">
-                {/* <RatingV2
-                  handleAddRating={handleAddRating}
-                  clientUserData={clientUserData}
-                  apiDoc={apiDoc}
-                /> */}
-                <RatingV3
-                  handleAddRating={handleAddRating}
-                  clientUserData={clientUserData}
-                  apiDoc={apiDoc}
-                />
-              </div>
-              <div className="triangle"></div>
-            </>
+            <RatingV3
+              handleAddRating={handleAddRating}
+              clientUserData={clientUserData}
+              apiDoc={apiDoc}
+            />
           )}
         </div>
 

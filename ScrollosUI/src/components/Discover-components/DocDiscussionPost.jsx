@@ -6,7 +6,7 @@ import replyIcon from "../../assets/reply.svg";
 import postIcon from "../../assets/post.svg";
 import loadingImg from "../../assets/loading.svg";
 import DocPostNewReplies from "./DocPostNewReplies";
-export default function DocPost(props) {
+export default function DocDiscussionPost(props) {
   const {
     post,
     apiDoc,
@@ -18,7 +18,7 @@ export default function DocPost(props) {
     handleDeletePost,
     isLoaded,
     // handleDeleteReply,
-    setPosts,
+    // setPosts,
     setIsLoaded,
   } = props;
 
@@ -38,7 +38,6 @@ export default function DocPost(props) {
   function handleViewReplies(e) {
     setIsViewReplies(!isViewReplies);
   }
-
   function handleLikePost(e) {
     fetch(
       `http://localhost:3001/toggleLikePost/${apiDoc._id}/${selectedIndex}/${index}`,
@@ -99,17 +98,21 @@ export default function DocPost(props) {
         }
       )
         .then((res) => res.json())
-        .then((json) => {});
-      setNewReplies((prev) => {
-        // let copy = [...prev];
-        const newReply = {
-          reply: replyInput,
-          author: clientUserData.username,
-          authorId: clientUserData._id,
-          likedBy: [],
-        };
-        return [...prev, newReply];
-      });
+        .then((json) => {
+
+          setNewReplies((prev) => {
+            // let copy = [...prev];
+            const newReply = {
+              reply: replyInput,
+              author: clientUserData.username,
+              authorId: clientUserData._id,
+              likedBy: [],
+              _id: json,
+            };
+            return [...prev, newReply];
+          });
+        });
+
       setReplyInput("");
       setIsReplying(false);
       // check if has input before submitting
@@ -119,7 +122,7 @@ export default function DocPost(props) {
   const matches = post.post.match(/\n/g);
   const createdDate = new Date(post.createdAt);
   let pmOrAm = () => {
-    if (!(createdDate.getUTCHours() >= 12)) {
+    if ((createdDate.getHours() >= 12)) {
       return "pm";
     } else return "am";
   };
@@ -219,7 +222,7 @@ export default function DocPost(props) {
               {post.createdAt
                 ? `${
                     createdDate.getMonth() + 1
-                  }/${createdDate.getDate()}/${createdDate.getFullYear()}  ${createdDate.getUTCHours()}:${createdDate.getUTCMinutes()}${pmOrAm()}`
+                  }/${createdDate.getDate()}/${createdDate.getFullYear()}  ${createdDate.getHours()}:${createdDate.getMinutes()}${pmOrAm()}`
                 : "just now"}
             </div>
           </div>
@@ -227,7 +230,7 @@ export default function DocPost(props) {
           {/* input */}
           {isReplying && (
             <div className="reply-input-container">
-              <form  className="reply-input-form" onSubmit={handleSubmitReply}>
+              <form className="reply-input-form" onSubmit={handleSubmitReply}>
                 <input
                   ref={replyRef}
                   value={replyInput}
@@ -263,6 +266,12 @@ export default function DocPost(props) {
 
           {newReplies &&
             newReplies.map((reply, replyIndex) => {
+           
+              let prevRepliesLengthVerify = 0;
+              if (discussions[selectedIndex].posts[index].replies) {
+                prevRepliesLengthVerify =
+                  discussions[selectedIndex].posts[index].replies.length;
+              }
               return (
                 <DocPostNewReplies
                   setNewReplies={setNewReplies}
@@ -270,15 +279,13 @@ export default function DocPost(props) {
                   clientUserData={clientUserData}
                   index={replyIndex}
                   postIndex={index}
-                  key={replyIndex}
+                  key={reply._id}
                   setDiscussions={setDiscussions}
                   discussions={discussions}
                   selectedIndex={selectedIndex}
                   apiDoc={apiDoc}
-                  setPosts={setPosts}
-                  prevRepliesLength={
-                    discussions[selectedIndex].posts[index].replies.length
-                  }
+                  // setPosts={setPosts}
+                  prevRepliesLength={prevRepliesLengthVerify}
                 />
               );
             })}
@@ -310,12 +317,12 @@ export default function DocPost(props) {
                 clientUserData={clientUserData}
                 index={replyIndex}
                 postIndex={index}
-                key={replyIndex._id}
+                key={reply._id}
                 setDiscussions={setDiscussions}
                 discussions={discussions}
                 selectedIndex={selectedIndex}
                 apiDoc={apiDoc}
-                setPosts={setPosts}
+                // setPosts={setPosts}
               />
             );
           }

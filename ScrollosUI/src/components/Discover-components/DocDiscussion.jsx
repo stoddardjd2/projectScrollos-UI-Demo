@@ -24,7 +24,8 @@ export default function DocDiscussion(props) {
     handleExitPopup,
   } = props;
   // const [posts, setPosts] = useState();
-  const [posts, setPosts] = useState(discussions[selectedIndex].posts);
+  // const [posts, setPosts] = useState(discussions[selectedIndex].posts);
+  const posts = discussions[selectedIndex].posts;
   const [isNewPost, setIsNewPost] = useState(false);
   const [postInput, setPostInput] = useState();
   const [isLoaded, setIsLoaded] = useState(0);
@@ -54,7 +55,7 @@ export default function DocDiscussion(props) {
     e.preventDefault();
 
     //update database to match updated project name
- 
+
     if (!(discNameInput == discussions[selectedIndex].title)) {
       //check if name is different from prev name before sending request to update database
       fetch(
@@ -70,7 +71,7 @@ export default function DocDiscussion(props) {
         .then((res) => res.json())
         .then((json) => {});
       setDiscussions((prev) => {
-        const copy = [...prev];
+        let copy = [...prev];
         copy[selectedIndex].title = discNameInput;
         return [...copy];
       });
@@ -89,7 +90,6 @@ export default function DocDiscussion(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log("posts!!", json);
         setDiscussions((prev) => {
           let prevCopy = [...prev];
           prevCopy[selectedIndex] = json;
@@ -153,19 +153,28 @@ export default function DocDiscussion(props) {
       )
         .then((res) => res.json())
         .then((json) => {
-          setPosts((prev) => {
-            // const copy = [...prev]?
-            const newPost = {
-              post: postInput,
-              author: clientUserData.username,
-              authorId: clientUserData._id,
-              replies: [],
-              likedBy: [],
-              _id: json._id,
-            };
-            const copy = [newPost].concat(prev);
-            return copy;
+          // setPosts((prev) => {
+          //   // const copy = [...prev]?
+          const newPost = {
+            post: postInput,
+            author: clientUserData.username,
+            authorId: clientUserData._id,
+            replies: [],
+            likedBy: [],
+            _id: json._id,
+          };
+    
+          setDiscussions((prev) => {
+            const copy = [...prev];
+            const postsCopy = [...prev[selectedIndex].posts];
+            postsCopy.unshift(newPost);
+            copy.splice(selectedIndex, 1, {
+              ...prev[selectedIndex],
+              posts: [...postsCopy],
+            });
+            return [...copy];
           });
+
           setIsNewPost(false);
           setPostInput();
         });
@@ -189,11 +198,21 @@ export default function DocDiscussion(props) {
       .then((json) => {
         // delete from apiDocs
         setIsLoaded(1);
-        setPosts((prev) => {
+        setDiscussions((prev) => {
           const copy = [...prev];
-          copy.splice(postIndex, 1);
-          return copy;
+          const postsCopy = [...prev[selectedIndex].posts];
+          postsCopy.splice(postIndex, 1);
+          copy.splice(selectedIndex, 1, {
+            ...prev[selectedIndex],
+            posts: [...postsCopy],
+          });
+          return [...copy];
         });
+        // setPosts((prev) => {
+        //   const copy = [...prev];
+        //   copy.splice(postIndex, 1);
+        //   return copy;
+        // });
       });
   }
 
@@ -212,7 +231,7 @@ export default function DocDiscussion(props) {
           setDiscussions={setDiscussions}
           discussions={discussions}
           handleDeletePost={handleDeletePost}
-          setPosts={setPosts}
+          // setPosts={setPosts}
           isLoaded={isLoaded}
           setIsLoaded={setIsLoaded}
         />

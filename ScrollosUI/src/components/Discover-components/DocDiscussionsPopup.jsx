@@ -24,6 +24,13 @@ export default function DocDiscussionsPopup(props) {
     // setProjectDocs([]);
   }
 
+
+  useEffect(() => {
+    // load projects from database on initial and if returning from posts
+    console.log("discussions", discussions);
+  }, [discussions]);
+
+
   return (
     <div
       id="exit"
@@ -70,7 +77,9 @@ export default function DocDiscussionsPopup(props) {
         ) : (
           // after discussion is selected
           <>
-            {selectedIndex && (
+          {console.log("discussions[selectedIndex]")}
+          {console.log(discussions[selectedIndex])}
+          {selectedIndex && (
               <DocDiscussion
                 discussions={discussions}
                 setDiscussions={setDiscussions}

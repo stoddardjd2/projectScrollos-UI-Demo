@@ -12,7 +12,7 @@ export default function DocPostReplies(props) {
     selectedIndex,
     postIndex,
     apiDoc,
-    setPosts,
+    // setPosts,
     // handleDeleteReply,
   } = props;
   const [reply, setReply] = useState(loadedReply);
@@ -22,7 +22,7 @@ export default function DocPostReplies(props) {
 
   const createdDate = new Date(reply.createdAt);
   let pmOrAm = () => {
-    if (!(createdDate.getUTCHours() >= 12)) {
+    if ((createdDate.getHours() >= 12)) {
       return "pm";
     } else return "am";
   };
@@ -51,11 +51,23 @@ export default function DocPostReplies(props) {
       .then((json) => {
         // delete from apiDocs
         setIsLoaded(1);
-        setPosts((prev) => {
+        setDiscussions((prev) => {
           const copy = [...prev];
-          copy[postIndex].replies.splice(replyIndex, 1);
-          return copy;
+          const postsCopy = [...prev[selectedIndex].posts];
+          // const repiesCopy = [...prev[selectedIndex].posts[postIndex].replies];
+          postsCopy[postIndex].replies.splice(replyIndex, 1);
+          copy.splice(selectedIndex, 1, {
+            ...prev[selectedIndex],
+            posts: [...postsCopy],
+          });
+          return [...copy];
         });
+
+        // setPosts((prev) => {
+        //   const copy = [...prev];
+        //   copy[postIndex].replies.splice(replyIndex, 1);
+        //   return copy;
+        // });
       });
   }
 
@@ -73,8 +85,7 @@ export default function DocPostReplies(props) {
       }
     )
       .then((res) => res.json())
-      .then((json) => {
-      });
+      .then((json) => {});
 
     setLikedBy((prev) => {
       if (prev.includes(clientUserData._id)) {
@@ -162,12 +173,11 @@ export default function DocPostReplies(props) {
             {reply.createdAt
               ? `${
                   createdDate.getMonth() + 1
-                }/${createdDate.getDate()}/${createdDate.getFullYear()}  ${createdDate.getUTCHours()}:${createdDate.getUTCMinutes()}${pmOrAm()}`
+                }/${createdDate.getDate()}/${createdDate.getFullYear()}  ${createdDate.getHours()}:${createdDate.getMinutes()}${pmOrAm()}`
               : "just now"}
           </div>
         </div>
       </div>
-
     </div>
   );
 }

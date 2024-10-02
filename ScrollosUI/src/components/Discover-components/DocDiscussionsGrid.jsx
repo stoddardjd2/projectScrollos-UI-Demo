@@ -16,8 +16,8 @@ export default function DocDiscussionGrid(props) {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
+
   useEffect(() => {
-    console.log("loading DISCUSSIONS")
     // load projects from database on initial and if returning from posts
     fetch(`http://localhost:3001/getDiscussions/${apiDoc._id}`, {
       method: "get",
@@ -27,12 +27,10 @@ export default function DocDiscussionGrid(props) {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
         setDiscussions(json.discussions);
       });
   }, []);
 
-  
   async function handleNewDiscussion() {
     //prevent sync problems from creating duplicates by checking if id is already addewd
     fetch(`http://localhost:3001/addNewDiscussion/${apiDoc._id}`, {
@@ -46,16 +44,12 @@ export default function DocDiscussionGrid(props) {
       }),
     })
       .then((res) => res.json())
-      .then((json) => {
-        console.log("new discussion res", json);
-      });
+      .then((json) => {});
 
     // const oldDiscussions = discussions;
-    // console.log(oldDiscussions);
     setDiscussions((prev) => {
       let prevCopy = [...prev];
       prevCopy.unshift({
-        likedBy: [],
         authorId: clientUserData._id,
         author: clientUserData.username,
         posts: [],
@@ -64,7 +58,6 @@ export default function DocDiscussionGrid(props) {
       });
       return [...prevCopy];
     });
-    
   }
 
   function handleDiscussionSelection(e) {
@@ -86,9 +79,7 @@ export default function DocDiscussionGrid(props) {
       }
     )
       .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-      });
+      .then((json) => {});
     // Update apiDocs to track current amount of views
     const views = discussions[selectionIndex].views;
     setDiscussions((prev) => {
@@ -172,8 +163,11 @@ export default function DocDiscussionGrid(props) {
             </button>
             <div className="new-discussion-text">New Discussion</div>
           </div>
-          {console.log("discussionElements", discussionElements)}
-          {!(discussionElements.length == 0)  ? discussionElements : <div>No</div>}
+          {!(discussionElements.length == 0) ? (
+            discussionElements
+          ) : (
+            <div>No</div>
+          )}
         </>
       }
     </div>

@@ -56,7 +56,6 @@ export default function Discover() {
   const [rightColumnDisplay, setRightColumnDisplay] =
     useState(loadedLastViewMode);
 
-  console.log("apiDocsDisplay", apiDocsDisplay)
 
   const [currentPage, setCurrentPage] = useState(0);
   //had to move out of page selection since was rerendering in same position and keeping

@@ -48,8 +48,6 @@ const router = createBrowserRouter([
       </>
     ),
     loader: async ({ params }) => {
-      console.log("LOADING DISCOVER")
-
       const loadedLastViewModeObj = await fetch(
         `http://localhost:3001/getLastViewMode/${params.userID}`
       ).then((res) => res.json());
@@ -71,7 +69,6 @@ const router = createBrowserRouter([
       allDocIdObjs.map((idObj) => {
         allDocIds.push(idObj._id);
       });
-      console.log("done")
       return { loadedDocs, userData, allDocIds, loadedLastViewMode };
     },
   },
