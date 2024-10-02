@@ -17,15 +17,6 @@ export default function DocDiscussionsPopup(props) {
   const [selectedDiscussion, setSelectedDiscussion] = useState();
   const [selectedIndex, setSelectedIndex] = useState();
   const [discussions, setDiscussions] = useState();
-  
-
-  useEffect(() => {
-    console.log("change!");
-    if (discussions) {
-      console.log(discussions);
-      // console.log("likedBy Updated",discussions[0].posts[1].replies[0].likedBy);
-    }
-  }, [discussions]);
 
   function handleBack() {
     setSelectedDiscussion();
@@ -39,24 +30,27 @@ export default function DocDiscussionsPopup(props) {
       onMouseDown={handleExitPopup}
       className="doc-discussion-popup"
     >
-      <button className="exit">
-        <img
-          className="exit-icon"
-          src={exitIcon}
-          onClick={handleExitPopup}
-          id="exit"
-        />
-      </button>
-      {selectedDiscussion && (
-        <button onClick={handleBack} className="back">
-          <img className="back-icon" src={backIcon} />
-        </button>
-      )}
-
       <div className="discussion-content">
         {!selectedDiscussion ? (
           <>
-            <h3 className="discussions-header">Discussions</h3>
+            <div className="discussions-header-container first-cont">
+              <h3 className="discussions-header">Discussions</h3>
+              <div className="flex nav-buttons">
+                {selectedDiscussion && (
+                  <button onClick={handleBack} className="back">
+                    <img className="back-icon" src={backIcon} />
+                  </button>
+                )}
+                <button className="exit">
+                  <img
+                    className="exit-icon"
+                    src={exitIcon}
+                    onClick={handleExitPopup}
+                    id="exit"
+                  />
+                </button>
+              </div>
+            </div>
             <div className="discussions-overflow">
               {apiDoc.discussions ? (
                 <DocDiscussionsGrid
@@ -86,6 +80,9 @@ export default function DocDiscussionsPopup(props) {
                 apiDoc={apiDoc}
                 setDisplayApiDocs={setDisplayApiDocs}
                 currentDocIndex={currentDocIndex}
+                setSelectedDiscussion={setSelectedDiscussion}
+                handleBack={handleBack}
+                handleExitPopup={handleExitPopup}
               />
             )}
           </>

@@ -80,6 +80,7 @@ export default function RightColumn(props) {
                     <CardsV2DocItem
                       clientUserData={clientUserData}
                       apiDoc={apiDoc}
+                      apiDocIndex = {index}
                       setClientUserData={setClientUserData}
                       key = {index}
                       setDisplayApiDocs={setDisplayApiDocs}

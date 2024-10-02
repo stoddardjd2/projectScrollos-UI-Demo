@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import likedIcon from "../../assets/cards-v2-icons/bookmark.svg";
 import loadingImg from "../../assets/loading.svg";
 import notLikedIcon from "../../assets/cards-v2-icons/unfilled-bookmark.svg";
-export default function DocPostReplies(props) {
+export default function DocPostNewReplies(props) {
   const {
     loadedReply,
     clientUserData,
@@ -13,6 +13,8 @@ export default function DocPostReplies(props) {
     postIndex,
     apiDoc,
     setPosts,
+    prevRepliesLength,
+    setNewReplies,
     // handleDeleteReply,
   } = props;
   const [reply, setReply] = useState(loadedReply);
@@ -36,7 +38,9 @@ export default function DocPostReplies(props) {
   function handleDeleteReply(postIndex, replyIndex) {
     setIsLoaded(0);
     fetch(
-      `http://localhost:3001/deleteReply/${apiDoc._id}/${selectedIndex}/${postIndex}/${replyIndex}`,
+      `http://localhost:3001/deleteReply/${
+        apiDoc._id
+      }/${selectedIndex}/${postIndex}/${replyIndex + prevRepliesLength}`,
       {
         method: "PUT",
         headers: {
@@ -51,9 +55,9 @@ export default function DocPostReplies(props) {
       .then((json) => {
         // delete from apiDocs
         setIsLoaded(1);
-        setPosts((prev) => {
+        setNewReplies((prev) => {
           const copy = [...prev];
-          copy[postIndex].replies.splice(replyIndex, 1);
+          copy.splice(replyIndex, 1);
           return copy;
         });
       });
@@ -167,7 +171,6 @@ export default function DocPostReplies(props) {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

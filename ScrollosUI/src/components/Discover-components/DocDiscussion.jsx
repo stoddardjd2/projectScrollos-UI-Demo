@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import DocDiscussionPost from "./DocDiscussionPost";
 import postIcon from "../../assets/post.svg";
+import editIcon from "../../assets/project-icons/edit.svg";
+import checkIcon from "../../assets/project-icons/check.svg";
+import trashIcon from "../../assets/trash.svg";
+import cancelIcon from "../../assets/project-icons/cancel.svg";
+import loadingImg from "../../assets/loading.svg";
+import exitIcon from "../../assets/exit.svg";
+import backIcon from "../../assets/back.svg";
 
 export default function DocDiscussion(props) {
   const {
@@ -12,12 +19,65 @@ export default function DocDiscussion(props) {
     currentDocIndex,
     setDiscussions,
     discussions,
+    setSelectedDiscussion,
+    handleBack,
+    handleExitPopup,
   } = props;
   // const [posts, setPosts] = useState();
   const [posts, setPosts] = useState(discussions[selectedIndex].posts);
   const [isNewPost, setIsNewPost] = useState(false);
   const [postInput, setPostInput] = useState();
+  const [isLoaded, setIsLoaded] = useState(0);
+  const [isEditingDiscName, setIsEditingDiscName] = useState(false);
+  const [isDeletingDisc, setIsDeletingDisc] = useState(false);
+  const [discNameInput, setDiscNameInput] = useState();
+  const discNameInputRef = useRef(null);
   const newPostRef = useRef(null);
+
+  function handleNameClick(e) {
+    if (e.detail === 2) {
+      handleEditDiscName();
+    }
+  }
+
+  function handleEditDiscName(e) {
+    setDiscNameInput(discussions[selectedIndex].title);
+    setIsEditingDiscName(!isEditingDiscName);
+  }
+  useEffect(() => {
+    if (isEditingDiscName) {
+      discNameInputRef.current.focus();
+    }
+  }, [isEditingDiscName]);
+
+  function handleSaveDiscName(e) {
+    e.preventDefault();
+
+    //update database to match updated project name
+ 
+    if (!(discNameInput == discussions[selectedIndex].title)) {
+      //check if name is different from prev name before sending request to update database
+      fetch(
+        `http://localhost:3001/updateDiscussionTitle/${apiDoc._id}/${selectedIndex}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ discNameInput }),
+        }
+      )
+        .then((res) => res.json())
+        .then((json) => {});
+      setDiscussions((prev) => {
+        const copy = [...prev];
+        copy[selectedIndex].title = discNameInput;
+        return [...copy];
+      });
+
+      setIsEditingDiscName(false);
+    }
+  }
 
   useEffect(() => {
     //load posts
@@ -38,33 +98,28 @@ export default function DocDiscussion(props) {
       });
   }, []);
 
- 
-  function handleDeletePost(e) {
-    console.log("delete post handle");
-    const postIndex = e.currentTarget.id;
+  function handleDeleteDisc() {
+    setIsLoaded(0);
     fetch(
-      `http://localhost:3001/deletePost/${apiDoc._id}/${selectedIndex}/${postIndex}`,
+      `http://localhost:3001/deleteDiscussion/${apiDoc._id}/${selectedIndex}`,
       {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          userId: clientUserData._id,
-        }),
       }
     )
       .then((res) => res.json())
       .then((json) => {
-        console.log("delete", json);
         // delete from apiDocs
+        setIsLoaded(1);
+        setSelectedDiscussion();
+        setDiscussions((prev) => {
+          const copy = [...prev];
+          copy.splice(selectedIndex, 1);
+          return copy;
+        });
       });
-
-    setPosts((prev) => {
-      const copy = [...prev];
-      copy.splice(postIndex, 1);
-      return copy;
-    });
   }
 
   function handleNewPost() {
@@ -98,7 +153,6 @@ export default function DocDiscussion(props) {
       )
         .then((res) => res.json())
         .then((json) => {
-          console.log("JSON", json);
           setPosts((prev) => {
             // const copy = [...prev]?
             const newPost = {
@@ -109,7 +163,6 @@ export default function DocDiscussion(props) {
               likedBy: [],
               _id: json._id,
             };
-            console.log("PREV", prev);
             const copy = [newPost].concat(prev);
             return copy;
           });
@@ -119,6 +172,29 @@ export default function DocDiscussion(props) {
 
       // const copy = [...posts];
     }
+  }
+
+  function handleDeletePost(e) {
+    const postIndex = e.currentTarget.id;
+    fetch(
+      `http://localhost:3001/deleteDiscussion/${apiDoc._id}/${selectedIndex}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        // delete from apiDocs
+        setIsLoaded(1);
+        setPosts((prev) => {
+          const copy = [...prev];
+          copy.splice(postIndex, 1);
+          return copy;
+        });
+      });
   }
 
   let postElements;
@@ -137,6 +213,8 @@ export default function DocDiscussion(props) {
           discussions={discussions}
           handleDeletePost={handleDeletePost}
           setPosts={setPosts}
+          isLoaded={isLoaded}
+          setIsLoaded={setIsLoaded}
         />
       );
     });
@@ -144,56 +222,177 @@ export default function DocDiscussion(props) {
 
   return (
     <div className="discussion-container">
-      <div className="discussion-header-container">
-        <div className="discussion-title">{selectedDiscussion.title}</div>
+      <div className="discussion-header-container first-cont">
+        {discussions[selectedIndex].authorId == clientUserData._id ? (
+          <>
+            {!isEditingDiscName ? (
+              <div className="header-flex">
+                <h2 onClick={handleNameClick} className="discussion-title">
+                  {selectedDiscussion.title}
+                </h2>
+
+                {!isDeletingDisc ? (
+                  <div className="header-flex">
+                    {!(isLoaded == 2) && (
+                      <>
+                        <img
+                          onClick={() => {
+                            setIsEditingDiscName(!isEditingDiscName);
+                            handleEditDiscName();
+                          }}
+                          className="edit-icon"
+                          src={editIcon}
+                        />
+                        <img
+                          onClick={() => {
+                            setIsDeletingDisc(!isDeletingDisc);
+                          }}
+                          className="trash-icon"
+                          src={trashIcon}
+                        />
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <div className="confirm-delete-container">
+                    {!(isLoaded == 2) && (
+                      <>
+                        <div
+                          onClick={() => {
+                            setIsDeletingDisc(!isDeletingDisc);
+                          }}
+                          className="cancel"
+                        >
+                          Cancel
+                        </div>
+
+                        <button
+                          onClick={(e) => {
+                            handleDeleteDisc(e);
+                            setIsLoaded(2);
+                          }}
+                          className="confirm"
+                        >
+                          Confirm Deletion
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+                {isLoaded == 2 && (
+                  <>
+                    <img className="loading-request-icon" src={loadingImg} />
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="header-flex-edit">
+                <form
+                  className="discussion-input-form"
+                  onSubmit={handleSaveDiscName}
+                >
+                  <input
+                    ref={discNameInputRef}
+                    id="txt"
+                    type="text"
+                    className={
+                      isEditingDiscName ? "project-name-input" : "hidden"
+                    }
+                    value={discNameInput}
+                    onChange={(e) => {
+                      setDiscNameInput(e.target.value);
+                    }}
+                  ></input>
+                </form>
+                <div className="btns-flex">
+                  <img
+                    onClick={handleSaveDiscName}
+                    className="disc-btn check"
+                    src={checkIcon}
+                  />
+                  <img
+                    onClick={() => {
+                      setIsEditingDiscName(false);
+                    }}
+                    className="disc-btn"
+                    src={cancelIcon}
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="discussions-header-container discussion-nav">
+            <h2 className="discussion-title">{selectedDiscussion.title}</h2>
+          </div>
+        )}
+
         <button onClick={handleNewPost} className="new-post-btn">
           <div className="plus">+</div>
           <div className="new-post-text">New post</div>
         </button>
+
+        <div className="flex nav-buttons">
+          {selectedDiscussion && (
+            <button onClick={handleBack} className="back">
+              <img className="back-icon" src={backIcon} />
+            </button>
+          )}
+          <button className="exit">
+            <img
+              className="exit-icon"
+              src={exitIcon}
+              onClick={handleExitPopup}
+              id="exit"
+            />
+          </button>
+        </div>
       </div>
-      {selectedDiscussion.posts && (
-        <>
-          {isNewPost && (
-            <div className="new-post-form-container">
-              <div className="post-container new-post-container">
-                <div className="author">{clientUserData.username}</div>
-                <textarea
-                  className="new-post-input"
-                  value={postInput}
-                  onChange={handlePostInput}
-                  ref={newPostRef}
-                  placeholder="new post"
-                ></textarea>
-              </div>
-              <div>
-                <div className="post-input-flex-container">
-                  <button
-                    onClick={() => {
-                      setIsNewPost(false);
-                      setPostInput();
-                    }}
-                    className="post-cancel-reply"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    style={!postInput ? { opacity: "40%" } : {}}
-                    onClick={handleSubmitPost}
-                    className="post-button"
-                    type="button"
-                  >
-                    <div>
-                      <img src={postIcon} />
-                    </div>
-                    <div>Post</div>
-                  </button>
+      <div className="content-bottom">
+        {selectedDiscussion.posts && (
+          <>
+            {isNewPost && (
+              <div className="new-post-form-container">
+                <div className="post-container new-post-container">
+                  <div className="author">{clientUserData.username}</div>
+                  <textarea
+                    className="new-post-input"
+                    value={postInput}
+                    onChange={handlePostInput}
+                    ref={newPostRef}
+                    placeholder="new post"
+                  ></textarea>
+                </div>
+                <div>
+                  <div className="post-input-flex-container">
+                    <button
+                      onClick={() => {
+                        setIsNewPost(false);
+                        setPostInput();
+                      }}
+                      className="post-cancel-reply"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      style={!postInput ? { opacity: "40%" } : {}}
+                      onClick={handleSubmitPost}
+                      className="post-button"
+                      type="button"
+                    >
+                      <div>
+                        <img src={postIcon} />
+                      </div>
+                      <div>Post</div>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-          <div className="posts-overflow">{postElements}</div>
-        </>
-      )}
+            )}
+            <div className="posts-overflow">{postElements}</div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

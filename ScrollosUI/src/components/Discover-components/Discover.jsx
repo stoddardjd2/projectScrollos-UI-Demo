@@ -32,83 +32,7 @@ export default function Discover() {
     notes: [],
     flags: [],
     recentProjects: [],
-    group: "DevTeam",
-    projects: [
-      {
-        id: "Project One",
-        documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
-        notes: "Proj one notes!",
-        discussions: [
-          {
-            name: "jared",
-            comment: "I like this",
-            likes: 2,
-            timePosted: { date: "9/6/24", time: "4:56" },
-            replies: [
-              {
-                name: "bob",
-                reply: "I second this",
-                likes: 3,
-                timePosted: { date: "9/6/24", time: "4:56" },
-              },
-              {
-                name: "kevin",
-                reply: "I third this",
-                likes: 3,
-                timePosted: { date: "9/6/24", time: "4:56" },
-              },
-            ],
-          },
-          {
-            name: "bob2",
-            comment: "I hate this",
-            likes: 2,
-            replies: [
-              {
-                name: "jared",
-                reply: "I like this",
-                likes: 3,
-                timePosted: { date: "9/6/24", time: "4:56" },
-              },
-              {
-                name: "kevin",
-                reply: "I hate this",
-                likes: 3,
-                timePosted: { date: "9/6/24", time: "4:56" },
-              },
-            ],
-          },
-          {
-            name: "bob",
-            comment: "I hate this",
-            likes: 2,
-            replies: [
-              {
-                name: "jared",
-                reply: "I like this",
-                likes: 3,
-                timePosted: { date: "9/6/24", time: "4:56" },
-              },
-              {
-                name: "kevin",
-                reply: "I hate this",
-                likes: 3,
-                timePosted: { date: "9/6/24", time: "4:56" },
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: "Project Two",
-        documentIds: [
-          "66aeb7944d74dc0a686c2a08",
-          "66aeb79e4d74dc0a686c2a0a",
-          "66aeb7a34d74dc0a686c2a0b",
-        ],
-        notes: "Project two notes!",
-      },
-    ],
+    projects: [],
   };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
@@ -131,23 +55,8 @@ export default function Discover() {
   //Changed by sidebar selection
   const [rightColumnDisplay, setRightColumnDisplay] =
     useState(loadedLastViewMode);
-  // Store all projects for current user:
-  //temporary values to test:
 
-  // const [projects, setProjects] = useState([
-  //   {
-  //     id: "Project One",
-  //     documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
-  //   },
-  //   {
-  //     id: "Project Two",
-  //     documentIds: [
-  //       "66aeb7944d74dc0a686c2a08",
-  //       "66aeb79e4d74dc0a686c2a0a",
-  //       "66aeb7a34d74dc0a686c2a0b",
-  //     ],
-  //   },
-  // ]);
+  console.log("apiDocsDisplay", apiDocsDisplay)
 
   const [currentPage, setCurrentPage] = useState(0);
   //had to move out of page selection since was rerendering in same position and keeping
@@ -215,20 +124,6 @@ export default function Discover() {
           });
           setDisplayApiDocs(sortedResponse);
         });
-    }
-  }
-
-  // function toggleSidebar() {
-  //   setIsOpen(!isOpen);
-  // }
-
-  function handleDiscoverClick(e) {
-    //hide user setting popup if click on page
-    console.log("discover clicked!");
-    console.log(e.target.id);
-    if (!(e.target.id === "userSettings")) {
-      //only hide if not clicking on user settings button
-      setIsSettings(false);
     }
   }
 

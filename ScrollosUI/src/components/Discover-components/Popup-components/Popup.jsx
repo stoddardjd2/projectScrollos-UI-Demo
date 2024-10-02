@@ -168,7 +168,6 @@ export default function Popup(props) {
     )
       .then((res) => res.json())
       .then((json) => {
-        console.log("leaving proj", json);
       });
 
     setClientUserData((prev) => {
@@ -206,8 +205,6 @@ export default function Popup(props) {
   }
 
   const docCards = projectDocs.map((doc) => {
-    const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
-    const loadIsFlagged = clientUserData.flags.includes(doc._id);
     return (
       <CardsV2DocItem
         key={doc._id}

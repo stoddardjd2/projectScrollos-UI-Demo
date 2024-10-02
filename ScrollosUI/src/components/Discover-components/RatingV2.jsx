@@ -2,7 +2,7 @@ import { useState } from "react";
 import starIcon from "../../assets/star.svg";
 
 export default function Rating(props) {
-  const { apiDoc, handleAddRating } = props;
+  const { apiDoc, handleAddRating, clientUserData } = props;
   const [mouseOverStar, setMouseOverStar] = useState();
   const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(true);
   function handleToggleAddRating() {
@@ -12,7 +12,12 @@ export default function Rating(props) {
     const id = e.currentTarget.id;
     setMouseOverStar(id);
   }
-
+  const [userRating, setUserRating] = useState(() => {
+    if (apiDoc.ratings[clientUserData._id]) {
+      return apiDoc.ratings[clientUserData._id];
+    } else return false;
+  });
+  console.log("USER RATING", userRating);
   // function getAverageRating(ratings) {
   //   if (ratings) {
   //     if (ratings.length === 0) {
@@ -50,7 +55,7 @@ export default function Rating(props) {
           style={
             isAddRatingExpanded
               ? // if expanded:
-                mouseOverStar >= index + 2
+                (mouseOverStar >= index + 2)
                 ? { opacity: "100%", transition: "0s ease-in-out all" }
                 : { transition: "0s ease-in-out all", opacity: " 40%" }
               : //if not expanded:
@@ -78,7 +83,7 @@ export default function Rating(props) {
         style={
           isAddRatingExpanded
             ? // if expanded:
-              mouseOverStar >= 1
+              (mouseOverStar >= 1 || userRating >= 1)
               ? { opacity: "100%", transition: "0s ease-in-out all" }
               : { transition: "0s ease-in-out all", opacity: "40%" }
             : //if not expanded:

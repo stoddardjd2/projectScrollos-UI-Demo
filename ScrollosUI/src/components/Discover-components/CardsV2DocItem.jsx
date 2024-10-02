@@ -1,26 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import saveFill from "../../assets/cards-v2-icons/bookmark.svg";
 import saveEmpty from "../../assets/cards-v2-icons/unfilled-bookmark.svg";
 // import saveEmpty from "../../assets/unfilledbookmark.svg";
 // import saveFill from "../../assets/filledbookmark.svg";
 // import starIcon from "../../assets/star.svg";
 import starIcon from "../../assets/cards-v2-icons/star.svg";
+import starFilledIcon from "../../assets/cards-v2-icons/starFilled.svg";
 // import starOutlineIcon from "../../assets/star.svg";
 import viewsIcon from "../../assets/cards-v2-icons/views.svg";
 import versionIcon from "../../assets/cards-v2-icons/version.svg";
 import messageIcon from "../../assets/cards-v2-icons/message.svg";
 import RatingV2 from "./RatingV2";
-
+import loadingImg from "../../assets/loading.svg";
+import RatingV3 from "./RatingV3";
 import DocDiscussionsPopup from "./DocDiscussionsPopup";
 
 export default function CardsV2DocItem(props) {
-  const { apiDoc, clientUserData, setClientUserData, setDisplayApiDocs, currentDocIndex } = props;
+  const {
+    apiDoc,
+    clientUserData,
+    setClientUserData,
+    setUserRating,
+    currentDocIndex,
+    setDisplayApiDocs,
+    apiDocIndex,
+  } = props;
   //   const [isSaved, setIsSaved] = useState(false);
   const [isMoreOptions, setIsMoreOptions] = useState(false);
   const [isRating, setIsRating] = useState(false);
   const [isDiscussion, setIsDiscussion] = useState(false);
+  const [discussionsCount, setDiscussionsCount] = useState();
+  const [averageRating, setAverageRating] = useState();
 
   const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
+
+  const [isRated, setIsRated] = useState(() => {
+    return Object.keys(apiDoc.ratings).includes(clientUserData._id);
+  });
+
+  // load disucussion length
+  useEffect(() => {
+    fetch(`http://localhost:3001/getDiscussionLength/${apiDoc._id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        setDiscussionsCount(results.discussions);
+      });
+  }, []);
+
+  // load average rating
+  useEffect(() => {
+    fetch(`http://localhost:3001/getAverageRating/${apiDoc._id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        setAverageRating(results);
+      });
+  }, []);
 
   function handleSave(e) {
     e.stopPropagation();
@@ -42,7 +86,7 @@ export default function CardsV2DocItem(props) {
       });
       //   setIsSaved(!isSaved);
       //remove from database if unsaving
-    } else if (isSaved) {
+    } else {
       //   setIsSaved(!isSaved);
       //remove id of selected item from state
       setClientUserData((prev) => {
@@ -103,9 +147,7 @@ export default function CardsV2DocItem(props) {
           },
         })
           .then((res) => res.json())
-          .then((json) => {
-            console.log(json);
-          });
+          .then((json) => {});
         window.location.href = `/ApiDocViewer/${selectedDocId}`;
       });
     }
@@ -114,8 +156,17 @@ export default function CardsV2DocItem(props) {
   async function handleAddRating(e) {
     // handle select star value and add rating to doc
     const rating = e.currentTarget.id;
-    setIsRating(false);
+    setDisplayApiDocs((prev) => {
+      const copy = [...prev];
+      copy.splice(apiDocIndex, 1, {
+        ...prev[apiDocIndex],
+        ratings: { ...prev[apiDocIndex].ratings, [clientUserData._id]: rating },
+      });
+      return [...copy];
+    });
 
+    setIsRating(false);
+    setIsRated(true);
     // FETCH DATABASE AND ADD RATING!
     fetch(`http://localhost:3001/addRating/${apiDoc._id}`, {
       method: "POST",
@@ -125,7 +176,7 @@ export default function CardsV2DocItem(props) {
       body: JSON.stringify({ userId: clientUserData._id, rating: rating }),
     })
       .then((res) => res.json())
-      .then((json) => console.log("res", json));
+      .then((json) => {});
   }
 
   function handleExitPopup(e) {
@@ -143,19 +194,23 @@ export default function CardsV2DocItem(props) {
           <div>{apiDoc.views ? apiDoc.views : "0"}</div>
         </div>
         <div className="grid-item-container ">
-          <div
-            className="grid-item-container discussion-button hover-effect"
-            onClick={() => {
-              setIsDiscussion(!isDiscussion);
-            }}
-          >
-            <img className="grid-icon" src={messageIcon} />
-            <div>{apiDoc.discussions ? apiDoc.discussions.length : "0"}</div>
-          </div>
+          {discussionsCount ? (
+            <div
+              className="grid-item-container discussion-button hover-effect"
+              onClick={() => {
+                setIsDiscussion(!isDiscussion);
+              }}
+            >
+              <img className="grid-icon" src={messageIcon} />
+              <div>{discussionsCount}</div>
+            </div>
+          ) : (
+            <img className="loading-request-icon" src={loadingImg} />
+          )}
 
           {isDiscussion && (
             <DocDiscussionsPopup
-            setClientUserData={setClientUserData}
+              setClientUserData={setClientUserData}
               apiDoc={apiDoc}
               handleExitPopup={handleExitPopup}
               clientUserData={clientUserData}
@@ -166,20 +221,36 @@ export default function CardsV2DocItem(props) {
         </div>
 
         <div className="grid-item-container hover-effect">
-          <div
-            className="sub-grid-item-container"
-            onClick={() => {
-              setIsRating(!isRating);
-            }}
-          >
-            <img className="grid-icon push-up" src={starIcon} />
-            <div>{apiDoc.averageRating}</div>
-          </div>
+          {averageRating ? (
+            <div
+              className="sub-grid-item-container"
+              onClick={() => {
+                setIsRating(!isRating);
+              }}
+            >
+              <img
+                className="grid-icon push-up"
+                src={!isRated ? starIcon : starFilledIcon}
+              />
+              <div>{averageRating}</div>
+            </div>
+          ) : (
+            <img className="loading-request-icon" src={loadingImg} />
+          )}
 
           {isRating && (
             <>
-              <div className="popup-action">
-                <RatingV2 handleAddRating={handleAddRating} />
+              <div className="rating-popup">
+                {/* <RatingV2
+                  handleAddRating={handleAddRating}
+                  clientUserData={clientUserData}
+                  apiDoc={apiDoc}
+                /> */}
+                <RatingV3
+                  handleAddRating={handleAddRating}
+                  clientUserData={clientUserData}
+                  apiDoc={apiDoc}
+                />
               </div>
               <div className="triangle"></div>
             </>

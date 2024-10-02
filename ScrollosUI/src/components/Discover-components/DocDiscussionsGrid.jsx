@@ -11,9 +11,11 @@ export default function DocDiscussionGrid(props) {
     handleExitPopup,
     setSelectedDiscussion,
     setDiscussions,
-    discussions
+    discussions,
   } = props;
-
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   useEffect(() => {
     console.log("loading DISCUSSIONS")
     // load projects from database on initial and if returning from posts
@@ -30,7 +32,8 @@ export default function DocDiscussionGrid(props) {
       });
   }, []);
 
-  function handleNewDiscussion() {
+  
+  async function handleNewDiscussion() {
     //prevent sync problems from creating duplicates by checking if id is already addewd
     fetch(`http://localhost:3001/addNewDiscussion/${apiDoc._id}`, {
       method: "PUT",
@@ -61,6 +64,7 @@ export default function DocDiscussionGrid(props) {
       });
       return [...prevCopy];
     });
+    
   }
 
   function handleDiscussionSelection(e) {
@@ -168,7 +172,8 @@ export default function DocDiscussionGrid(props) {
             </button>
             <div className="new-discussion-text">New Discussion</div>
           </div>
-          {discussionElements}
+          {console.log("discussionElements", discussionElements)}
+          {!(discussionElements.length == 0)  ? discussionElements : <div>No</div>}
         </>
       }
     </div>

@@ -4,7 +4,8 @@ import likedIcon from "../../assets/cards-v2-icons/bookmark.svg";
 import notLikedIcon from "../../assets/cards-v2-icons/unfilled-bookmark.svg";
 import replyIcon from "../../assets/reply.svg";
 import postIcon from "../../assets/post.svg";
-
+import loadingImg from "../../assets/loading.svg";
+import DocPostNewReplies from "./DocPostNewReplies";
 export default function DocPost(props) {
   const {
     post,
@@ -15,8 +16,10 @@ export default function DocPost(props) {
     setDiscussions,
     discussions,
     handleDeletePost,
+    isLoaded,
     // handleDeleteReply,
     setPosts,
+    setIsLoaded,
   } = props;
 
   // const [post, setPost] = useState(loadedPost);
@@ -28,6 +31,9 @@ export default function DocPost(props) {
   const [newReplies, setNewReplies] = useState([]);
   const [isNewRepliesOpen, setIsNewRepliesOpen] = useState(true);
   const replyRef = useRef(null);
+  const [repliesLoadLimit, setRepliesLoadLimit] = useState(5);
+  const loadXMoreReplies = 5;
+  //set amount of replies to display at a time
 
   function handleViewReplies(e) {
     setIsViewReplies(!isViewReplies);
@@ -47,14 +53,10 @@ export default function DocPost(props) {
       }
     )
       .then((res) => res.json())
-      .then((json) => {
-        console.log(json);
-      });
+      .then((json) => {});
 
     setLikedBy((prev) => {
-      console.log("likedBy", likedBy);
       if (prev.includes(clientUserData._id)) {
-        console.log("included");
         const copy = [...prev];
         const index = prev.indexOf(clientUserData._id);
         copy.splice(index, 1);
@@ -79,7 +81,8 @@ export default function DocPost(props) {
     setReplyInput(e.target.value);
   }
 
-  function handleSubmitReply() {
+  function handleSubmitReply(e) {
+    e.preventDefault();
     if (replyInput) {
       fetch(
         `http://localhost:3001/addReplyToPost/${apiDoc._id}/${selectedIndex}/${index}`,
@@ -98,9 +101,14 @@ export default function DocPost(props) {
         .then((res) => res.json())
         .then((json) => {});
       setNewReplies((prev) => {
-        let copy = [...prev];
-        copy.unshift(replyInput);
-        return [...copy];
+        // let copy = [...prev];
+        const newReply = {
+          reply: replyInput,
+          author: clientUserData.username,
+          authorId: clientUserData._id,
+          likedBy: [],
+        };
+        return [...prev, newReply];
       });
       setReplyInput("");
       setIsReplying(false);
@@ -122,7 +130,7 @@ export default function DocPost(props) {
   }
   const postHeight = 21 + 23 * numbOfLinesForPost;
   return (
-    <div className="post-main-container" key={index}>
+    <div key={index} className="post-main-container">
       <div className="post-container">
         <div className="author">{post.author}</div>
         <textarea
@@ -137,13 +145,13 @@ export default function DocPost(props) {
         <div className="under-post-container">
           <div className="under-post">
             <div className="actions-flex">
-              <div className="button-flex">
+              <div className="button-flex like-container">
                 <button
                   id={index}
                   onClick={(e) => {
                     handleLikePost(e);
                   }}
-                  className="under-post-button"
+                  className="under-post-button "
                 >
                   {likedBy.includes(clientUserData._id) ? (
                     <img className="like-icon" src={likedIcon} />
@@ -159,7 +167,7 @@ export default function DocPost(props) {
                 onClick={handleReply}
                 className="under-post-button"
               >
-                <div className="button-flex">
+                <div className="button-flex reply-btn">
                   <img className="reply-icon" src={replyIcon}></img>
                   <div>Reply</div>
                 </div>
@@ -168,32 +176,40 @@ export default function DocPost(props) {
               {post.authorId === clientUserData._id && (
                 <>
                   {!isDeleting ? (
-                    <button
-                      id={index}
-                      onClick={() => setIsDeleting(!isDeleting)}
-                      className="under-post-button"
-                    >
-                      Delete
-                    </button>
+                    <>
+                      {!(isLoaded === 2) && (
+                        <button
+                          id={index}
+                          onClick={() => setIsDeleting(!isDeleting)}
+                          className="under-post-button"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </>
                   ) : (
                     <div className="confirm-delete-container">
-                      <button
-                        onClick={(e) => {
-                          handleDeletePost(e);
-                          setIsDeleting(false);
-                        }}
-                        id={index}
-                        className="under-post-button confirm"
-                      >
-                        Confirm
-                      </button>
                       <button
                         className="under-post-button cancel"
                         onClick={() => setIsDeleting(false)}
                       >
                         Cancel
                       </button>
+                      <button
+                        onClick={(e) => {
+                          handleDeletePost(e);
+                          setIsDeleting(false);
+                          setIsLoaded(2);
+                        }}
+                        id={index}
+                        className="under-post-button confirm"
+                      >
+                        Confirm
+                      </button>
                     </div>
+                  )}
+                  {isLoaded == 2 && (
+                    <img className="loading-request-icon" src={loadingImg} />
                   )}
                 </>
               )}
@@ -211,13 +227,16 @@ export default function DocPost(props) {
           {/* input */}
           {isReplying && (
             <div className="reply-input-container">
-              <input
-                ref={replyRef}
-                value={replyInput}
-                onChange={handleReplyInput}
-                placeholder="reply here"
-                className="reply-input"
-              ></input>
+              <form  className="reply-input-form" onSubmit={handleSubmitReply}>
+                <input
+                  ref={replyRef}
+                  value={replyInput}
+                  onChange={handleReplyInput}
+                  placeholder="reply here"
+                  className="reply-input"
+                ></input>
+              </form>
+
               <div className="flex-container">
                 <button
                   onClick={() => {
@@ -242,66 +261,78 @@ export default function DocPost(props) {
             </div>
           )}
 
-          {/* New replies */}
-          {!newReplies.length == 0 && isNewRepliesOpen && (
-            <>
-              {newReplies.map((newReply, index) => {
-                return (
-                  <div key={index} className="new-replies-container">
-                    <div className="post-container">
-                      <div className="author">test </div>
-                      <textarea
-                        style={{ height: `${21}px` }}
-                        readOnly
-                        value={newReply}
-                        className="fake-input-for-wrap"
-                      ></textarea>
-                    </div>
-
-                    <div className="under-new-replies-container">
-                      <div></div>
-                      <div>just now</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </>
-          )}
-
-          {!post.replies.length == 0 && (
-            <div
-              id={index}
-              onClick={handleViewReplies}
-              className="view-replies"
-              style={isViewReplies ? { marginLeft: "40px" } : {}}
-            >
-              {!isViewReplies
-                ? `View ${post.replies.length} more ${""} ${
-                    post.replies.length > 1 ? "replies" : "reply"
-                  }`
-                : "Hide"}
-            </div>
-          )}
+          {newReplies &&
+            newReplies.map((reply, replyIndex) => {
+              return (
+                <DocPostNewReplies
+                  setNewReplies={setNewReplies}
+                  loadedReply={reply}
+                  clientUserData={clientUserData}
+                  index={replyIndex}
+                  postIndex={index}
+                  key={replyIndex}
+                  setDiscussions={setDiscussions}
+                  discussions={discussions}
+                  selectedIndex={selectedIndex}
+                  apiDoc={apiDoc}
+                  setPosts={setPosts}
+                  prevRepliesLength={
+                    discussions[selectedIndex].posts[index].replies.length
+                  }
+                />
+              );
+            })}
         </div>
       }
+
+      {!post.replies.length == 0 && (
+        <div
+          id={index}
+          onClick={handleViewReplies}
+          className="view-replies"
+          style={isViewReplies ? { marginLeft: "40px" } : {}}
+        >
+          {!isViewReplies
+            ? `View ${post.replies.length} more ${""} ${
+                post.replies.length > 1 ? "replies" : "reply"
+              }`
+            : "Hide"}
+        </div>
+      )}
+
       {/* replies */}
       {isViewReplies &&
         post.replies.map((reply, replyIndex) => {
-          return (
-            <DocPostReplies
-              loadedReply={reply}
-              clientUserData={clientUserData}
-              index={replyIndex}
-              postIndex={index}
-              key={replyIndex}
-              setDiscussions={setDiscussions}
-              discussions={discussions}
-              selectedIndex={selectedIndex}
-              apiDoc={apiDoc}
-              setPosts={setPosts}
-            />
-          );
+          if (!(replyIndex >= repliesLoadLimit)) {
+            return (
+              <DocPostReplies
+                loadedReply={reply}
+                clientUserData={clientUserData}
+                index={replyIndex}
+                postIndex={index}
+                key={replyIndex._id}
+                setDiscussions={setDiscussions}
+                discussions={discussions}
+                selectedIndex={selectedIndex}
+                apiDoc={apiDoc}
+                setPosts={setPosts}
+              />
+            );
+          }
         })}
+
+      {isViewReplies && post.replies.length > repliesLoadLimit && (
+        <button
+          onClick={() =>
+            setRepliesLoadLimit((prev) => {
+              return prev + loadXMoreReplies;
+            })
+          }
+          className="load-more-replies"
+        >
+          View more replies
+        </button>
+      )}
     </div>
   );
 }
