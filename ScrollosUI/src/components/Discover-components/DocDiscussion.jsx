@@ -163,7 +163,7 @@ export default function DocDiscussion(props) {
             likedBy: [],
             _id: json._id,
           };
-    
+
           setDiscussions((prev) => {
             const copy = [...prev];
             const postsCopy = [...prev[selectedIndex].posts];
@@ -357,13 +357,8 @@ export default function DocDiscussion(props) {
               <img className="back-icon" src={backIcon} />
             </button>
           )}
-          <button className="exit">
-            <img
-              className="exit-icon"
-              src={exitIcon}
-              onClick={handleExitPopup}
-              id="exit"
-            />
+          <button onClick={handleExitPopup} className="exit">
+            <img className="exit-icon" src={exitIcon} id="exit" />
           </button>
         </div>
       </div>

@@ -24,12 +24,10 @@ export default function DocDiscussionsPopup(props) {
     // setProjectDocs([]);
   }
 
-
   useEffect(() => {
     // load projects from database on initial and if returning from posts
     console.log("discussions", discussions);
   }, [discussions]);
-
 
   return (
     <div
@@ -48,13 +46,8 @@ export default function DocDiscussionsPopup(props) {
                     <img className="back-icon" src={backIcon} />
                   </button>
                 )}
-                <button className="exit">
-                  <img
-                    className="exit-icon"
-                    src={exitIcon}
-                    onClick={handleExitPopup}
-                    id="exit"
-                  />
+                <button onClick={handleExitPopup} className="exit">
+                  <img className="exit-icon" src={exitIcon} id="exit" />
                 </button>
               </div>
             </div>
@@ -77,9 +70,9 @@ export default function DocDiscussionsPopup(props) {
         ) : (
           // after discussion is selected
           <>
-          {console.log("discussions[selectedIndex]")}
-          {console.log(discussions[selectedIndex])}
-          {selectedIndex && (
+            {console.log("discussions[selectedIndex]")}
+            {console.log(discussions[selectedIndex])}
+            {selectedIndex && (
               <DocDiscussion
                 discussions={discussions}
                 setDiscussions={setDiscussions}

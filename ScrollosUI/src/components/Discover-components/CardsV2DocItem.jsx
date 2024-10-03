@@ -244,6 +244,8 @@ export default function CardsV2DocItem(props) {
               handleAddRating={handleAddRating}
               clientUserData={clientUserData}
               apiDoc={apiDoc}
+              locationMain={{ x: 20, y: 60 }}
+              locationTriangle={{ x: 0, y:-40 }}
             />
           )}
         </div>

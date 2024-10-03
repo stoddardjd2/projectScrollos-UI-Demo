@@ -116,6 +116,10 @@ body {
   margin: 0px;
   overflow: hidden;
 }
+#root {
+  height: 100%;
+  overflow-y: auto;
+}
 html {
   height: 100%;
   margin: 0px;
@@ -288,6 +292,7 @@ button:hover {
     column-gap: 4em;
     padding: 1em;
     height: 64px;
+    overflow-y: hidden  ;
     .header {
       text-wrap: nowrap;
       text-align: center;
@@ -640,12 +645,15 @@ button:hover {
 }
 
 .discover-page {
-  height: 100vh;
-  background-color: var(--primary-light);
-  overflow: hidden;
+  /* overflow: hidden; */
+  overflow-y: auto;
+  height: 100%;
+  /* height: 100vh; */
+  display: flex;
+  flex-direction: column;
   .discover {
     display: flex;
-    height: 100%;
+    flex:1;
     /* border-top: 3px var(--vertical-expand-bar) solid; */
     .no-results {
       font-size: 1.5em;
@@ -658,10 +666,12 @@ button:hover {
       flex-direction: column;
       width: 100%;
       background-color: var(--right-column);
+      overflow-y: auto;
       .bottom-navigation {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex:3;
       }
     }
     .simulate-drop-down {
@@ -672,17 +682,16 @@ button:hover {
 }
 /* cards-V2-view */
 .cards-v2-view {
-  height: 80vh;
+  height: 100%;
+  
 }
 
 /* ROWS */
 .row-view {
-  height: 80vh;
-
   color: black;
   padding: 5px;
-  overflow-y: scroll;
-  scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
+  /* overflow-y: scroll; */
+  /* scrollbar-color: var(--scrollbar-color) var(--scrollbar-background); */
 
   .row-docs-container:hover {
     background-color: rgb(216, 216, 216);
@@ -696,10 +705,15 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin-left: 40px;
-
+    div {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     .row-title {
       flex: 1.2;
-      max-width: 250px;
+      max-width: 200px;
+      min-width: 200px;
       cursor: pointer;
       div {
         white-space: nowrap;
@@ -749,12 +763,12 @@ button:hover {
       flex: 1;
     }
     .row-discussions {
-      flex:1;
+      flex: 1;
       display: flex;
-      .grid-item-container{
-      gap:6px;
-      display: flex;
-      cursor:pointer;
+      .grid-item-container {
+        gap: 6px;
+        display: flex;
+        cursor: pointer;
       }
     }
     .row-rating {
@@ -786,12 +800,14 @@ button:hover {
     .more-options {
       display: flex;
       justify-content: right;
-      margin-right: 40px;
-      flex: 1;
+      /* margin-right: 40px; */
+      flex: .1;
       user-select: none;
       font-size: 20px;
       font-weight: 500;
       text-align: center;
+      min-width: 25px;
+
       .options-img-container:hover {
         background-color: rgb(197, 197, 197);
         border-radius: 20px;
@@ -800,6 +816,7 @@ button:hover {
       .options-img-container {
         border-radius: 20px;
         padding: 5px 10px;
+        width: 25px;
       }
     }
     .row-value {
@@ -1605,6 +1622,10 @@ button:hover {
   padding: 10px;
   background-color: white;
   width: 30%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 45px;
 }
 .search-form {
   display: flex;
@@ -2561,8 +2582,10 @@ button:hover {
   column-gap: 25px;
   /* width: 340px; */
   width: 100%;
+  background-color: var(--right-column);
 
   padding-top: 10px;
+  padding-bottom: 10px;
   /* background-color: var(--primary-light); */
   .prev-page {
     display: flex;
@@ -2689,17 +2712,16 @@ button:hover {
 
 .cards-v2-grid {
   margin: 10px;
-  width: 100%;
-  height: 100%;
-  height: fit-content;
   display: grid;
+  flex:1;
+  /* max-height: 300px; */
   /* grid-template-rows: 15em; */
   /* grid-auto-rows: 21.3em; */
   grid-auto-rows: 240px;
   grid-template-columns: repeat(auto-fit, minmax(163.3px, 150px));
   column-gap: 10px;
   row-gap: 30px;
-
+  overflow: auto;
   .cards-v2-item:hover {
     /* applies to same element as inner-card-flex */
     box-shadow: 0 0px 5px #61616181;
@@ -2714,7 +2736,7 @@ button:hover {
     flex-direction: column;
     .bottom-description {
       flex: 2;
-      margin: 0px 10px;
+      padding: 0px 10px;
       color: black;
       display: flex;
       flex-direction: column;
@@ -2798,6 +2820,7 @@ button:hover {
       gap: 10px;
       width: 100%;
       max-width: 600px;
+      cursor: default;
       /* margin: auto; */
       .save-container {
         cursor: pointer;
@@ -3005,6 +3028,8 @@ button:hover {
         font-size: 12px;
         font-weight: 600;
         margin: 0px 10px;
+        width: fit-content;
+        cursor: pointer;
       }
       .load-more-replies {
         margin-left: 40px;
@@ -3438,7 +3463,7 @@ button:hover {
 .flex {
   display: flex;
 }
-.cards-v2-item{
+.cards-v2-item {
   cursor: pointer;
 }
 .inner-card-grid {

@@ -56,7 +56,6 @@ export default function Discover() {
   const [rightColumnDisplay, setRightColumnDisplay] =
     useState(loadedLastViewMode);
 
-
   const [currentPage, setCurrentPage] = useState(0);
   //had to move out of page selection since was rerendering in same position and keeping
   //-prev currentPage state
@@ -125,24 +124,6 @@ export default function Discover() {
         });
     }
   }
-
-  //api Documents
-  const docCards = apiDocsDisplay.map((doc) => {
-    const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
-    const loadIsFlagged = clientUserData.flags.includes(doc._id);
-    return (
-      <DocCard
-        key={doc._id}
-        apiDoc={doc}
-        loadIsSaved={loadIsSaved}
-        loadIsFlagged={loadIsFlagged}
-        userID={clientUserData._id}
-        setClientUserData={setClientUserData}
-        projects={clientUserData.projects}
-        clientUserData={clientUserData}
-      />
-    );
-  });
 
   return (
     <div
@@ -257,7 +238,6 @@ export default function Discover() {
         {/* </div> */}
         <RightColumn
           rightColumnDisplay={rightColumnDisplay}
-          docCards={docCards}
           apiDocsDisplay={apiDocsDisplay}
           setDisplayApiDocs={setDisplayApiDocs}
           idsForPage={idsForPage}
@@ -265,6 +245,15 @@ export default function Discover() {
           setCurrentPage={setCurrentPage}
           clientUserData={clientUserData}
           setClientUserData={setClientUserData}
+        />
+      </div>
+      <div className="bottom-navigation">
+        <PageSelection
+          setDisplayApiDocs={setDisplayApiDocs}
+          apiDocsDisplay={apiDocsDisplay}
+          idsForPage={idsForPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </div>
     </div>

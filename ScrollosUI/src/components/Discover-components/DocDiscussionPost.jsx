@@ -109,7 +109,9 @@ export default function DocDiscussionPost(props) {
               likedBy: [],
               _id: json,
             };
-            return [...prev, newReply];
+            const copy = [...prev]
+            copy.unshift(newReply)
+            return [...copy];
           });
         });
 
