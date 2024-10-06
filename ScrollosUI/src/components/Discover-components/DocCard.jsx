@@ -56,7 +56,7 @@ export default function DocCard(props) {
           body: JSON.stringify({ docIds: recentDocIds }),
         }
       ).then(() => {
-        window.location.href = `/ApiDocViewer/${selectedDocId}`;
+        window.location.href = `/ApiDocViewer/${selectedDocId}/${clientUserData._id}`;
       });
     }
   }

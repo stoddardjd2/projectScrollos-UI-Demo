@@ -15,8 +15,6 @@ export default function DocDiscussion(props) {
     clientUserData,
     apiDoc,
     selectedIndex,
-    setDisplayApiDocs,
-    currentDocIndex,
     setDiscussions,
     discussions,
     setSelectedDiscussion,
@@ -292,7 +290,7 @@ export default function DocDiscussion(props) {
                           }}
                           className="confirm"
                         >
-                          Confirm Deletion
+                          Delete
                         </button>
                       </>
                     )}
@@ -346,20 +344,20 @@ export default function DocDiscussion(props) {
           </div>
         )}
 
-        <button onClick={handleNewPost} className="new-post-btn">
+      {!isDeletingDisc &&  <button onClick={handleNewPost} className="new-post-btn">
           <div className="plus">+</div>
           <div className="new-post-text">New post</div>
         </button>
-
+}
         <div className="flex nav-buttons">
           {selectedDiscussion && (
             <button onClick={handleBack} className="back">
               <img className="back-icon" src={backIcon} />
             </button>
           )}
-          <button onClick={handleExitPopup} className="exit">
+          {/* <button onClick={handleExitPopup} className="exit">
             <img className="exit-icon" src={exitIcon} id="exit" />
-          </button>
+          </button> */}
         </div>
       </div>
       <div className="content-bottom">

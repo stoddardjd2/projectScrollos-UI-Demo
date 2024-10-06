@@ -3,16 +3,14 @@ import exitIcon from "../../assets/exit.svg";
 import backIcon from "../../assets/back.svg";
 
 import { useState, useEffect } from "react";
-import DocDiscussion from "./DocDiscussion";
+import DocDiscussion from "../Discover-components/DocDiscussion";
 import DocDiscussionsGrid from "./DocDiscussionsGrid";
 
-export default function DocDiscussionsPopup(props) {
+export default function Discussions(props) {
   const {
     apiDoc,
     handleExitPopup,
     clientUserData,
-    setDisplayApiDocs,
-    currentDocIndex,
   } = props;
   const [selectedDiscussion, setSelectedDiscussion] = useState();
   const [selectedIndex, setSelectedIndex] = useState();
@@ -70,8 +68,6 @@ export default function DocDiscussionsPopup(props) {
         ) : (
           // after discussion is selected
           <>
-            {console.log("discussions[selectedIndex]")}
-            {console.log(discussions[selectedIndex])}
             {selectedIndex && (
               <DocDiscussion
                 discussions={discussions}
@@ -80,8 +76,6 @@ export default function DocDiscussionsPopup(props) {
                 selectedIndex={selectedIndex}
                 clientUserData={clientUserData}
                 apiDoc={apiDoc}
-                setDisplayApiDocs={setDisplayApiDocs}
-                currentDocIndex={currentDocIndex}
                 setSelectedDiscussion={setSelectedDiscussion}
                 handleBack={handleBack}
                 handleExitPopup={handleExitPopup}

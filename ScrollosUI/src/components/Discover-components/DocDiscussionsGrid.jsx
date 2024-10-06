@@ -16,7 +16,7 @@ export default function DocDiscussionGrid(props) {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-
+  const [isDiscussionCreated, setIsDiscussionCreated] = useState(false);
   useEffect(() => {
     // load projects from database on initial and if returning from posts
     fetch(`http://localhost:3001/getDiscussions/${apiDoc._id}`, {
@@ -44,7 +44,8 @@ export default function DocDiscussionGrid(props) {
       }),
     })
       .then((res) => res.json())
-      .then((json) => {});
+      .then((json) => {
+      });
 
     // const oldDiscussions = discussions;
     setDiscussions((prev) => {
@@ -101,7 +102,7 @@ export default function DocDiscussionGrid(props) {
       const createdDate = new Date(discussion.createdAt);
       return (
         <div
-          className="cards-v2-item"
+          className="discussion-card"
           key={index}
           onClick={handleDiscussionSelection}
           id={index}
@@ -166,7 +167,7 @@ export default function DocDiscussionGrid(props) {
           {!(discussionElements.length == 0) ? (
             discussionElements
           ) : (
-            <div>No</div>
+            <div>No discussions</div>
           )}
         </>
       }

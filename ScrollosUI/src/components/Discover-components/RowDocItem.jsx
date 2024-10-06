@@ -8,7 +8,7 @@ import starFilledIcon from "../../assets/cards-v2-icons/starFilled.svg";
 import starIcon from "../../assets/cards-v2-icons/star.svg";
 import messageIcon from "../../assets/cards-v2-icons/message.svg";
 import loadingImg from "../../assets/loading.svg";
-import DocDiscussionsPopup from "./DocDiscussionsPopup";
+import DocDiscussionsHome from "./DocDiscussionsHome";
 export default function RowDoc(props) {
   const {
     apiDoc,
@@ -148,7 +148,7 @@ export default function RowDoc(props) {
           body: JSON.stringify({ docIds: recentDocIds }),
         }
       ).then(() => {
-        window.location.href = `/ApiDocViewer/${selectedDocId}`;
+        window.location.href = `/ApiDocViewer/${selectedDocId}/${clientUserData._id}`;
       });
     }
   }
@@ -210,14 +210,22 @@ export default function RowDoc(props) {
         )}
 
         {isDiscussion && (
-          <DocDiscussionsPopup
-            setClientUserData={setClientUserData}
-            apiDoc={apiDoc}
-            handleExitPopup={handleExitPopup}
-            clientUserData={clientUserData}
-            setDisplayApiDocs={setDisplayApiDocs}
-            currentDocIndex={currentDocIndex}
-          />
+          <div
+            id="exit"
+            onMouseDown={handleExitPopup}
+            className="doc-discussion-popup"
+          >
+            <div className="popup-content-container">
+              <DocDiscussionsHome
+                setClientUserData={setClientUserData}
+                apiDoc={apiDoc}
+                handleExit={handleExitPopup}
+                clientUserData={clientUserData}
+                setDisplayApiDocs={setDisplayApiDocs}
+                currentDocIndex={currentDocIndex}
+              />
+            </div>
+          </div>
         )}
       </div>
 

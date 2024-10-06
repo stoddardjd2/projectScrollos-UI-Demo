@@ -13,7 +13,7 @@ import messageIcon from "../../assets/cards-v2-icons/message.svg";
 import RatingV2 from "./RatingV2";
 import loadingImg from "../../assets/loading.svg";
 import RatingV3 from "./RatingV3";
-import DocDiscussionsPopup from "./DocDiscussionsPopup";
+import DocDiscussionsHome from "./DocDiscussionsHome";
 
 export default function CardsV2DocItem(props) {
   const {
@@ -148,7 +148,7 @@ export default function CardsV2DocItem(props) {
         })
           .then((res) => res.json())
           .then((json) => {});
-        window.location.href = `/ApiDocViewer/${selectedDocId}`;
+        window.location.href = `/ApiDocViewer/${selectedDocId}/${clientUserData._id}`;
       });
     }
   }
@@ -210,14 +210,22 @@ export default function CardsV2DocItem(props) {
           )}
 
           {isDiscussion && (
-            <DocDiscussionsPopup
-              setClientUserData={setClientUserData}
-              apiDoc={apiDoc}
-              handleExitPopup={handleExitPopup}
-              clientUserData={clientUserData}
-              setDisplayApiDocs={setDisplayApiDocs}
-              currentDocIndex={currentDocIndex}
-            />
+            <div
+              id="exit"
+              onMouseDown={handleExitPopup}
+              className="doc-discussion-popup"
+            >
+              <div className="popup-content-container">
+                <DocDiscussionsHome
+                  setClientUserData={setClientUserData}
+                  apiDoc={apiDoc}
+                  handleExit={handleExitPopup}
+                  clientUserData={clientUserData}
+                  setDisplayApiDocs={setDisplayApiDocs}
+                  currentDocIndex={currentDocIndex}
+                />
+              </div>
+            </div>
           )}
         </div>
 
@@ -245,7 +253,7 @@ export default function CardsV2DocItem(props) {
               clientUserData={clientUserData}
               apiDoc={apiDoc}
               locationMain={{ x: 20, y: 60 }}
-              locationTriangle={{ x: 0, y:-40 }}
+              locationTriangle={{ x: 0, y: -40 }}
             />
           )}
         </div>
