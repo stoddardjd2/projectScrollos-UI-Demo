@@ -781,10 +781,18 @@ background-color: var(--right-column);
     .row-discussions {
       flex: 1;
       display: flex;
+      .row-flex{
+        display: flex;
+        gap:6px;
+        .views-icon{
+          width: 16px;
+        }
+      }
       .grid-item-container {
         gap: 6px;
         display: flex;
         cursor: pointer;
+       
       }
     }
     .row-rating {

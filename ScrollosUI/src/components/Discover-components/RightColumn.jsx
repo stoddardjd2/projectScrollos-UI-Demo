@@ -65,6 +65,7 @@ export default function RightColumn(props) {
                   <div className="row-save save-container"></div>
                   <div className="row-title ">Document Title</div>
                   <div className="row-rating">Rating</div>
+                  <div className="row-views">Views</div>
                   <div className="row-discussion">Discussions</div>
                   <div className="row-date row-key">Created on</div>
                   <div className="row-version row-key">Document Version</div>

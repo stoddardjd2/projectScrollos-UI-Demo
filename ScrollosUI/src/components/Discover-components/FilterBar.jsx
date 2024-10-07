@@ -9,6 +9,7 @@ import LastProjectIcon from "../../assets/filter-bar-icons/last-project.svg";
 import Popup from "./Popup-components/Popup";
 import savedIcon from "../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
 import viewsIcon from "../../assets/views.svg";
+import dateIcon from '../../assets/date.svg'
 import { useState } from "react";
 export default function FilterBar(props) {
   const {
@@ -231,7 +232,7 @@ export default function FilterBar(props) {
       <FilterOption
         activeId="date"
         displayName="Date"
-        img={newDocIcon}
+        img={dateIcon}
         handleClick={handleClick}
         activeFilter={activeFilter}
         slider={true}

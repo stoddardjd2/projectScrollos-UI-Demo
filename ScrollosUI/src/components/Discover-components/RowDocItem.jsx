@@ -9,6 +9,7 @@ import starIcon from "../../assets/cards-v2-icons/star.svg";
 import messageIcon from "../../assets/cards-v2-icons/message.svg";
 import loadingImg from "../../assets/loading.svg";
 import DocDiscussionsHome from "./DocDiscussionsHome";
+import viewsIcon from "../../assets/cards-v2-icons/views.svg";
 
 export default function RowDoc(props) {
   const {
@@ -201,6 +202,12 @@ export default function RowDoc(props) {
         {/* ) : (
           <img className="loading-request-icon" src={loadingImg} />
         )} */}
+      </div>
+      <div className="row-discussions row-value">
+        <div className="row-flex">
+          <img className="views-icon" src={viewsIcon}/>
+          <div>{apiDoc.views}</div>
+        </div>
       </div>
 
       {isRating && (
