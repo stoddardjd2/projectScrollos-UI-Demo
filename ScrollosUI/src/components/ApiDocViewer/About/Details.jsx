@@ -4,7 +4,8 @@ import likeIcon from "../../../assets/cards-v2-icons/bookmark.svg";
 import viewsIcon from "../../../assets/ApiDocViewer-Icons/views.svg";
 import Contact from "../Contact";
 import Like from "../../Common-components/Like";
-import Rating from "../../Discover-components/Rating";
+import Rating from "../Rating";
+import notLikedIcon from "../../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
 export default function Details(props) {
   const { clientUserData, apiDoc } = props;
   return (
@@ -13,8 +14,8 @@ export default function Details(props) {
         <h2>{apiDoc.info.title}</h2>
         <Like clientUserData={clientUserData} apiDoc={apiDoc} />
       </div>
-        {/* <Rating apiDoc={apiDoc} clientUserData={clientUserData} /> */}
-        <Rating apiDoc={apiDoc} clientUserData={clientUserData} /> 
+      {/* <Rating apiDoc={apiDoc} clientUserData={clientUserData} /> */}
+      <Rating apiDoc={apiDoc} clientUserData={clientUserData} />
       <div className="border"></div>
       <div class="top-left-item-grid-container">
         <div className="item">
@@ -55,10 +56,10 @@ export default function Details(props) {
           <DiscussionsCount apiDoc={apiDoc} />
         </div>
         <div className="item">
-          <h3>Likes</h3>
+          <h3>Saves</h3>
 
           <div className="description-item-container">
-            <img className="description-item-icon" src={likeIcon} />
+            <img className="description-item-icon" src={notLikedIcon} />
             <div>
               {apiDoc?.ratings ? Object.keys(apiDoc.ratings).length : 0}
             </div>

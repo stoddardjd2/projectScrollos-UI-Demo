@@ -50,18 +50,20 @@ export default function DocumentViewSelector(props) {
         className="view-filter-btn"
       >
         <img src={viewTypeIcon} />
+        View
+
       </div>
       {isViewClicked && (
         <div className="bottom-popup">
           <div className="bottom-popup-container">
-            <div
+            {/* <div
               onClick={handleViewSelection}
               className="bottom-popup-item-container"
               id="cards"
             >
               <img src={cardsIcon} />
               <div>Cards</div>
-            </div>
+            </div> */}
             <div
               onClick={handleViewSelection}
               className="bottom-popup-item-container"

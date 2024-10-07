@@ -27,6 +27,7 @@ export default function RightColumn(props) {
               <>
                 {
                   //api Documents
+
                   apiDocsDisplay.map((doc) => {
                     const loadIsSaved = clientUserData.bookmarks.includes(
                       doc._id
@@ -65,7 +66,7 @@ export default function RightColumn(props) {
                   <div className="row-title ">Document Title</div>
                   <div className="row-rating">Rating</div>
                   <div className="row-discussion">Discussions</div>
-                  <div className="row-date row-key">Last opened</div>
+                  <div className="row-date row-key">Created on</div>
                   <div className="row-version row-key">Document Version</div>
                   <div className="row-api-type row-key">API Spec</div>
                   <div className="more-options"></div>
@@ -74,18 +75,21 @@ export default function RightColumn(props) {
                   const loadIsSaved = clientUserData.bookmarks.includes(
                     apiDoc._id
                   );
-
+                  {
+                  }
                   return (
-                    <RowDocItem
-                      apiDoc={apiDoc}
-                      loadIsSaved={loadIsSaved}
-                      setClientUserData={setClientUserData}
-                      clientUserData={clientUserData}
-                      key={apiDoc._id}
-                      setDisplayApiDocs={setDisplayApiDocs}
-                      apiDocIndex={index}
-                      currentDocIndex={index}
-                    />
+                    <>
+                      <RowDocItem
+                        apiDoc={apiDoc}
+                        loadIsSaved={loadIsSaved}
+                        setClientUserData={setClientUserData}
+                        clientUserData={clientUserData}
+                        key={apiDoc._id}
+                        setDisplayApiDocs={setDisplayApiDocs}
+                        apiDocIndex={index}
+                        currentDocIndex={index}
+                      />
+                    </>
                   );
                 })}
               </>

@@ -26,11 +26,13 @@ export default function CardsV2DocItem(props) {
     apiDocIndex,
   } = props;
   //   const [isSaved, setIsSaved] = useState(false);
+  const createdDate = new Date(apiDoc.history.createdAt);
+
   const [isMoreOptions, setIsMoreOptions] = useState(false);
   const [isRating, setIsRating] = useState(false);
   const [isDiscussion, setIsDiscussion] = useState(false);
   const [discussionsCount, setDiscussionsCount] = useState();
-  const [averageRating, setAverageRating] = useState();
+  // const [averageRating, setAverageRating] = useState();
 
   const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
 
@@ -53,18 +55,18 @@ export default function CardsV2DocItem(props) {
   }, []);
 
   // load average rating
-  useEffect(() => {
-    fetch(`http://localhost:3001/getAverageRating/${apiDoc._id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((results) => {
-        setAverageRating(results);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3001/getAverageRating/${apiDoc._id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((results) => {
+  //       setAverageRating(results);
+  //     });
+  // }, []);
 
   function handleSave(e) {
     e.stopPropagation();
@@ -230,22 +232,22 @@ export default function CardsV2DocItem(props) {
         </div>
 
         <div className="grid-item-container hover-effect">
-          {averageRating ? (
-            <div
-              className="sub-grid-item-container"
-              onClick={() => {
-                setIsRating(!isRating);
-              }}
-            >
-              <img
-                className="grid-icon push-up"
-                src={!isRated ? starIcon : starFilledIcon}
-              />
-              <div>{averageRating}</div>
-            </div>
-          ) : (
+          {/* {apiDoc.avgRating ? ( */}
+          <div
+            className="sub-grid-item-container"
+            // onClick={() => {
+            //   setIsRating(!isRating);
+            // }}
+          >
+            <img
+              className="grid-icon push-up"
+              src={!isRated ? starIcon : starFilledIcon}
+            />
+            <div>{apiDoc.avgRating ? apiDoc.avgRating : 0}</div>
+          </div>
+          {/* ) : (
             <img className="loading-request-icon" src={loadingImg} />
-          )}
+          )} */}
 
           {isRating && (
             <RatingV3
@@ -315,7 +317,9 @@ export default function CardsV2DocItem(props) {
           </div>
         </div>
         <div className="bottom-extra-container">
-          <div className="bottom-extra">8/27/2024</div>
+          <div className="bottom-extra">{`${
+            createdDate.getMonth() + 1
+          }/${createdDate.getDate()}/${createdDate.getFullYear()}`}</div>
           <div className="rating-container">
             <div>v{apiDoc.info.version}</div>
           </div>

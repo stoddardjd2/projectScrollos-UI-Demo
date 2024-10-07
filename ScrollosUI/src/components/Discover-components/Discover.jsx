@@ -21,6 +21,7 @@ import Popup from "./Popup-components/Popup";
 import projectsIcon from "../../assets/projects.svg";
 import UserSettingsBar from "./UserSettingsBar";
 import DocumentViewSelector from "./DocumentViewSelector";
+import loadingImg from "../../assets/loading.svg";
 
 export default function Discover() {
   const { loadedDocs, userData, allDocIds, loadedLastViewMode } =
@@ -70,6 +71,7 @@ export default function Discover() {
 
   useEffect(() => {
     const idsForPage = getIdsPerPage(active);
+
     setidsForPage(idsForPage);
     setCurrentPage(0);
     getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
@@ -82,7 +84,11 @@ export default function Discover() {
       let idsForPage = [];
       let currentPage = 1;
       docIds.map((docId, index) => {
-        idsForPage.push(docId);
+        if (currentPage == 1) {
+          idsForPage.push(docId);
+        } else {
+          idsForPage.push(docId);
+        }
         if (index + 1 === numbOfIdsPerPage * currentPage) {
           idsGroupedByPage.push(idsForPage);
           idsForPage = [];
@@ -92,8 +98,8 @@ export default function Discover() {
           //if last doc, push partial array
           idsGroupedByPage.push(idsForPage);
         }
-      });
 
+      });
       return idsGroupedByPage;
     }
   }
@@ -113,6 +119,7 @@ export default function Discover() {
       })
         .then((results) => results.json())
         .then((res) => {
+          console.log("DOC RES", res)
           // mongodb sends back array of documents in order of first in their database-
           //must sort their response to match with our array that was sent(for recents to work)
           let sortedResponse = new Array(idsArray.length);
@@ -236,16 +243,23 @@ export default function Discover() {
             </div>
           </div> */}
         {/* </div> */}
-        <RightColumn
-          rightColumnDisplay={rightColumnDisplay}
-          apiDocsDisplay={apiDocsDisplay}
-          setDisplayApiDocs={setDisplayApiDocs}
-          idsForPage={idsForPage}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          clientUserData={clientUserData}
-          setClientUserData={setClientUserData}
-        />
+
+        {apiDocsDisplay ? (
+          <RightColumn
+            rightColumnDisplay={rightColumnDisplay}
+            apiDocsDisplay={apiDocsDisplay}
+            setDisplayApiDocs={setDisplayApiDocs}
+            idsForPage={idsForPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            clientUserData={clientUserData}
+            setClientUserData={setClientUserData}
+          />
+        ) : (
+          <div className="loading-container">
+            <img className="right-column-loading" src={loadingImg} />
+          </div>
+        )}
       </div>
       <div className="bottom-navigation">
         <PageSelection

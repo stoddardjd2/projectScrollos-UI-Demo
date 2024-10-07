@@ -16,7 +16,6 @@ export default function DocDiscussionGrid(props) {
   function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  const [isDiscussionCreated, setIsDiscussionCreated] = useState(false);
   useEffect(() => {
     // load projects from database on initial and if returning from posts
     fetch(`http://localhost:3001/getDiscussions/${apiDoc._id}`, {

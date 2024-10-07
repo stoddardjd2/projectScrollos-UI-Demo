@@ -8,8 +8,7 @@ import commentIcon from "../../assets/comment.svg";
 import NotesView from "./Card-components/NotesView";
 import AddView from "./Card-components/AddView";
 import InfoView from "./Card-components/InfoView";
-import Rating from "./Rating";
-
+import Rating from '../ApiDocViewer/Rating'
 import ActionButton from "./Card-components/ActionButton";
 // import getStyleForAction from "./Card-components/getStyleForAction";
 export default function DocCard(props) {

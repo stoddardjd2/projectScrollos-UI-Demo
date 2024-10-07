@@ -11,13 +11,11 @@ export default function FilterOption(props) {
     sortOption2,
     sortImg,
     activeId,
+    handleSortToggle,
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
-
-  function handleSort(e) {
-    setSort((prev) => !prev);
-  }
+  const [sortOption, setSortOption] = useState(0);
 
   return (
     <div id={activeId} className="sort-main-container" onClick={handleClick}>
@@ -35,7 +33,11 @@ export default function FilterOption(props) {
         </div>
         {/* if slider enabled and current option active, show extra sort options: */}
         <div
-          onClick={handleSort}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSort((prev) => !prev);
+            handleSortToggle(sort);
+          }}
           className={
             slider && activeFilter === activeId
               ? "sort-container sort-active"

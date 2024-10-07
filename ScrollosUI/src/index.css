@@ -317,7 +317,7 @@ button:hover {
   }
   .page-info-bar {
     position: relative;
-    z-index: 2;
+    z-index: 0;
     box-shadow: 0 2px 10px #00000081;
 
     padding-top: 0.6em;
@@ -388,6 +388,10 @@ button:hover {
         border-right: 1px rgb(255, 255, 255) solid;
       }
       .sort-main-container {
+        img {
+          width: 24px;
+          height: 24px;
+        }
       }
       .option-container {
         overflow: hidden;
@@ -544,10 +548,10 @@ button:hover {
         z-index: 1;
         /* left: 0%; */
 
-        transform: translate(-115px, 45px);
+        transform: translate(-10px, 42px);
 
         background-color: rgb(255, 255, 255);
-        padding: 10px;
+        padding: 3px;
         border-radius: 10px;
         display: flex;
         flex-direction: column;
@@ -582,7 +586,7 @@ button:hover {
           content: "";
           rotate: 180deg;
           position: absolute;
-          transform: translate(-125px, 18px);
+          transform: translate(-65px, 11px);
           border-width: 5px;
           border-style: solid;
           border-color: rgb(255, 255, 255) transparent transparent transparent;
@@ -630,6 +634,7 @@ button:hover {
         gap: 10px;
         flex: 1;
         padding: 8px;
+        color: black;
         div {
           color: black;
           font-size: 14px;
@@ -655,6 +660,18 @@ button:hover {
     display: flex;
     flex: 1;
     /* border-top: 3px var(--vertical-expand-bar) solid; */
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+background-color: var(--right-column);
+      .right-column-loading {
+        animation: rotate 2s ease-in-out infinite;
+        opacity: 50%;
+        height: 100%;
+        width: 100px;
+      }
+    }
     .no-results {
       font-size: 1.5em;
       color: black;
@@ -778,7 +795,6 @@ button:hover {
       .container {
         display: flex;
         gap: 4px;
-        cursor: pointer;
       }
       .star-icon {
         width: 15px;
@@ -1768,7 +1784,7 @@ button:hover {
 }
 
 .user-settings-popup {
-  position: absolute;
+  position: fixed;
   /* left: 85.4%; */
   /* top: 6%; */
   top: 60px;
@@ -1776,8 +1792,8 @@ button:hover {
   background-color: white;
   box-shadow: 0 0px 10px rgb(31, 31, 31);
   border-radius: 5px;
-
   .content {
+    position: relative;
     width: 200px;
     padding: 10px;
     font-size: 12px;
@@ -1787,7 +1803,7 @@ button:hover {
     content: "";
     rotate: 180deg;
     position: absolute;
-    top: -8px;
+    top: -51px;
     left: 180px;
     margin-left: -5px;
     border-width: 5px;
@@ -3153,9 +3169,9 @@ button:hover {
           .cancel {
             background-color: rgb(146, 146, 146);
             height: 30px;
-              color:white;
-              padding: 5px 10px;
-              cursor: pointer;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
           }
         }
         .discussion-title {
@@ -3169,7 +3185,8 @@ button:hover {
         img:hover {
           opacity: 100%;
         }
-        .trash-icon, .edit-icon {
+        .trash-icon,
+        .edit-icon {
           cursor: pointer;
         }
       }

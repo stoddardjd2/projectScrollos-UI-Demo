@@ -18,6 +18,8 @@ import shrinkIcon from "../../assets/ApiDocViewer-Icons/shrink.svg";
 export default function ApiDocViewer() {
   // const [apiDocsViewer, setApiDocsViewer] = useState(null);
   const { apiDoc, userData } = useLoaderData();
+
+  const [clientUserData, setClientUserData] = useState(userData);
   const [aboutOptionSelection, setAboutOptionSelection] = useState(0);
   const [isSwaggerExpanded, setIsSwaggerExpanded] = useState(false);
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
@@ -27,7 +29,7 @@ export default function ApiDocViewer() {
   const aboutOptions = [
     {
       name: "Details",
-      elements: <Details clientUserData={userData} apiDoc={apiDoc} />,
+      elements: <Details clientUserData={clientUserData} apiDoc={apiDoc} />,
       icon: detailsIcon,
     },
     {
@@ -40,13 +42,17 @@ export default function ApiDocViewer() {
       elements: (
         <DocDiscussionsHome
           apiDoc={apiDoc}
-          clientUserData={userData}
+          clientUserData={clientUserData}
           handleExit={handleExit}
         />
       ),
       icon: messageIcon,
     },
-    { name: "Notes", elements: <Notes />, icon: notesIcon },
+    {
+      name: "Notes",
+      elements: <Notes apiDoc={apiDoc} setClientUserData={setClientUserData} clientUserData={clientUserData} />,
+      icon: notesIcon,
+    },
     // { name: "Reviews", elements: <Notes />, icon: reviewsIcon },
   ];
   return (
@@ -110,22 +116,24 @@ export default function ApiDocViewer() {
             {/* use selection to display about option: */}
           </div>
         )}
-        {!isAboutExpanded && <div className="swagger-ui-item main-item">
-          <button
-            onClick={() => setIsSwaggerExpanded(!isSwaggerExpanded)}
-            className="expand"
-          >
-            <img src={!isSwaggerExpanded ? expandIcon : shrinkIcon} />
-          </button>
-          <SwaggerUI spec={apiDoc} />;
-        </div>}
+        {!isAboutExpanded && (
+          <div className="swagger-ui-item main-item">
+            <button
+              onClick={() => setIsSwaggerExpanded(!isSwaggerExpanded)}
+              className="expand"
+            >
+              <img src={!isSwaggerExpanded ? expandIcon : shrinkIcon} />
+            </button>
+            <SwaggerUI spec={apiDoc} />;
+          </div>
+        )}
         {/* <div className="discussions-item main-item">
           <h2>Discussions</h2>
           <div className="border"></div>
           <div className="">
             <DocDiscussionsHome
               apiDoc={apiDoc}
-              clientUserData={userData}
+              clientUserData={clientUserData]}
               handleExit={handleExit}
             />
           </div>

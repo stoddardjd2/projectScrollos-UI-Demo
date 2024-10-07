@@ -9,6 +9,7 @@ import starIcon from "../../assets/cards-v2-icons/star.svg";
 import messageIcon from "../../assets/cards-v2-icons/message.svg";
 import loadingImg from "../../assets/loading.svg";
 import DocDiscussionsHome from "./DocDiscussionsHome";
+
 export default function RowDoc(props) {
   const {
     apiDoc,
@@ -18,6 +19,7 @@ export default function RowDoc(props) {
     apiDocIndex,
     currentDocIndex,
   } = props;
+  const createdDate = new Date(apiDoc.history.createdAt);
   const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
   const [isRating, setIsRating] = useState(false);
   const [isRated, setIsRated] = useState(() => {
@@ -25,6 +27,20 @@ export default function RowDoc(props) {
   });
   const [discussionsCount, setDiscussionsCount] = useState();
   const [isDiscussion, setIsDiscussion] = useState(false);
+  // const [averageRating, setAverageRating] = useState();
+  // load average rating
+  // useEffect(() => {
+  //   fetch(`http://localhost:3001/getAverageRating/${apiDoc._id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((results) => {
+  //       setAverageRating(results);
+  //     });
+  // }, []);
 
   // load disucussion length
   useEffect(() => {
@@ -168,19 +184,23 @@ export default function RowDoc(props) {
       {/* maintains min height for flex box when bookmark animated */}
 
       <div className="row-rating">
+        {/* {apiDoc.avgRating ? ( */}
         <div
           className="container"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsRating(!isRating);
-          }}
+          // onClick={(e) => {
+          //   e.stopPropagation();
+          //   setIsRating(!isRating);
+          // }}
         >
           <img
             className="star-icon"
             src={!isRated ? starIcon : starFilledIcon}
           />
-          <div>4.5</div>
+          <div>{apiDoc.avgRating ? apiDoc.avgRating : "0"}</div>
         </div>
+        {/* ) : (
+          <img className="loading-request-icon" src={loadingImg} />
+        )} */}
       </div>
 
       {isRating && (
@@ -229,7 +249,9 @@ export default function RowDoc(props) {
         )}
       </div>
 
-      <div className="row-date row-value">Opened 9/27/2024</div>
+      <div className="row-date row-value">{`${
+        createdDate.getMonth() + 1
+      }/${createdDate.getDate()}/${createdDate.getFullYear()}`}</div>
       <div className="row-version row-value">v{apiDoc.info.version}</div>
       <div className="row-api-type row-value">
         {apiDoc.openapi && "v" + apiDoc.openapi}

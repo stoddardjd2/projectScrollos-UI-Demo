@@ -1,7 +1,7 @@
 import { useState } from "react";
 import starIcon from "../../assets/star.svg";
 
-export default function Rating(props) {
+export default function RatingV2(props) {
   const { apiDoc, handleAddRating, clientUserData } = props;
   const [mouseOverStar, setMouseOverStar] = useState();
   const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(true);

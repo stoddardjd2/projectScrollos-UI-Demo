@@ -1,40 +1,38 @@
 import { useState, useEffect } from "react";
 import starIcon from "../../assets/star.svg";
-
+import Loading from "./Loading";
 export default function Rating(props) {
   const { apiDoc, clientUserData } = props;
-  const [hoverOverIndex, setHoverOverIndex] = useState();
+  const [mouseOverStar, setMouseOverStar] = useState();
+  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
+  // const [averageRating, setAverageRating] = useState();
+  // const averageRating = apiDoc.avgRating;
   const getLoadedUserRating = () => {
     if (apiDoc.ratings[clientUserData._id]) {
       return apiDoc.ratings[clientUserData._id];
     } else return false;
   };
   const [userRating, setUserRating] = useState(getLoadedUserRating());
-  const [userRatingHover, setUserRatingHover] = useState(getLoadedUserRating());
-  const [averageRating, setAverageRating] = useState()
-  // load average rating
-  useEffect(() => {
-    fetch(`http://localhost:3001/getAverageRating/${apiDoc._id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((results) => {
-        setAverageRating(results);
-      });
-  }, []);
+  // load average rating (OLD, AVG RATING STORED IN APIDOC DATa)
+  // useEffect(() => {
+  //   fetch(`http://localhost:3001/getAverageRating/${apiDoc._id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((results) => {
+  //       setAverageRating(results);
+  //     });
+  // }, []);
 
-  function handleHoverOverStar(e) {
-    console.log("HOVER");
-    setHoverOverIndex(e.target.id);
-    setUserRatingHover(e.target.id);
+  function handleToggleAddRating() {
+    setIsAddRatingExpanded(!isAddRatingExpanded);
   }
-  function handleHoverLeaveStar(e) {
-    setHoverOverIndex();
-    // setUserRating(getLoadedUserRating());
-    setUserRatingHover(userRating);
+  function handleMouseOverStar(e) {
+    const id = e.currentTarget.id;
+    setMouseOverStar(id);
   }
   function handleAddRating(e) {
     const rating = e.currentTarget.id;
@@ -50,22 +48,76 @@ export default function Rating(props) {
       .then((json) => {});
   }
 
-  let starsElements = [];
-  for (let i = 1; i <= 5; i++) {
-    starsElements.push(
-      <img
-        key={i}
-        index={i}
-        id={i}
-        src={starIcon}
-        className="star"
-        onMouseEnter={handleHoverOverStar}
-        onMouseLeave={handleHoverLeaveStar}
-        style={i <= userRatingHover ? { opacity: 1 } : { opacity: 0.2 }}
-        onClick={handleAddRating}
-      />
-    );
+  function getRatingElements() {
+    const ratingDelays = [
+      { enter: "0.4s", exit: "0s" },
+      { enter: "0.3s", exit: "0.1s" },
+      { enter: "0.2s", exit: "0.2s" },
+      { enter: "0.1s", exit: "0.3s" },
+    ];
+    return ratingDelays.map((ratingDelay, index) => {
+      return (
+        <img
+          key={index}
+          src={starIcon}
+          className="star"
+          onClick={handleAddRating}
+          id={index + 2}
+          style={
+            isAddRatingExpanded
+              ? // if expanded:
+                mouseOverStar >= index + 2 || userRating >= index + 2
+                ? { opacity: "100%", transition: "0s ease-in-out all" }
+                : { transition: "0s ease-in-out all", opacity: " 40%" }
+              : //if not expanded:
+                { opacity: " 40%" }
+          }
+        />
+      );
+    });
   }
 
-  return <div className="rating-container-v3">{starsElements}</div>;
+  return (
+    <div className="rating-container-main">
+      <div
+        className="rating-container"
+        onClick={handleToggleAddRating}
+        onMouseOver={(e) => setMouseOverStar(e.target.id)}
+        onMouseLeave={() => setMouseOverStar()}
+      >
+        <img
+          src={starIcon}
+          id={1}
+          // onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
+          // onMouseLeave={() => setMouseOverStar()}
+          className="star"
+          style={
+            isAddRatingExpanded
+              ? // if expanded:
+                mouseOverStar >= 1 || userRating >= 1
+                ? { opacity: "100%", transition: "0s ease-in-out all" }
+                : { transition: "0s ease-in-out all", opacity: "40%" }
+              : //if not expanded:
+                { opacity: "1" }
+          }
+          onClick={(e) => {
+            //only set rating if expanded
+            isAddRatingExpanded && handleAddRating(e);
+          }}
+        />
+
+        <div
+          className="add-rating-container"
+          style={!isAddRatingExpanded ? { width: "0%" } : { width: "100%" }}
+        >
+          {getRatingElements()}
+        </div>
+        <div className="rating">
+          {apiDoc.avgRating ? apiDoc.avgRating : 0}
+          {/* {averageRating ? averageRating : <Loading />} */}
+        </div>
+        <div>({apiDoc?.ratings ? Object.keys(apiDoc.ratings).length : 0})</div>
+      </div>
+    </div>
+  );
 }

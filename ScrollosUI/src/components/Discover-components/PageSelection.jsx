@@ -7,7 +7,7 @@ export default function PageSelection(props) {
     idsForPage,
     currentPage,
     setCurrentPage,
-    setRightColumnDisplay
+    setRightColumnDisplay,
   } = props;
 
   function handleSetPage(e) {
@@ -24,8 +24,13 @@ export default function PageSelection(props) {
       body: JSON.stringify(docsToDisplay),
     })
       .then((results) => results.json())
-      .then((json) => {
-        setDisplayApiDocs(json);
+      .then((res) => {
+        let sortedResponse = new Array(docsToDisplay.length);
+        res.map((responseItem) => {
+          const index = docsToDisplay.indexOf(responseItem._id);
+          sortedResponse.splice(index, 1, responseItem);
+        });
+        setDisplayApiDocs(sortedResponse);
       });
   }
 
@@ -42,8 +47,13 @@ export default function PageSelection(props) {
       body: JSON.stringify(docsToDisplay),
     })
       .then((results) => results.json())
-      .then((json) => {
-        setDisplayApiDocs(json);
+      .then((res) => {
+        let sortedResponse = new Array(docsToDisplay.length);
+        res.map((responseItem) => {
+          const index = docsToDisplay.indexOf(responseItem._id);
+          sortedResponse.splice(index, 1, responseItem);
+        });
+        setDisplayApiDocs(sortedResponse);
       });
   }
 
