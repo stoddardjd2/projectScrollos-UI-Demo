@@ -277,6 +277,19 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  .rating-date-container {
+    display: flex;
+    .date-container {
+      display: flex;
+      gap: 5px;
+      align-items: baseline;
+      .created-on {
+        color: rgb(182, 182, 182);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+    }
+  }
   .title-container {
     display: flex;
     align-items: center;
@@ -298,9 +311,28 @@
 /* notes component */
 .notes-container {
   height: 100%;
+  background-color: rgb(255, 255, 255);
+  padding: 10px;
+  border-radius: 10px;
+  overflow-y: auto;
   .notes-header-container {
+    
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    gap: 10px;
+    margin: 0px 8px;
+    margin-top: 8px;
+    .enable-delete-btn{
+     background-color: var(--primary-light); 
+    }
+    button:hover {
+      opacity: 80%;
+    }
+    button {
+      background-color: var(--primary-light);
+      padding: 5px;
+      border-radius: 5px;
+    }
   }
   .notes-grid {
     display: grid;
@@ -310,15 +342,29 @@
     margin: 8px;
     .note-item-container {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      background-color: rgb(233, 233, 233);
+      color: black;
+      padding: 8px;
+      border-radius: 10px;
+      width: 100%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      .notes-details-container{
+        font-size: 12px;
+        color:grey
+      }
+      /* .notes-details-container{
+        color:black
+      } */
       .notes-textarea {
+        /* font-family: "Roboto Condensed", sans-serif; */
+        flex:1;
+        font-family: "Inter", sans-serif;
+
         resize: none;
         /* border: 1px white solid; */
-        background-color: white;
-        color:black;
-        padding: 5px;
-        border-radius: 10px;
-        height: 100%;
-        width: 100%;
+      
       }
       .note-button {
         border-radius: 200px;
@@ -329,41 +375,49 @@
           height: 14px;
         }
       }
-      .trash-container {
-        position: absolute;
-        bottom: 5px;
-        left: 5px;
-        .trash-confirm-container{
-          translate: 0px -2px;
+      /* .trash-container { */
+        /* position: absolute; */
+        /* bottom: 8px; */
+        /* right: 50px; */
+        .trash-confirm-container {
+          /* translate: 0px -2px; */
           display: flex;
-          gap:10px;
-          .save-button{
-            background-color: rgb(211, 31, 31);
+          gap: 10px;
+
+          .save-button {
+            background-color: rgb(253, 77, 77);
           }
+        }
+        .confirm-delete-button{
+          opacity: 1;
         }
         .trash-button:hover {
           opacity: 1;
         }
         .trash-button {
           z-index: 100;
+ 
           background-color: rgb(65, 65, 65);
         }
-      }
+      /* } */
       .note-button:hover {
         opacity: 1;
       }
 
+      .confirm-cancel-button {
+        opacity: 1;
+      }
       .cancel-button {
         background-color: rgb(65, 65, 65);
       }
       .save-button {
-        background-color: rgb(0, 165, 0);
+        background-color: var(--primary-light);
       }
       .notes-actions-container {
         z-index: 100;
         position: absolute;
-        bottom: 5px;
-        right: 5px;
+        bottom: 10px;
+        right: 15px;
         display: flex;
         gap: 10px;
       }

@@ -8,6 +8,7 @@ import Rating from "../Rating";
 import notLikedIcon from "../../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
 export default function Details(props) {
   const { clientUserData, apiDoc } = props;
+  const createdDate = new Date(apiDoc.history.createdAt);
   return (
     <div className="details-container">
       <div className="title-container">
@@ -15,7 +16,15 @@ export default function Details(props) {
         <Like clientUserData={clientUserData} apiDoc={apiDoc} />
       </div>
       {/* <Rating apiDoc={apiDoc} clientUserData={clientUserData} /> */}
-      <Rating apiDoc={apiDoc} clientUserData={clientUserData} />
+      <div className="rating-date-container">
+        <Rating apiDoc={apiDoc} clientUserData={clientUserData} />
+        <div className="date-container"> 
+          <div className="created-on">Created on </div>
+          <div>{`${
+            createdDate.getMonth() + 1
+          }/${createdDate.getDate()}/${createdDate.getFullYear()}`}</div>
+        </div>
+      </div>
       <div className="border"></div>
       <div class="top-left-item-grid-container">
         <div className="item">
