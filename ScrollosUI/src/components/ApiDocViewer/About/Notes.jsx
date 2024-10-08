@@ -10,6 +10,8 @@ export default function Notes(props) {
   const [isDeletingEnabled, setIsDeletingEnabled] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
+console.log("client", clientUserData.notes)
+console.log("valiues", noteValue)
   function getNoteValues() {
     clientUserData.notes[apiDoc._id];
     let values = [];
@@ -63,7 +65,7 @@ export default function Notes(props) {
 
       if (prev.notes[apiDoc._id]) {
         const notesCopy = [...prev.notes[apiDoc._id]];
-        notesCopy.unshift("");
+        notesCopy.unshift({note:''});
         return { ...prev, notes: { ...prev.notes, [apiDoc._id]: notesCopy } };
       } else {
         return { ...prev, notes: { ...prev.notes, [apiDoc._id]: [""] } };
@@ -159,63 +161,54 @@ export default function Notes(props) {
                   onChange={handleNoteInput}
                   value={noteValue[index]}
                 ></textarea>
-                {
-                  <div className="notes-actions-container">
-                    {/* <button
-                      id={index}
-                      className="cancel-button note-button"
-                      onClick={handleCancel}
-                    >
-                      <img src={cancelIcon} />
-                    </button> */}
 
-                    {isDeletingEnabled && (
-                      <>
-                        {!isDeleting[index] ? (
+                <div className="notes-actions-container">
+                  {isDeletingEnabled && (
+                    <>
+                      {!isDeleting[index] ? (
+                        <button
+                          id={index}
+                          className="trash-button note-button"
+                          onClick={handleDeleteNote}
+                        >
+                          <img src={trashIcon} />
+                        </button>
+                      ) : (
+                        <div className="trash-confirm-container">
                           <button
                             id={index}
-                            className="trash-button note-button"
-                            onClick={handleDeleteNote}
+                            className="confirm-delete-button save-button note-button"
+                            onClick={handleConfirmDelete}
                           >
                             <img src={trashIcon} />
                           </button>
-                        ) : (
-                          <div className="trash-confirm-container">
-                            <button
-                              id={index}
-                              className="confirm-delete-button save-button note-button"
-                              onClick={handleConfirmDelete}
-                            >
-                              <img src={trashIcon} />
-                            </button>
-                            <button
-                              id={index}
-                              className="confirm-cancel-button cancel-button note-button"
-                              onClick={(e) => {
-                                const index = e.currentTarget.id;
-                                setIsDeleting((prev) => {
-                                  return { ...prev, [index]: false };
-                                });
-                              }}
-                            >
-                              <img src={cancelIcon} />
-                            </button>
-                          </div>
-                        )}
-                      </>
-                    )}
+                          <button
+                            id={index}
+                            className="confirm-cancel-button cancel-button note-button"
+                            onClick={(e) => {
+                              const index = e.currentTarget.id;
+                              setIsDeleting((prev) => {
+                                return { ...prev, [index]: false };
+                              });
+                            }}
+                          >
+                            <img src={cancelIcon} />
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
 
-                    {!(noteValue[index] == noteInfo.note) && (
-                      <button
-                        id={index}
-                        className="save-button note-button"
-                        onClick={handleSaveNotes}
-                      >
-                        <img src={saveIcon} />
-                      </button>
-                    )}
-                  </div>
-                }
+                  {!(noteValue[index] == noteInfo.note) && (
+                    <button
+                      id={index}
+                      className="save-button note-button"
+                      onClick={handleSaveNotes}
+                    >
+                      <img src={saveIcon} />
+                    </button>
+                  )}
+                </div>
 
                 <div className="notes-details-container">
                   {clientUserData.notes[apiDoc._id][index].updatedAt &&

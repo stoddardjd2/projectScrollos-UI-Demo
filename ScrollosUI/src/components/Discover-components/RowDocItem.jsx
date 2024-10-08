@@ -26,7 +26,7 @@ export default function RowDoc(props) {
   const [isRated, setIsRated] = useState(() => {
     return Object.keys(apiDoc.ratings).includes(clientUserData._id);
   });
-  const [discussionsCount, setDiscussionsCount] = useState();
+  // const [discussionsCount, setDiscussionsCount] = useState();
   const [isDiscussion, setIsDiscussion] = useState(false);
   // const [averageRating, setAverageRating] = useState();
   // load average rating
@@ -44,18 +44,18 @@ export default function RowDoc(props) {
   // }, []);
 
   // load disucussion length
-  useEffect(() => {
-    fetch(`http://localhost:3001/getDiscussionLength/${apiDoc._id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((results) => {
-        setDiscussionsCount(results.discussions);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3001/getDiscussionLength/${apiDoc._id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((results) => {
+  //       setDiscussionsCount(results.discussions);
+  //     });
+  // }, []);
 
   function handleExitPopup(e) {
     e.stopPropagation();
@@ -205,8 +205,8 @@ export default function RowDoc(props) {
       </div>
       <div className="row-discussions row-value">
         <div className="row-flex">
-          <img className="views-icon" src={viewsIcon}/>
-          <div>{apiDoc.views}</div>
+          <img className="views-icon" src={viewsIcon} />
+          <div>{apiDoc.views ? apiDoc.views : 0}</div>
         </div>
       </div>
 
@@ -221,20 +221,20 @@ export default function RowDoc(props) {
       )}
 
       <div className="row-discussions row-value">
-        {discussionsCount ? (
-          <div
-            className="grid-item-container discussion-button hover-effect"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsDiscussion(!isDiscussion);
-            }}
-          >
-            <img className="grid-icon" src={messageIcon} />
-            <div>{discussionsCount}</div>
-          </div>
-        ) : (
+        {/* {discussionsCount ? ( */}
+        <div
+          className="grid-item-container discussion-button hover-effect"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsDiscussion(!isDiscussion);
+          }}
+        >
+          <img className="grid-icon" src={messageIcon} />
+          <div>{apiDoc.discussionsCount ? apiDoc.discussionsCount : 0}</div>
+        </div>
+        {/* ) : (
           <img className="loading-request-icon" src={loadingImg} />
-        )}
+        )} */}
 
         {isDiscussion && (
           <div
