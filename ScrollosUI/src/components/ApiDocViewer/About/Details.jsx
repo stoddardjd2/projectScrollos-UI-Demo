@@ -6,7 +6,6 @@ import Contact from "../Contact";
 import Like from "../../Common-components/Like";
 import Rating from "../Rating";
 import notLikedIcon from "../../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
-import likedOutlined from "../../../assets/ApiDocViewer-Icons/like-icons/likedOutlined.svg";
 
 export default function Details(props) {
   const { clientUserData, apiDoc } = props;

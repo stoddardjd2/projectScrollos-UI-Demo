@@ -31,7 +31,7 @@ export default function CardsV2DocItem(props) {
   const [isMoreOptions, setIsMoreOptions] = useState(false);
   const [isRating, setIsRating] = useState(false);
   const [isDiscussion, setIsDiscussion] = useState(false);
-  const [discussionsCount, setDiscussionsCount] = useState();
+  // const [discussionsCount, setDiscussionsCount] = useState();
   // const [averageRating, setAverageRating] = useState();
 
   const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
@@ -41,18 +41,18 @@ export default function CardsV2DocItem(props) {
   });
 
   // load disucussion length
-  useEffect(() => {
-    fetch(`http://localhost:3001/getDiscussionLength/${apiDoc._id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((results) => {
-        setDiscussionsCount(results.discussions);
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3001/getDiscussionLength/${apiDoc._id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((results) => {
+  //       setDiscussionsCount(results.discussions);
+  //     });
+  // }, []);
 
   // load average rating
   // useEffect(() => {
@@ -197,7 +197,7 @@ export default function CardsV2DocItem(props) {
           <div>{apiDoc.views ? apiDoc.views : "0"}</div>
         </div>
         <div className="grid-item-container ">
-          {discussionsCount ? (
+          {/* {discussionsCount ? ( */}
             <div
               className="grid-item-container discussion-button hover-effect"
               onClick={() => {
@@ -205,11 +205,11 @@ export default function CardsV2DocItem(props) {
               }}
             >
               <img className="grid-icon" src={messageIcon} />
-              <div>{discussionsCount}</div>
+              <div>{apiDoc.discussionsCount ? apiDoc.discussionsCount : 0}</div>
             </div>
-          ) : (
+          {/* ) : (
             <img className="loading-request-icon" src={loadingImg} />
-          )}
+          )} */}
 
           {isDiscussion && (
             <div
