@@ -2,7 +2,7 @@ import searchIcon from "../../assets/search.svg";
 import clearIcon from "../../assets/x.svg";
 import { useState } from "react";
 export default function Search(props) {
-  const { setDisplayApiDocs, allApiDocs, apiDocsDisplay, setActive, allDocIds } = props;
+  const { setDisplayApiDocs, apiDocsDisplay, setActive, allDocIds } = props;
   const [search, setSearch] = useState("");
 
   function handleInput(e) {

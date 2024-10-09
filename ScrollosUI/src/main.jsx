@@ -53,9 +53,9 @@ const router = createBrowserRouter([
       ).then((res) => res.json());
       const loadedLastViewMode = loadedLastViewModeObj.lastViewMode;
 
-      const loadedDocs = await fetch(
-        "http://localhost:3001/read/limitResults/12"
-      ).then((res) => res.json());
+      // const loadedDocs = await fetch(
+      //   "http://localhost:3001/read/limitResults/20"
+      // ).then((res) => res.json());
 
       const userData = await fetch(
         `http://localhost:3001/user/${params.userID}`
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
       allDocIdObjs.map((idObj) => {
         allDocIds.push(idObj._id);
       });
-      return { loadedDocs, userData, allDocIds, loadedLastViewMode };
+      return {userData, allDocIds, loadedLastViewMode };
     },
   },
   {

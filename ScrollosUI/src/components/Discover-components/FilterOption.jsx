@@ -18,9 +18,11 @@ export default function FilterOption(props) {
   const [sortOption, setSortOption] = useState(0);
 
   return (
-    <div id={activeId} className="sort-main-container" onClick={handleClick}>
+    <div className="sort-main-container">
       <div className="option-container">
         <div
+          id={activeId}
+          onClick={handleClick}
           //   className="option"
           className={
             slider && activeFilter === activeId
@@ -33,6 +35,7 @@ export default function FilterOption(props) {
         </div>
         {/* if slider enabled and current option active, show extra sort options: */}
         <div
+        style={(slider && activeFilter === activeId) ? {} :{visibility:"hidden"}}
           onClick={(e) => {
             e.stopPropagation();
             setSort((prev) => !prev);
