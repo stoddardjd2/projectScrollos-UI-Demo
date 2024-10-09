@@ -8,6 +8,8 @@ import notificationsIcon from "../../assets/sidebar-icons/notifications.svg";
 import logoutIcon from "../../assets/sidebar-icons/logout.svg";
 import dropdownIcon from "../../assets/sideExpand.svg";
 import { useEffect, useState } from "react";
+import AddView from "./Card-components/AddView";
+import Popup from "./Popup-components/Popup";
 export default function Sidebar(props) {
   const [sidebarSelection, setSidebarSelection] = useState();
   const {
@@ -18,7 +20,9 @@ export default function Sidebar(props) {
     setClientUserData,
     setDisplayApiDocs,
     loadedDocs,
-    setActive
+    setActive,
+    allDocIds,
+    clientUserData,
   } = props;
 
   function handleLogout() {
@@ -62,6 +66,8 @@ export default function Sidebar(props) {
           setClientUserData={setClientUserData}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
+          allDocIds={allDocIds}
+          setActive={setActive}
         />
         <SidebarItem
           name="Projects"
@@ -86,6 +92,8 @@ export default function Sidebar(props) {
           setRightColumnDisplay={setRightColumnDisplay}
           sidebarSelection={sidebarSelection}
           setSidebarSelection={setSidebarSelection}
+          popup={true}
+          clientUserData={clientUserData}
         />
         <SidebarItem
           name="Notes"
@@ -145,12 +153,16 @@ function SidebarItem(props) {
     rightColumnDisplay,
     dropdownItems,
     setDisplayApiDocs,
-    setClientUserData,
     dropdownIcon,
     sidebarSelection,
     setSidebarSelection,
-    setActive
+    setActive,
+    allDocIds,
+    popup,
+    clientUserData,
+    setClientUserData,
   } = props;
+  const [isPopupActive, setIsPopupActive] = useState(false);
   // const isSelected = rightColumnDisplay === name.toLowerCase();
   const isSelected = name.toLowerCase() === sidebarSelection;
   const [initialDropdownOrder, setInitialDropdownOrder] =
@@ -167,12 +179,19 @@ function SidebarItem(props) {
     //reset dropdown selection on option selection
     // setDropdownSelection();
     // setActive(id);
-    if(id===sidebarSelection && sidebarSelection){
+    if (popup) {
+      setIsPopupActive(!isPopupActive);
+    }
+
+    if (id === sidebarSelection && sidebarSelection) {
       //if sidebar selection is already open and same sidebar option is selected
       setSidebarSelection();
-    }else{
+    } else {
       setSidebarSelection(id);
-
+      //control docs to display on option selection:
+      if (id === "documents") {
+        setActive(allDocIds);
+      }
     }
     setDropdownSelection();
   }
@@ -204,34 +223,19 @@ function SidebarItem(props) {
         indexOfCurrentProject = index;
       }
     });
-    
 
     //push selected proejct to front of array
-    // setProjects();
     setClientUserData((prev) => {
       //make copy of values not by reference to prevProjects so that it may be mutated seperately
       const prevProjectsCopy = [...prev.projects];
       prevProjectsCopy.splice(indexOfCurrentProject, 1);
       prevProjectsCopy.unshift(prev.projects[indexOfCurrentProject]);
       // const recentOrderArray = prevProjects.concat(prevProjectsCopy)
-      return ({...prev, projects: [...prevProjectsCopy]});
+      return { ...prev, projects: [...prevProjectsCopy] };
     });
 
-    // const documentsArray = dropdownItems[id].documentIds;
     setDropdownSelection(id);
-    //update display to show documents included in dropdown selection
-    // fetch(`http://localhost:3001/read/ids`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(documentsArray),
-    // })
-    //   .then((results) => results.json())
-    //   .then((json) => setActive(json));
-    console.log("docs arrray", documentsArray
-    )
-    setActive(documentsArray)
+    setActive(documentsArray);
   }
 
   return (
@@ -249,6 +253,7 @@ function SidebarItem(props) {
       >
         {/* change color of image when selected */}
         <img
+        className="sidebar-icon"
           src={img}
           style={isSelected ? { filter: "brightness(100)" } : {}}
         />
@@ -314,6 +319,14 @@ function SidebarItem(props) {
           })}
         </div>
         // </div>
+      )}
+      {/* popups: */}
+      {isPopupActive && (
+        <Popup
+          setIsPopupActive={setIsPopupActive}
+          clientUserData={clientUserData}
+          setClientUserData={setClientUserData}
+        />
       )}
     </div>
   );

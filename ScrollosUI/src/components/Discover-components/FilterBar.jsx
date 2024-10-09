@@ -6,28 +6,165 @@ import starIcon from "../../assets/filter-bar-icons/star.svg";
 import sortByIcon from "../../assets/filter-bar-icons/sortby.svg";
 import FilterOption from "./FilterOption";
 import LastProjectIcon from "../../assets/filter-bar-icons/last-project.svg";
-import { useState, useEffect, act } from "react";
+import Popup from "./Popup-components/Popup";
+import savedIcon from "../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
+import viewsIcon from "../../assets/views.svg";
+import dateIcon from '../../assets/date.svg'
+import { useState } from "react";
 export default function FilterBar(props) {
-  const { setActive, active, setDisplayApiDocs, clientUserData, allDocIds } =
-    props;
+  const {
+    setClientUserData,
+    setActive,
+    active,
+    setDisplayApiDocs,
+    clientUserData,
+    allDocIds,
+  } = props;
 
   const [activeFilter, setActiveFilter] = useState("all docs");
 
+  function handleSortToggleForViews(sort) {
+    setDisplayApiDocs();
+    if (sort) {
+      fetch(`http://localhost:3001/getDocIdsByViews/lowest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          setActive(res);
+        });
+    } else {
+      fetch(`http://localhost:3001/getDocIdsByViews/highest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          setActive(res);
+        });
+    }
+  }
+
+  function handleSortToggleForRatings(sort) {
+    console.log("DATE")
+    setDisplayApiDocs();
+    if (sort) {
+      fetch(`http://localhost:3001/getDocIdsByRatings/lowest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          setActive(res);
+        });
+    } else {
+      fetch(`http://localhost:3001/getDocIdsByRatings/highest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          setActive(res);
+        });
+    }
+  }
+
+  function handleSortToggleForDate(sort) {
+    
+    setDisplayApiDocs();
+    if (sort) {
+      fetch(`http://localhost:3001/getDocIdsByDate/oldest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          setActive(res);
+        });
+    } else {
+      fetch(`http://localhost:3001/getDocIdsByDate/newest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          // mongodb sends back array of documents in order of first in their database-
+          //must sort their response to match with our array that was sent(for recents to work)
+          setActive(res);
+        });
+    }
+  }
+
   function handleClick(e) {
-    const activeId = e.currentTarget.id.toLowerCase();
+    const activeId = e.currentTarget.id;
+    setDisplayApiDocs();
+    setActiveFilter(activeId);
     if (activeId === "documents") {
       setActive(allDocIds);
     } else if (activeId === "recents") {
       setActive(clientUserData.recents);
-    } else if (activeId === "bookmarks") {
+    } else if (activeId === "saved") {
       setActive(clientUserData.bookmarks);
     } else if (activeId === "lastproject") {
-      console.log("lastproject:", clientUserData.projects[0].documentIds)
       setActive(clientUserData.projects[0].documentIds);
     } else if (activeId === "ratings") {
+      fetch(`http://localhost:3001/getDocIdsByRatings/highest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          setActive(res);
+        });
+    } else if (activeId === "date") {
+      console.log("DATE")
 
-    } else if (activeId === "docage") {
-      
+      fetch(`http://localhost:3001/getDocIdsByDate/newest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          setActive(res);
+        });
+    } else if (activeId === "views") {
+      fetch(`http://localhost:3001/getDocIdsByViews/highest`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((results) => results.json())
+        .then((res) => {
+          setActive(res);
+        });
     }
   }
 
@@ -39,37 +176,40 @@ export default function FilterBar(props) {
         displayName="All Docs"
         img={allDocsIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
+
+      <div className="vertical-border"></div>
+
       <FilterOption
         activeId="recents"
         displayName="Recents"
         img={recentsIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
       <FilterOption
-        activeId="bookmarks"
-        displayName="Bookmarks"
-        img={bookmarkIcon}
+        activeId="saved"
+        displayName="Saved"
+        img={savedIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
       />
-      <FilterOption
-        activeId="lastProject"
+      {/* <FilterOption
+        activeId="lastproject"
         displayName="Last Project"
         img={LastProjectIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
-      />
+      /> */}
 
       {/* <div></div> */}
       <div className="vertical-border"></div>
@@ -79,7 +219,7 @@ export default function FilterBar(props) {
         displayName="Ratings"
         img={starIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         slider={true}
         sortByIcon={sortByIcon}
         sortImg={sortByIcon}
@@ -87,20 +227,37 @@ export default function FilterBar(props) {
         sortOption2="Least"
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
+        handleSortToggle={handleSortToggleForRatings}
       />
       <FilterOption
-        activeId="docAge"
-        displayName="Doc Age"
-        img={newDocIcon}
+        activeId="date"
+        displayName="Date"
+        img={dateIcon}
         handleClick={handleClick}
-        active={active}
+        activeFilter={activeFilter}
         slider={true}
         sortByIcon={sortByIcon}
         sortImg={sortByIcon}
-        sortOption1="Oldest"
-        sortOption2="Newest"
+        sortOption1="Newest"
+        sortOption2="Oldest"
         setDisplayApiDocs={setDisplayApiDocs}
         clientUserData={clientUserData}
+        handleSortToggle={handleSortToggleForDate}
+      />
+      <FilterOption
+        activeId="views"
+        displayName="Views"
+        img={viewsIcon}
+        handleClick={handleClick}
+        activeFilter={activeFilter}
+        slider={true}
+        sortByIcon={sortByIcon}
+        sortImg={sortByIcon}
+        sortOption1="Most"
+        sortOption2="Least"
+        setDisplayApiDocs={setDisplayApiDocs}
+        clientUserData={clientUserData}
+        handleSortToggle={handleSortToggleForViews}
       />
     </div>
   );

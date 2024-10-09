@@ -2,7 +2,7 @@ import searchIcon from "../../assets/search.svg";
 import clearIcon from "../../assets/x.svg";
 import { useState } from "react";
 export default function Search(props) {
-  const { setDisplayApiDocs, allApiDocs, apiDocsDisplay } = props;
+  const { setDisplayApiDocs, allApiDocs, apiDocsDisplay, setActive, allDocIds } = props;
   const [search, setSearch] = useState("");
 
   function handleInput(e) {
@@ -17,7 +17,14 @@ export default function Search(props) {
     console.log("serach!");
     await fetch(`http://localhost:3001/search/title/${search}`)
       .then((res) => res.json())
-      .then((data) => setDisplayApiDocs(data));
+      .then((data) => {
+          console.log("data", data)
+        let idsArray = [];
+        data.map(objId=>{
+          idsArray.push(objId._id)
+        });
+        setActive(idsArray);
+      });
   }
 
   // function handleActiveSearch(e) {
@@ -46,7 +53,7 @@ export default function Search(props) {
   function handleReset() {
     //reset search
     setSearch("");
-    setDisplayApiDocs(allApiDocs);
+    setActive(allDocIds);
   }
   return (
     <>

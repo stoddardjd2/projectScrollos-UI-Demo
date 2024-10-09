@@ -2,17 +2,16 @@ import { useState, useTransition, useEffect } from "react";
 import saveFill from "../../assets/filledbookmark.svg";
 import saveEmpty from "../../assets/unfilledbookmark.svg";
 import infoIcon from "../../assets/info.svg";
-import starIcon from "../../assets/star.svg";
 import addIcon from "../../assets/add.svg";
 import commentIcon from "../../assets/comment.svg";
 
 import NotesView from "./Card-components/NotesView";
 import AddView from "./Card-components/AddView";
 import InfoView from "./Card-components/InfoView";
-
+import Rating from '../ApiDocViewer/Rating'
 import ActionButton from "./Card-components/ActionButton";
 // import getStyleForAction from "./Card-components/getStyleForAction";
-export default function DocCards(props) {
+export default function DocCard(props) {
   const {
     setClientUserData,
     apiDoc,
@@ -22,13 +21,12 @@ export default function DocCards(props) {
     projects,
     clientUserData,
   } = props;
-  const [isSaved, setIsSaved] = useState(loadIsSaved);
+  const isSaved = clientUserData.bookmarks.includes(apiDoc._id);
   // const [isFlagged, setIsFlagged] = useState(loadIsFlagged);
   const [action, setAction] = useState({ active: false, type: "none" });
   // const [IsinfoFlipped, setIsInfoFlipped] = useState(false);
 
-  const [mouseOverStar, setMouseOverStar] = useState();
-  const [isAddRatingExpanded, setIsAddRatingExpanded] = useState(false);
+
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   function handleSelectedDoc(e) {
@@ -41,8 +39,7 @@ export default function DocCards(props) {
         recentDocIds.push(recentId);
       }
     });
-    
-    console.log("updated client data")
+
     setClientUserData((prev) => ({ ...prev, recents: recentDocIds }));
 
     //update recents with new recents array
@@ -58,7 +55,7 @@ export default function DocCards(props) {
           body: JSON.stringify({ docIds: recentDocIds }),
         }
       ).then(() => {
-        window.location.href = `/ApiDocViewer/${selectedDocId}`;
+        window.location.href = `/ApiDocViewer/${selectedDocId}/${clientUserData._id}`;
       });
     }
   }
@@ -74,31 +71,39 @@ export default function DocCards(props) {
         ...prev,
         bookmarks: [...prev.bookmarks, apiDoc._id],
       }));
-      fetch(`http://localhost:3001/user/${userID}/save/bookmarks`, {
+      fetch(`http://localhost:3001/user/${clientUserData._id}/save/bookmarks`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ docID: apiDoc._id }),
       });
-      setIsSaved(!isSaved);
+      //   setIsSaved(!isSaved);
       //remove from database if unsaving
     } else if (isSaved) {
-      setIsSaved(!isSaved);
+      //   setIsSaved(!isSaved);
       //remove id of selected item from state
       setClientUserData((prev) => {
         const index = prev.bookmarks.indexOf(apiDoc._id);
-        prev.bookmarks.splice(index, 1);
+        let copy = [...prev.bookmarks];
+        copy.splice(index, 1);
+        console.log("removing", apiDoc.info.title);
 
-        return { ...prev, bookmarks: [...prev.bookmarks, apiDoc._id] };
+        return {
+          ...prev,
+          bookmarks: [...copy],
+        };
       });
-      fetch(`http://localhost:3001/user/${userID}/remove/bookmarks`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ docID: apiDoc._id }),
-      });
+      fetch(
+        `http://localhost:3001/user/${clientUserData._id}/remove/bookmarks`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ docID: apiDoc._id }),
+        }
+      );
     }
   }
 
@@ -128,67 +133,7 @@ export default function DocCards(props) {
     }
   }
 
-  function handleToggleAddRating() {
-    setIsAddRatingExpanded(!isAddRatingExpanded);
-  }
-  function handleAddRating(e) {
-    const rating = e.currentTarget.id;
-    console.log("adding rating of :", rating);
 
-    // FETCH DATABASE AND ADD RATING!
-  }
-  function handleMouseOverStar(e) {
-    const id = e.currentTarget.id;
-    setMouseOverStar(id);
-  }
-
-  function getAverageRating(ratings) {
-    if (ratings) {
-      if (ratings.length === 0) {
-        return { sum: 0, average: 0 };
-      }
-
-      let totalSum = ratings.reduce(
-        (acc, ratingObj) => acc + parseFloat(ratingObj.rating),
-        0
-      );
-      let average = totalSum / ratings.length;
-
-      // Rounding the average to the nearest tenth
-      let roundedAverage = Math.round(average * 10) / 10;
-
-      return roundedAverage;
-    } else return 0;
-  }
-
-  function getRatingElements() {
-    const ratingDelays = [
-      { enter: "0.4s", exit: "0s" },
-      { enter: "0.3s", exit: "0.1s" },
-      { enter: "0.2s", exit: "0.2s" },
-      { enter: "0.1s", exit: "0.3s" },
-    ];
-    return ratingDelays.map((ratingDelay, index) => {
-      return (
-        <img
-          key={index}
-          src={starIcon}
-          className="star"
-          onClick={handleAddRating}
-          id={index + 2}
-          style={
-            isAddRatingExpanded
-              ? // if expanded:
-                mouseOverStar >= index + 2
-                ? { opacity: "100%", transition: "0s ease-in-out all" }
-                : { transition: "0s ease-in-out all", opacity: " 40%" }
-              : //if not expanded:
-                { opacity: " 40%" }
-          }
-        />
-      );
-    });
-  }
 
   function getStyleForAction(target) {
     if (action.type === "info") {
@@ -428,47 +373,8 @@ export default function DocCards(props) {
           }
         >
           <div className="updated">Opened 8/8/2024 </div>
-          <div
-            className="rating-container"
-            onClick={handleToggleAddRating}
-            onMouseOver={(e) => setMouseOverStar(e.target.id)}
-            onMouseLeave={() => setMouseOverStar()}
-          >
-            <img
-              src={starIcon}
-              id={1}
-              // onMouseOver={(e) => setMouseOverStar(e.currentTarget.id)}
-              // onMouseLeave={() => setMouseOverStar()}
-              className="star"
-              style={
-                isAddRatingExpanded
-                  ? // if expanded:
-                    mouseOverStar >= 1
-                    ? { opacity: "100%", transition: "0s ease-in-out all" }
-                    : { transition: "0s ease-in-out all", opacity: "40%" }
-                  : //if not expanded:
-                    {}
-              }
-              onClick={(e) => {
-                //only set rating if expanded
-                isAddRatingExpanded && handleAddRating(e);
-              }}
-            />
-
-            <div
-              className="add-rating-container"
-              style={!isAddRatingExpanded ? { width: "0%" } : { width: "100%" }}
-            >
-              {getRatingElements()}
-            </div>
-            <div className="rating">
-              {getAverageRating(apiDoc.ratings.reviews)}
-            </div>
-          </div>
+          <Rating apiDoc={apiDoc}/>
         </div>
-
-
-
 
         {/* if info is clicked*/}
         <InfoView

@@ -13,12 +13,19 @@ import Logout from "./Logout";
 import settingsIcon from "../../assets/settings.svg";
 import SideBarItemNotes from "./SidebarItemNotes";
 import walgreensLogo from "../../assets/walgreensLogo.svg";
-import userIcon from "../../assets/sidebar-icons/user.svg";
 import FilterBar from "./FilterBar";
 import Sidebar from "./Sidebar";
 import PageSelection from "./PageSelection";
+import Projects from "./Popup-components/Projects";
+import Popup from "./Popup-components/Popup";
+import projectsIcon from "../../assets/projects.svg";
+import UserSettingsBar from "./UserSettingsBar";
+import DocumentViewSelector from "./DocumentViewSelector";
+import loadingImg from "../../assets/loading.svg";
+
 export default function Discover() {
-  const { loadedDocs, userData, allDocIds } = useLoaderData();
+  const { loadedDocs, userData, allDocIds, loadedLastViewMode } =
+    useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
   const userDataSchema = {
     recents: [],
@@ -26,27 +33,15 @@ export default function Discover() {
     notes: [],
     flags: [],
     recentProjects: [],
-    projects: [
-      {
-        id: "Project One",
-        documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
-      },
-      {
-        id: "Project Two",
-        documentIds: [
-          "66aeb7944d74dc0a686c2a08",
-          "66aeb79e4d74dc0a686c2a0a",
-          "66aeb7a34d74dc0a686c2a0b",
-        ],
-      },
-    ],
+    projects: [],
   };
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
+  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(12);
+
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
-
   const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
   //alter amount of docs loaded at start using main fetch limit
 
@@ -55,45 +50,45 @@ export default function Discover() {
   const [idsForPage, setidsForPage] = useState(getIdsPerPage(allDocIds));
   const [clientUserData, setClientUserData] = useState(userDataWithSchema);
   //for toggling sidebar
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   // for controlling right column display:
   //Changed by sidebar selection
-  const [rightColumnDisplay, setRightColumnDisplay] = useState("documents");
-  // Store all projects for current user:
-  //temporary values to test:
+  const [rightColumnDisplay, setRightColumnDisplay] =
+    useState(loadedLastViewMode);
 
-  // const [projects, setProjects] = useState([
-  //   {
-  //     id: "Project One",
-  //     documentIds: ["669c15ffb288b7fcda5dc2ac", "66aeb7744d74dc0a686c2a05"],
-  //   },
-  //   {
-  //     id: "Project Two",
-  //     documentIds: [
-  //       "66aeb7944d74dc0a686c2a08",
-  //       "66aeb79e4d74dc0a686c2a0a",
-  //       "66aeb7a34d74dc0a686c2a0b",
-  //     ],
-  //   },
-  // ]);
+  const [currentPage, setCurrentPage] = useState(0);
+  //had to move out of page selection since was rerendering in same position and keeping
+  //-prev currentPage state
 
   const [active, setActive] = useState(allDocIds);
+  const [isPopupActive, setIsPopupActive] = useState(false);
+
+  const [isSettings, setIsSettings] = useState(false);
+  //for user settings popup/dropdown(need at this level to hide it when clicking off on discover page)
+
+  useEffect(() => {}, [clientUserData]);
 
   useEffect(() => {
     const idsForPage = getIdsPerPage(active);
+
     setidsForPage(idsForPage);
+    setCurrentPage(0);
     getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
   }, [active]);
 
   function getIdsPerPage(docIds) {
     if (docIds) {
-      const numbOfIdsPerPage = 8;
+      const numbOfIdsPerPage = numbOfDocsPerPage;
       let idsGroupedByPage = [];
       let idsForPage = [];
       let currentPage = 1;
       docIds.map((docId, index) => {
-        idsForPage.push(docId);
+        if (currentPage == 1) {
+          idsForPage.push(docId);
+        } else {
+          idsForPage.push(docId);
+        }
         if (index + 1 === numbOfIdsPerPage * currentPage) {
           idsGroupedByPage.push(idsForPage);
           idsForPage = [];
@@ -103,8 +98,8 @@ export default function Discover() {
           //if last doc, push partial array
           idsGroupedByPage.push(idsForPage);
         }
-      });
 
+      });
       return idsGroupedByPage;
     }
   }
@@ -124,6 +119,7 @@ export default function Discover() {
       })
         .then((results) => results.json())
         .then((res) => {
+          console.log("DOC RES", res)
           // mongodb sends back array of documents in order of first in their database-
           //must sort their response to match with our array that was sent(for recents to work)
           let sortedResponse = new Array(idsArray.length);
@@ -136,30 +132,19 @@ export default function Discover() {
     }
   }
 
-  function toggleSidebar() {
-    setIsOpen(!isOpen);
-  }
-
-  //api Document Bar
-  const docCards = apiDocsDisplay.map((doc) => {
-    const loadIsSaved = clientUserData.bookmarks.includes(doc._id);
-    const loadIsFlagged = clientUserData.flags.includes(doc._id);
-    return (
-      <DocCard
-        key={doc._id}
-        apiDoc={doc}
-        loadIsSaved={loadIsSaved}
-        loadIsFlagged={loadIsFlagged}
-        userID={clientUserData._id}
-        setClientUserData={setClientUserData}
-        projects={clientUserData.projects}
-        clientUserData={clientUserData}
-      />
-    );
-  });
-
   return (
-    <div className="discover-page">
+    <div
+      // onClick={handleDiscoverClick}
+      className="discover-page"
+    >
+      {/* POPUPS here for z-index to work properly*/}
+      {isPopupActive && (
+        <Popup
+          setIsPopupActive={setIsPopupActive}
+          clientUserData={clientUserData}
+          setClientUserData={setClientUserData}
+        />
+      )}
       <div className="header-container">
         <div className="search-bar">
           <div className="header">API Library </div>
@@ -167,24 +152,29 @@ export default function Discover() {
 
           {/* <div style={{display:"flex", alignItems: "center"}}> */}
           <Search
-            setDisplayApiDocs={setDisplayApiDocs}
+            setActive={setActive}
             allApiDocs={loadedDocs}
             apiDocsDisplay={apiDocsDisplay}
+            allDocIds={allDocIds}
+          />
+          <UserSettingsBar
+            clientUserData={clientUserData}
+            isSettings={isSettings}
+            setIsSettings={setIsSettings}
           />
 
-          <div className="user-info-container">
-            <img className="user-icon" src={userIcon} />
-            <div>
-              <div className="username">Jared Stoddard</div>
-              <div className="email">stoddardjd2@gmail.com</div>
-            </div>
-            <div className="ellipsis">...</div>
-          </div>
           {/* </div> */}
         </div>
         <div className="page-info-bar">
           {/* <div className="found">10 docs found</div> */}
-          <div className="left-margin"></div>
+          <div className="left-margin">
+            <div onClick={() => setIsPopupActive(true)} className="container">
+              <div className="projects-container">
+                <img className="projects-icon" src={projectsIcon} />
+                <div>Projects</div>
+              </div>
+            </div>
+          </div>
           {/* <Search
             setDisplayApiDocs={setDisplayApiDocs}
             allApiDocs={loadedDocs}
@@ -194,25 +184,28 @@ export default function Discover() {
             setDisplayApiDocs={setDisplayApiDocs}
             allDocIds={allDocIds}
             clientUserData={clientUserData}
+            setClientUserData={setClientUserData}
             projects={clientUserData.projects}
             active={active}
             setActive={setActive}
+            setIsPopupActive={setIsPopupActive}
           />
           {/* <Sort
             allApiDocs={loadedDocs}
             setDisplayApiDocs={setDisplayApiDocs}
             clientUserData={clientUserData}
           /> */}
-          <PageSelection
-            setDisplayApiDocs={setDisplayApiDocs}
-            apiDocsDisplay={apiDocsDisplay}
-            idsForPage={idsForPage}
+          <div className="actions-placeholder"></div>
+          <DocumentViewSelector
+            setClientUserData={setClientUserData}
+            setRightColumnDisplay={setRightColumnDisplay}
+            clientUserData={clientUserData}
           />
         </div>
       </div>
       <div className="discover">
-        <div className="left-column">
-          <div className="divider">
+        {/* <div className="left-column"> */}
+        {/* <div className="divider">
             <div
               // style={
               //   !isOpen
@@ -233,7 +226,6 @@ export default function Discover() {
               />
             </div>
 
-            {/* hide sidebar content if closed */}
             <div className="left-split">
               <Sidebar
                 setDisplayApiDocs={setDisplayApiDocs}
@@ -245,14 +237,37 @@ export default function Discover() {
                 loadedDocs={loadedDocs}
                 setActive={setActive}
                 active={active}
+                allDocIds={allDocIds}
+                clientUserData={clientUserData}
               />
             </div>
+          </div> */}
+        {/* </div> */}
+
+        {apiDocsDisplay ? (
+          <RightColumn
+            rightColumnDisplay={rightColumnDisplay}
+            apiDocsDisplay={apiDocsDisplay}
+            setDisplayApiDocs={setDisplayApiDocs}
+            idsForPage={idsForPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            clientUserData={clientUserData}
+            setClientUserData={setClientUserData}
+          />
+        ) : (
+          <div className="loading-container">
+            <img className="right-column-loading" src={loadingImg} />
           </div>
-        </div>
-        <RightColumn
-          rightColumnDisplay={rightColumnDisplay}
-          docCards={docCards}
+        )}
+      </div>
+      <div className="bottom-navigation">
+        <PageSelection
+          setDisplayApiDocs={setDisplayApiDocs}
           apiDocsDisplay={apiDocsDisplay}
+          idsForPage={idsForPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </div>
     </div>

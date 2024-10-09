@@ -6,7 +6,7 @@ import Discover from "./components/Discover-components/Discover.jsx";
 import Signin from "./components/Signin.jsx";
 import Signup from "./components/Signup.jsx";
 import Navbar from "./components/Navbar.jsx";
-import ApiDocViewer from "./components/ApiDocViewer.jsx";
+import ApiDocViewer from "./components/ApiDocViewer/ApiDocViewer.jsx";
 import UserNavBar from "./components/Discover-components/UserNavBar.jsx";
 
 import "./index.css";
@@ -48,20 +48,28 @@ const router = createBrowserRouter([
       </>
     ),
     loader: async ({ params }) => {
+      const loadedLastViewModeObj = await fetch(
+        `http://localhost:3001/getLastViewMode/${params.userID}`
+      ).then((res) => res.json());
+      const loadedLastViewMode = loadedLastViewModeObj.lastViewMode;
+
       const loadedDocs = await fetch(
         "http://localhost:3001/read/limitResults/12"
       ).then((res) => res.json());
+
       const userData = await fetch(
         `http://localhost:3001/user/${params.userID}`
       ).then((res) => res.json());
+
       const allDocIdObjs = await fetch(
         `http://localhost:3001/getAllDocIds`
       ).then((res) => res.json());
+
       let allDocIds = [];
       allDocIdObjs.map((idObj) => {
         allDocIds.push(idObj._id);
       });
-      return { loadedDocs, userData, allDocIds };
+      return { loadedDocs, userData, allDocIds, loadedLastViewMode };
     },
   },
   {
@@ -81,9 +89,16 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "ApiDocViewer/:apiID",
+    path: "ApiDocViewer/:apiID/:userID",
     loader: async ({ params }) => {
-      return fetch(`http://localhost:3001/read/getId/${params.apiID}`);
+      const apiDoc = await fetch(
+        `http://localhost:3001/read/getId/${params.apiID}`
+      ).then((res) => res.json());
+      const userData = await fetch(
+        `http://localhost:3001/user/${params.userID}`
+      ).then((res) => res.json());
+
+      return { apiDoc, userData };
       // ({ params }) => {
       //   return params.apiID;
     },

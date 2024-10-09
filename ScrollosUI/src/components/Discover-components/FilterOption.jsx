@@ -5,19 +5,17 @@ export default function FilterOption(props) {
     displayName,
     img,
     handleClick,
-    active,
+    activeFilter,
     slider,
     sortOption1,
     sortOption2,
     sortImg,
     activeId,
+    handleSortToggle,
   } = props;
   //    default to sort from high to low
   const [sort, setSort] = useState(true);
-
-  function handleSort(e) {
-    setSort((prev) => !prev);
-  }
+  const [sortOption, setSortOption] = useState(0);
 
   return (
     <div id={activeId} className="sort-main-container" onClick={handleClick}>
@@ -25,7 +23,7 @@ export default function FilterOption(props) {
         <div
           //   className="option"
           className={
-            slider && active === activeId
+            slider && activeFilter === activeId
               ? "option option-if-slidebar-active"
               : "option option-if-slidebar-inactive"
           }
@@ -35,9 +33,13 @@ export default function FilterOption(props) {
         </div>
         {/* if slider enabled and current option active, show extra sort options: */}
         <div
-          onClick={handleSort}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSort((prev) => !prev);
+            handleSortToggle(sort);
+          }}
           className={
-            slider && active === activeId
+            slider && activeFilter === activeId
               ? "sort-container sort-active"
               : "sort-container sort-inactive"
           }
@@ -50,12 +52,12 @@ export default function FilterOption(props) {
             }
             className="toggle-container"
           >
-            <div className={"container"}>
+            <div className={"filter-container"}>
               <img src={sortImg} style={{ transform: "rotateX(180deg)" }} />
               <div>{sortOption1}</div>
             </div>
 
-            <div className={"container"}>
+            <div className={"filter-container"}>
               <img src={sortImg} />
               <div>{sortOption2}</div>
             </div>
@@ -63,7 +65,7 @@ export default function FilterOption(props) {
         </div>
         <div
           className={
-            active === activeId
+            activeFilter === activeId
               ? "bottom-border active"
               : "bottom-border inactive"
           }
