@@ -24,7 +24,7 @@ import DocumentViewSelector from "./DocumentViewSelector";
 import loadingImg from "../../assets/loading.svg";
 
 export default function Discover() {
-  const { loadedDocs, userData, allDocIds, loadedLastViewMode } =
+  const {userData, allDocIds, loadedLastViewMode } =
     useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
   const userDataSchema = {
@@ -38,11 +38,11 @@ export default function Discover() {
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
-  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(12);
+  const [numbOfDocsPerPage, setNumbOfDocsPerPage] = useState(33);
 
   // //make clone of loaded api docs to be able to mutate-
   //-value according to filter and search
-  const [apiDocsDisplay, setDisplayApiDocs] = useState(loadedDocs);
+  const [apiDocsDisplay, setDisplayApiDocs] = useState();
   //alter amount of docs loaded at start using main fetch limit
 
   //loads then stores docIds assigned to each page
@@ -98,7 +98,6 @@ export default function Discover() {
           //if last doc, push partial array
           idsGroupedByPage.push(idsForPage);
         }
-
       });
       return idsGroupedByPage;
     }
@@ -119,7 +118,7 @@ export default function Discover() {
       })
         .then((results) => results.json())
         .then((res) => {
-          console.log("DOC RES", res)
+          console.log("DOC RES", res);
           // mongodb sends back array of documents in order of first in their database-
           //must sort their response to match with our array that was sent(for recents to work)
           let sortedResponse = new Array(idsArray.length);
@@ -153,7 +152,6 @@ export default function Discover() {
           {/* <div style={{display:"flex", alignItems: "center"}}> */}
           <Search
             setActive={setActive}
-            allApiDocs={loadedDocs}
             apiDocsDisplay={apiDocsDisplay}
             allDocIds={allDocIds}
           />
@@ -168,12 +166,12 @@ export default function Discover() {
         <div className="page-info-bar">
           {/* <div className="found">10 docs found</div> */}
           <div className="left-margin">
-            <div onClick={() => setIsPopupActive(true)} className="container">
+            {/* <div onClick={() => setIsPopupActive(true)} className="container">
               <div className="projects-container">
                 <img className="projects-icon" src={projectsIcon} />
                 <div>Projects</div>
               </div>
-            </div>
+            </div> */}
           </div>
           {/* <Search
             setDisplayApiDocs={setDisplayApiDocs}

@@ -9,7 +9,7 @@ import LastProjectIcon from "../../assets/filter-bar-icons/last-project.svg";
 import Popup from "./Popup-components/Popup";
 import savedIcon from "../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
 import viewsIcon from "../../assets/views.svg";
-import dateIcon from '../../assets/date.svg'
+import dateIcon from "../../assets/date.svg";
 import { useState } from "react";
 export default function FilterBar(props) {
   const {
@@ -55,7 +55,7 @@ export default function FilterBar(props) {
   }
 
   function handleSortToggleForRatings(sort) {
-    console.log("DATE")
+    console.log("DATE");
     setDisplayApiDocs();
     if (sort) {
       fetch(`http://localhost:3001/getDocIdsByRatings/lowest`, {
@@ -87,7 +87,6 @@ export default function FilterBar(props) {
   }
 
   function handleSortToggleForDate(sort) {
-    
     setDisplayApiDocs();
     if (sort) {
       fetch(`http://localhost:3001/getDocIdsByDate/oldest`, {
@@ -120,51 +119,54 @@ export default function FilterBar(props) {
 
   function handleClick(e) {
     const activeId = e.currentTarget.id;
-    setDisplayApiDocs();
-    setActiveFilter(activeId);
-    if (activeId === "documents") {
-      setActive(allDocIds);
-    } else if (activeId === "recents") {
-      setActive(clientUserData.recents);
-    } else if (activeId === "saved") {
-      setActive(clientUserData.bookmarks);
-    } else if (activeId === "lastproject") {
-      setActive(clientUserData.projects[0].documentIds);
-    } else if (activeId === "ratings") {
-      fetch(`http://localhost:3001/getDocIdsByRatings/highest`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((results) => results.json())
-        .then((res) => {
-          setActive(res);
-        });
-    } else if (activeId === "date") {
-      console.log("DATE")
+    if (!(activeFilter == activeId)) {
+      // only load/initiate filter option if filter selection is different than previous
+      setDisplayApiDocs();
+      setActiveFilter(activeId);
+      if (activeId === "documents") {
+        setActive(allDocIds);
+      } else if (activeId === "recents") {
+        setActive(clientUserData.recents);
+      } else if (activeId === "saved") {
+        setActive(clientUserData.bookmarks);
+      } else if (activeId === "lastproject") {
+        setActive(clientUserData.projects[0].documentIds);
+      } else if (activeId === "ratings") {
+        fetch(`http://localhost:3001/getDocIdsByRatings/highest`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((results) => results.json())
+          .then((res) => {
+            setActive(res);
+          });
+      } else if (activeId === "date") {
+        console.log("DATE");
 
-      fetch(`http://localhost:3001/getDocIdsByDate/newest`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((results) => results.json())
-        .then((res) => {
-          setActive(res);
-        });
-    } else if (activeId === "views") {
-      fetch(`http://localhost:3001/getDocIdsByViews/highest`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((results) => results.json())
-        .then((res) => {
-          setActive(res);
-        });
+        fetch(`http://localhost:3001/getDocIdsByDate/newest`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((results) => results.json())
+          .then((res) => {
+            setActive(res);
+          });
+      } else if (activeId === "views") {
+        fetch(`http://localhost:3001/getDocIdsByViews/highest`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((results) => results.json())
+          .then((res) => {
+            setActive(res);
+          });
+      }
     }
   }
 
