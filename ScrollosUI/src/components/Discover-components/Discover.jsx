@@ -22,9 +22,9 @@ import projectsIcon from "../../assets/projects.svg";
 import UserSettingsBar from "./UserSettingsBar";
 import DocumentViewSelector from "./DocumentViewSelector";
 import loadingImg from "../../assets/loading.svg";
-
+import MainHeader from "./MainHeader";
 export default function Discover() {
-  const {userData, allDocIds, loadedLastViewMode } =
+  const { userData, allDocIds, loadedLastViewMode, searchQuery } =
     useLoaderData();
   //make sure values are defined to prevent errors after creating account or if no data
   const userDataSchema = {
@@ -35,6 +35,7 @@ export default function Discover() {
     recentProjects: [],
     projects: [],
   };
+
   //combine with userData overriding fields
   const userDataWithSchema = { ...userDataSchema, ...userData };
 
@@ -61,20 +62,54 @@ export default function Discover() {
   //had to move out of page selection since was rerendering in same position and keeping
   //-prev currentPage state
 
-  const [active, setActive] = useState(allDocIds);
+  const [active, setActive] = useState(getActiveDocIds());
+
+  function isPromise(variable) {
+    return (
+      variable !== null &&
+      typeof variable === "object" &&
+      typeof variable.then === "function"
+    );
+  }
+
+  function getActiveDocIds() {
+    //if search query in params, set active with doc ids from query else use default doc ids
+    if (searchQuery) {
+      return fetch(`http://localhost:3001/search/title/${searchQuery}`)
+        .then((res) => res.json())
+        .then((data) => {
+          let idsArray = [];
+          data.map((objId) => {
+            idsArray.push(objId._id);
+          });
+          return idsArray;
+        });
+    } else {
+      return allDocIds;
+    }
+  }
+
   const [isPopupActive, setIsPopupActive] = useState(false);
 
-  const [isSettings, setIsSettings] = useState(false);
   //for user settings popup/dropdown(need at this level to hide it when clicking off on discover page)
 
-  useEffect(() => {}, [clientUserData]);
-
   useEffect(() => {
-    const idsForPage = getIdsPerPage(active);
-
-    setidsForPage(idsForPage);
-    setCurrentPage(0);
-    getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+    if (active) {
+      // if using search query in params, active will be a promise and must be handled differently
+      if (isPromise(active)) {
+        active.then((activeResolved) => {
+          const idsForPage = getIdsPerPage(activeResolved);
+          setidsForPage(idsForPage);
+          setCurrentPage(0);
+          getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+        });
+      } else {
+        const idsForPage = getIdsPerPage(active);
+        setidsForPage(idsForPage);
+        setCurrentPage(0);
+        getDocsByArrayOfIdsAndUpdateDisplay(idsForPage[0]);
+      }
+    }
   }, [active]);
 
   function getIdsPerPage(docIds) {
@@ -103,7 +138,6 @@ export default function Discover() {
     }
   }
 
-  //for determine display type using active selection
   async function getDocsByArrayOfIdsAndUpdateDisplay(idsArray) {
     if (idsArray === undefined) {
       //if emtpy, show nothing
@@ -118,7 +152,6 @@ export default function Discover() {
       })
         .then((results) => results.json())
         .then((res) => {
-          console.log("DOC RES", res);
           // mongodb sends back array of documents in order of first in their database-
           //must sort their response to match with our array that was sent(for recents to work)
           let sortedResponse = new Array(idsArray.length);
@@ -145,24 +178,12 @@ export default function Discover() {
         />
       )}
       <div className="header-container">
-        <div className="search-bar">
-          <div className="header">API Library </div>
-          {/* <img src={walgreensLogo} /> */}
-
-          {/* <div style={{display:"flex", alignItems: "center"}}> */}
-          <Search
-            setActive={setActive}
-            apiDocsDisplay={apiDocsDisplay}
-            allDocIds={allDocIds}
-          />
-          <UserSettingsBar
-            clientUserData={clientUserData}
-            isSettings={isSettings}
-            setIsSettings={setIsSettings}
-          />
-
-          {/* </div> */}
-        </div>
+        <MainHeader
+          setActive={setActive}
+          clientUserData={clientUserData}
+          allDocIds={allDocIds}
+          isInDiscover={true}
+        />
         <div className="page-info-bar">
           {/* <div className="found">10 docs found</div> */}
           <div className="left-margin">

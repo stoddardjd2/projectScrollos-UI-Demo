@@ -2,29 +2,35 @@ import searchIcon from "../../assets/search.svg";
 import clearIcon from "../../assets/x.svg";
 import { useState } from "react";
 export default function Search(props) {
-  const { setDisplayApiDocs, apiDocsDisplay, setActive, allDocIds } = props;
+  const { setActive, allDocIds, clientUserData, isInDiscover } = props;
   const [search, setSearch] = useState("");
 
   function handleInput(e) {
     const value = e.target.value;
-    console.log("serach update:", value);
     setSearch(value);
   }
 
   async function handleSearch(e) {
     e.preventDefault();
-    //update display with search query results
-    console.log("serach!");
-    await fetch(`http://localhost:3001/search/title/${search}`)
-      .then((res) => res.json())
-      .then((data) => {
-          console.log("data", data)
-        let idsArray = [];
-        data.map(objId=>{
-          idsArray.push(objId._id)
+
+    if (search) {
+      //update display with search query results
+      await fetch(`http://localhost:3001/search/title/${search}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data", data);
+          let idsArray = [];
+          data.map((objId) => {
+            idsArray.push(objId._id);
+          });
+          if (isInDiscover) {
+            // if in discover page, dont change url and cause unnecessary rerenders and requests
+            setActive(idsArray);
+          } else {
+            window.location.href = `/discover/${clientUserData._id}/${search}`;
+          }
         });
-        setActive(idsArray);
-      });
+    }
   }
 
   // function handleActiveSearch(e) {
@@ -53,7 +59,7 @@ export default function Search(props) {
   function handleReset() {
     //reset search
     setSearch("");
-    setActive(allDocIds);
+    // setActive(allDocIds);
   }
   return (
     <>
