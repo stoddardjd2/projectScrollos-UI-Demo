@@ -7,43 +7,46 @@
   }
 }
 /* mainHeader component overide css*/
-  .search-bar {
-    position: relative;
-    z-index: 3;
-    /* border-radius: 10px; */
-    box-shadow: 0 0px 5px #00000081;
-    font-size: 0.7em;
-    background-color: rgb(68, 68, 68);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    column-gap: 4em;
-    padding: 1em;
-    height: 64px;
-    overflow-y: hidden;
-    .search--container{
-      /* background-color:  */
-
-    }
-    .user-info-container{
-      /* background-color: rgb(230, 230, 230); */
-    }
-    .header {
-      text-wrap: nowrap;
-      text-align: center;
-      flex: 0.2;
-      font-size: 3em;
-      color: white;
-      min-width: 200px;
-      cursor: pointer;
-    }
- 
-    .logout {
-    }
-    .logout:hover {
-      cursor: pointer;
-    }
+.search-bar {
+  position: relative;
+  z-index: 3;
+  /* border-radius: 10px; */
+  box-shadow: 0 0px 5px #00000081;
+  font-size: 0.7em;
+  background-color: rgb(68, 68, 68);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 4em;
+  padding: 1em;
+  height: 64px;
+  overflow-y: hidden;
+  .search--container {
+    /* background-color:  */
   }
+  .user-icon {
+    filter: brightness(0) saturate(100%) invert(22%) sepia(0%) saturate(2%)
+      hue-rotate(198deg) brightness(102%) contrast(86%);
+  }
+  .user-info-container {
+    /* background-color: rgb(230, 230, 230); */
+  }
+  .header {
+    text-wrap: nowrap;
+    text-align: center;
+    flex: 0.2;
+    font-size: 3em;
+    color: white;
+    min-width: 200px;
+    cursor: pointer;
+  }
+
+  .logout {
+  }
+  .logout:hover {
+    cursor: pointer;
+  }
+}
 /* apiDocViewer main Component */
 .apiDocViewer-main-container {
   height: 100%;
@@ -86,6 +89,7 @@
       /* .discussions-container{
         height: 100%;
       } */
+       padding-right: 5px;
       scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
 
       margin-top: 5px;

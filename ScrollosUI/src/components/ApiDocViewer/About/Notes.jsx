@@ -10,8 +10,6 @@ export default function Notes(props) {
   const [isDeletingEnabled, setIsDeletingEnabled] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-console.log("client", clientUserData.notes)
-console.log("valiues", noteValue)
   function getNoteValues() {
     clientUserData.notes[apiDoc._id];
     let values = [];
@@ -65,7 +63,7 @@ console.log("valiues", noteValue)
 
       if (prev.notes[apiDoc._id]) {
         const notesCopy = [...prev.notes[apiDoc._id]];
-        notesCopy.unshift({note:''});
+        notesCopy.unshift({ note: "" });
         return { ...prev, notes: { ...prev.notes, [apiDoc._id]: notesCopy } };
       } else {
         return { ...prev, notes: { ...prev.notes, [apiDoc._id]: [""] } };

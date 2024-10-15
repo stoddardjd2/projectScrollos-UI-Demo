@@ -25,7 +25,6 @@ export default function ApiDocViewer() {
   const [isSwaggerExpanded, setIsSwaggerExpanded] = useState(false);
   const [isAboutExpanded, setIsAboutExpanded] = useState(false);
   function handleExit() {
-    console.log("exit");
   }
   const aboutOptions = [
     {
@@ -64,10 +63,7 @@ export default function ApiDocViewer() {
   ];
   return (
     <div className="apiDocViewer-main-container">
-      <MainHeader
-        clientUserData={clientUserData}
-        isInDiscover={false}
-      />
+      <MainHeader clientUserData={clientUserData} isInDiscover={false} />
       <div className="apiDocViewer-sub-container">
         <div
           style={
@@ -99,6 +95,7 @@ export default function ApiDocViewer() {
                   {aboutOptions.map((option, index) => {
                     return (
                       <button
+                        key={index}
                         id={index}
                         style={
                           aboutOptionSelection == index

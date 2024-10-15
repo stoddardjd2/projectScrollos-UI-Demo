@@ -7,6 +7,7 @@ import Like from "../../Common-components/Like";
 import Rating from "../Rating";
 import notLikedIcon from "../../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
 import linkIcon from "../../../assets/ApiDocViewer-Icons/link.svg";
+import messageIcon from "../../../assets/cards-v2-icons/messageWhite.svg";
 
 export default function Details(props) {
   const { clientUserData, apiDoc } = props;
@@ -73,7 +74,10 @@ export default function Details(props) {
         </div>
         <div className="item discussions--item">
           <h3>Discussions</h3>
-          <DiscussionsCount apiDoc={apiDoc} />
+          <div className="description-item-container">
+            <img className="description-item-icon" src={messageIcon} />
+            <div>{apiDoc.discussionsCount}</div>
+          </div>
         </div>
         <div className="item">
           <h3>Saves</h3>

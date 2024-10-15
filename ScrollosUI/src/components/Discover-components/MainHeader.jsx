@@ -7,7 +7,7 @@ export default function MainHeader(props) {
   const [isSettings, setIsSettings] = useState();
 
   return (
-    <div className="search-bar">
+    <div className="search-bar" >
       <div
         className="header"
         onClick={() => {
