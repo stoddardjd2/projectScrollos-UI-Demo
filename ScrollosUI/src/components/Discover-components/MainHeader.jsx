@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Search from "./Search";
 import UserSettingsBar from "./UserSettingsBar";
-
+import UploadDocument from "./UploadDocument";
 export default function MainHeader(props) {
   const { setActive, allDocIds, clientUserData, isInDiscover } = props;
   const [isSettings, setIsSettings] = useState();
 
   return (
-    <div className="search-bar" >
+    <div className="search-bar">
       <div
         className="header"
         onClick={() => {
@@ -25,11 +25,14 @@ export default function MainHeader(props) {
         clientUserData={clientUserData}
         isInDiscover={isInDiscover}
       />
-      <UserSettingsBar
-        clientUserData={clientUserData}
-        isSettings={isSettings}
-        setIsSettings={setIsSettings}
-      />
+      <div className="right-header-container">
+        {/* <UploadDocument /> */}
+        <UserSettingsBar
+          clientUserData={clientUserData}
+          isSettings={isSettings}
+          setIsSettings={setIsSettings}
+        />
+      </div>
     </div>
   );
 }
