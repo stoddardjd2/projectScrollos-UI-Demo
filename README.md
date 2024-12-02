@@ -19,13 +19,13 @@ This repository contains the front end for an API library application, intended 
 ### Easily sort by recents, saved, ratings, date added and views.
 ![Demo 3](/ProjectScrollos-Demo-Images/demo-3.png?raw=true)
 <br/><br/>
-### View selected API document
+### View selected API document.
 ![Demo 4](/ProjectScrollos-Demo-Images/demo-4.png?raw=true)
 <br/><br/>
 ### View endpoints of API document using Swagger UI component.
 ![Demo 6](/ProjectScrollos-Demo-Images/demo-6.png?raw=true)
 <br/><br/>
-### View API document details and add ratings and/or save document. Includes top navigation to switch between features for current API document. 
+### View API document details and add rating and/or save document. Includes top navigation to switch between features for current API document. 
 ![Demo 7](/ProjectScrollos-Demo-Images/demo-7.png?raw=true)
 <br/><br/>
 ### Create, interact, and view discussions from peers for current API document with "View Discussions" option.
