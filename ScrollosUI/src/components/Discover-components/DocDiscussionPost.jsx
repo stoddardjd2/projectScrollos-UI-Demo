@@ -122,6 +122,8 @@ export default function DocDiscussionPost(props) {
   }
 
   const matches = post.post.match(/\n/g);
+  //for post height
+  
   const createdDate = new Date(post.createdAt);
   let pmOrAm = () => {
     if ((createdDate.getHours() >= 12)) {

@@ -6,8 +6,52 @@
     margin: 0px !important;
   }
 }
+/* mainHeader component overide css*/
+.search-bar {
+  position: relative;
+  z-index: 3;
+  /* border-radius: 10px; */
+  box-shadow: 0 0px 5px #00000081;
+  font-size: 0.7em;
+  background-color: rgb(68, 68, 68);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 4em;
+  padding: 1em;
+  height: 64px;
+  overflow-y: hidden;
+  .search--container {
+    /* background-color:  */
+  }
+  .user-icon {
+    filter: brightness(0) saturate(100%) invert(22%) sepia(0%) saturate(2%)
+      hue-rotate(198deg) brightness(102%) contrast(86%);
+  }
+  .user-info-container {
+    /* background-color: rgb(230, 230, 230); */
+  }
+  .header {
+    text-wrap: nowrap;
+    text-align: center;
+    flex: 0.2;
+    font-size: 3em;
+    color: white;
+    min-width: 200px;
+    cursor: pointer;
+  }
+
+  .logout {
+  }
+  .logout:hover {
+    cursor: pointer;
+  }
+}
 /* apiDocViewer main Component */
 .apiDocViewer-main-container {
+  height: 100%;
+}
+.apiDocViewer-sub-container {
   display: flex;
   height: 100%;
   width: 100%;
@@ -45,6 +89,7 @@
       /* .discussions-container{
         height: 100%;
       } */
+       padding-right: 5px;
       scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
 
       margin-top: 5px;
@@ -293,7 +338,15 @@
   .title-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
+    .sub-title-container {
+      display: flex;
+      gap: 15px;
+    }
+    .title-link {
+      cursor: pointer;
+    }
   }
   .contact-border {
     margin: 10px 0px;
@@ -316,14 +369,13 @@
   border-radius: 10px;
   overflow-y: auto;
   .notes-header-container {
-    
     display: flex;
     /* justify-content: space-between; */
     gap: 10px;
     margin: 0px 8px;
     margin-top: 8px;
-    .enable-delete-btn{
-     background-color: var(--primary-light); 
+    .enable-delete-btn {
+      background-color: var(--primary-light);
     }
     button:hover {
       opacity: 80%;
@@ -350,21 +402,20 @@
       border-radius: 10px;
       width: 100%;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      .notes-details-container{
+      .notes-details-container {
         font-size: 12px;
-        color:grey
+        color: grey;
       }
       /* .notes-details-container{
         color:black
       } */
       .notes-textarea {
         /* font-family: "Roboto Condensed", sans-serif; */
-        flex:1;
+        flex: 1;
         font-family: "Inter", sans-serif;
 
         resize: none;
         /* border: 1px white solid; */
-      
       }
       .note-button {
         border-radius: 200px;
@@ -376,29 +427,29 @@
         }
       }
       /* .trash-container { */
-        /* position: absolute; */
-        /* bottom: 8px; */
-        /* right: 50px; */
-        .trash-confirm-container {
-          /* translate: 0px -2px; */
-          display: flex;
-          gap: 10px;
+      /* position: absolute; */
+      /* bottom: 8px; */
+      /* right: 50px; */
+      .trash-confirm-container {
+        /* translate: 0px -2px; */
+        display: flex;
+        gap: 10px;
 
-          .save-button {
-            background-color: rgb(253, 77, 77);
-          }
+        .save-button {
+          background-color: rgb(253, 77, 77);
         }
-        .confirm-delete-button{
-          opacity: 1;
-        }
-        .trash-button:hover {
-          opacity: 1;
-        }
-        .trash-button {
-          z-index: 100;
- 
-          background-color: rgb(65, 65, 65);
-        }
+      }
+      .confirm-delete-button {
+        opacity: 1;
+      }
+      .trash-button:hover {
+        opacity: 1;
+      }
+      .trash-button {
+        z-index: 100;
+
+        background-color: rgb(65, 65, 65);
+      }
       /* } */
       .note-button:hover {
         opacity: 1;

@@ -8,7 +8,7 @@ import Signup from "./components/Signup.jsx";
 import Navbar from "./components/Navbar.jsx";
 import ApiDocViewer from "./components/ApiDocViewer/ApiDocViewer.jsx";
 import UserNavBar from "./components/Discover-components/UserNavBar.jsx";
-
+import ErrorPage from "./components/Discover-components/ErrorPage.jsx";
 import "./index.css";
 import {
   createBrowserRouter,
@@ -29,6 +29,7 @@ const router = createBrowserRouter([
         <Home />
       </>
     ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "about",
@@ -38,16 +39,21 @@ const router = createBrowserRouter([
         <div>About!</div>
       </>
     ),
+    errorElement: <ErrorPage />,
   },
   {
-    path: "discover/:userID",
+    path: "discover/:userID/:searchQuery?",
     element: (
       <>
         {/* <UserNavBar /> */}
-        <Discover />
+        <Discover  />
       </>
     ),
+    errorElement: <ErrorPage />,
+
     loader: async ({ params }) => {
+      const searchQuery = params.searchQuery
+
       const loadedLastViewModeObj = await fetch(
         `http://localhost:3001/getLastViewMode/${params.userID}`
       ).then((res) => res.json());
@@ -69,7 +75,7 @@ const router = createBrowserRouter([
       allDocIdObjs.map((idObj) => {
         allDocIds.push(idObj._id);
       });
-      return {userData, allDocIds, loadedLastViewMode };
+      return { userData, allDocIds, loadedLastViewMode, searchQuery};
     },
   },
   {

@@ -79,7 +79,6 @@ export default function RightColumn(props) {
                   {
                   }
                   return (
-                    <>
                       <RowDocItem
                         apiDoc={apiDoc}
                         loadIsSaved={loadIsSaved}
@@ -90,7 +89,6 @@ export default function RightColumn(props) {
                         apiDocIndex={index}
                         currentDocIndex={index}
                       />
-                    </>
                   );
                 })}
               </>

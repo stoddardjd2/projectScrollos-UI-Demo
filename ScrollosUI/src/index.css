@@ -276,6 +276,8 @@ button:hover {
   text-align: center;
   padding: 20px;
 }
+/* MainHeader component */
+
 /* Discover css: */
 .header-container {
   background-color: var(--primary-light);
@@ -293,6 +295,10 @@ button:hover {
     padding: 1em;
     height: 64px;
     overflow-y: hidden;
+    .right-header-container {
+      display: flex;
+      gap: 20px;
+    }
     .header {
       text-wrap: nowrap;
       text-align: center;
@@ -300,6 +306,7 @@ button:hover {
       font-size: 3em;
       color: white;
       min-width: 200px;
+      cursor: pointer;
     }
     .settings {
       background-color: white;
@@ -651,7 +658,7 @@ button:hover {
 
 .discover-page {
   /* overflow: hidden; */
-  overflow-y: auto;
+  overflow-y: scroll;
   height: 100%;
   /* height: 100vh; */
   display: flex;
@@ -664,7 +671,7 @@ button:hover {
       display: flex;
       justify-content: center;
       width: 100%;
-background-color: var(--right-column);
+      background-color: var(--right-column);
       .right-column-loading {
         animation: rotate 2s ease-in-out infinite;
         opacity: 50%;
@@ -676,7 +683,8 @@ background-color: var(--right-column);
       font-size: 1.5em;
       color: black;
       align-self: center;
-      margin: auto;
+      text-align: center;
+      margin-top: 50px;
     }
     .right-column {
       display: flex;
@@ -721,11 +729,12 @@ background-color: var(--right-column);
     justify-content: space-between;
     align-items: center;
     margin-left: 40px;
-    div {
+    /* div {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
+    } */
+
     .row-title {
       flex: 1.2;
       max-width: 200px;
@@ -781,10 +790,10 @@ background-color: var(--right-column);
     .row-discussions {
       flex: 1;
       display: flex;
-      .row-flex{
+      .row-flex {
         display: flex;
-        gap:6px;
-        .views-icon{
+        gap: 6px;
+        .views-icon {
           width: 16px;
         }
       }
@@ -792,7 +801,6 @@ background-color: var(--right-column);
         gap: 6px;
         display: flex;
         cursor: pointer;
-       
       }
     }
     .row-rating {
@@ -942,6 +950,7 @@ background-color: var(--right-column);
     display: flex;
     max-height: 250px;
     min-height: 250px;
+
     .title {
       /* min-width:4.6em; */
       /* min-width: 100%; */
@@ -1669,6 +1678,7 @@ background-color: var(--right-column);
   font-size: 14px;
   color: #707070;
   padding-left: 14px;
+  width: 100%;
 }
 .search--searchbox:focus {
   text-align: left;
@@ -2838,11 +2848,11 @@ background-color: var(--right-column);
       /* box-shadow: 0 0px 5px #00000081; */
       flex: 8;
       padding: 10px;
-      background-color: #e2e2e2;
+      /* background-color: #ffffff; */
       border-radius: 10px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      /* gap: 10px; */
       width: 100%;
       max-width: 600px;
       cursor: default;
@@ -2904,6 +2914,7 @@ background-color: var(--right-column);
   align-items: center;
   z-index: 10;
   cursor: pointer;
+
   .popup-content-container {
     width: 80%;
     height: 90%;
@@ -3265,6 +3276,9 @@ background-color: var(--right-column);
     .new-post-btn:hover {
       opacity: 80%;
     }
+    .discussions-right-buttons-container {
+      display: flex;
+    }
     .new-post-btn {
       min-width: 110px;
       align-self: center;
@@ -3366,7 +3380,7 @@ background-color: var(--right-column);
   }
 
   .discussions-overflow {
-    overflow-y: auto;
+    overflow-y: scroll;
     display: flex;
     height: 100%;
     scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
@@ -3383,7 +3397,6 @@ background-color: var(--right-column);
     grid-template-columns: repeat(auto-fit, minmax(163.3px, 150px));
     column-gap: 20px;
     row-gap: 30px;
-
     .new-project-card-container {
       display: flex;
       flex-direction: column;
@@ -3579,6 +3592,49 @@ background-color: var(--right-column);
       height: 18px;
       width: 18px;
       user-select: none;
+    }
+  }
+}
+
+/* error page component */
+.error-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: black;
+  align-items: center;
+  height: 100%;
+  gap: 30px;
+  h1 {
+    font-size: 30px;
+  }
+}
+
+/* Upload Document component */
+.upload-doc-container {
+  display: flex;
+  align-items: center;
+  .upload-doc-button {
+    background-color: white;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  .upload-popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: hsl(0, 0%, 50%, 40%);
+    .upload-popup-content-container{
+      height: 50%;
+      width: 50%;
+      background-color: rgb(255, 255, 255);
     }
   }
 }

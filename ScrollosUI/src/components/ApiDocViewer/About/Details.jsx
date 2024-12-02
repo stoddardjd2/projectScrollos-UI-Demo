@@ -6,6 +6,8 @@ import Contact from "../Contact";
 import Like from "../../Common-components/Like";
 import Rating from "../Rating";
 import notLikedIcon from "../../../assets/ApiDocViewer-Icons/like-icons/not-liked.svg";
+import linkIcon from "../../../assets/ApiDocViewer-Icons/link.svg";
+import messageIcon from "../../../assets/cards-v2-icons/messageWhite.svg";
 
 export default function Details(props) {
   const { clientUserData, apiDoc } = props;
@@ -13,13 +15,22 @@ export default function Details(props) {
   return (
     <div className="details-container">
       <div className="title-container">
-        <h2>{apiDoc.info.title}</h2>
-        <Like clientUserData={clientUserData} apiDoc={apiDoc} />
+        <div className="sub-title-container">
+          <h2>{apiDoc.info.title}</h2>
+          <Like clientUserData={clientUserData} apiDoc={apiDoc} />
+        </div>
+
+        {apiDoc.info?.contact?.url && (
+          <a href={apiDoc.info.contact.url}>
+            <img className="title-link" src={linkIcon} />
+            {console.log(apiDoc.info.contact.url)}
+          </a>
+        )}
       </div>
       {/* <Rating apiDoc={apiDoc} clientUserData={clientUserData} /> */}
       <div className="rating-date-container">
         <Rating apiDoc={apiDoc} clientUserData={clientUserData} />
-        <div className="date-container"> 
+        <div className="date-container">
           <div className="created-on">Created on </div>
           <div>{`${
             createdDate.getMonth() + 1
@@ -63,7 +74,10 @@ export default function Details(props) {
         </div>
         <div className="item discussions--item">
           <h3>Discussions</h3>
-          <DiscussionsCount apiDoc={apiDoc} />
+          <div className="description-item-container">
+            <img className="description-item-icon" src={messageIcon} />
+            <div>{apiDoc.discussionsCount}</div>
+          </div>
         </div>
         <div className="item">
           <h3>Saves</h3>

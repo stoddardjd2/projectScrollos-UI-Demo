@@ -343,22 +343,23 @@ export default function DocDiscussion(props) {
             <h2 className="discussion-title">{selectedDiscussion.title}</h2>
           </div>
         )}
-
-      {!isDeletingDisc &&  <button onClick={handleNewPost} className="new-post-btn">
-          <div className="plus">+</div>
-          <div className="new-post-text">New post</div>
-        </button>
-}
-        <div className="flex nav-buttons">
+        <div className="discussions-right-buttons-container">
+          {!isDeletingDisc && (
+            <button onClick={handleNewPost} className="new-post-btn">
+              <div className="plus">+</div>
+              <div className="new-post-text">New post</div>
+            </button>
+          )}
           {selectedDiscussion && (
             <button onClick={handleBack} className="back">
               <img className="back-icon" src={backIcon} />
             </button>
           )}
-          {/* <button onClick={handleExitPopup} className="exit">
+        </div>
+
+        {/* <button onClick={handleExitPopup} className="exit">
             <img className="exit-icon" src={exitIcon} id="exit" />
           </button> */}
-        </div>
       </div>
       <div className="content-bottom">
         {selectedDiscussion.posts && (
