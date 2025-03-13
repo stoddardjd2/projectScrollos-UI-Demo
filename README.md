@@ -10,6 +10,13 @@ This repository contains the front end for an API library application, intended 
 -React for front end
 -Express and Node.js for back-end
 
+## License: 
+This project is licensed under the MIT License 
+## Questions?: 
+https://github.com/stoddardjd2
+
+Or contact me at: jared.stoddard2@gmail.com
+
 ## Demo:
 ### View all your added API documents in card or row format.
 ![Demo 1](/ProjectScrollos-Demo-Images/demo-1.png?raw=true)
@@ -39,10 +46,3 @@ This repository contains the front end for an API library application, intended 
 ![Demo 11](/ProjectScrollos-Demo-Images/demo-11.png?raw=true)
 <br/><br/>
 
-
-## License: 
-This project is licensed under the MIT License 
-## Questions?: 
-https://github.com/stoddardjd2
-
-Or contact me at: jared.stoddard2@gmail.com
