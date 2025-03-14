@@ -3,7 +3,7 @@
 # ProjectScrollos-UI 
 
 ## Description: 
-(Superseded by https://github.com/stoddardjd2/the-ui-demo)0
+(Superseded by https://github.com/stoddardjd2/the-ui-demo)
 <br/><br/>
 This repository contains the front end for an API library application, intended to centralize your API documents with useful features for discovery, collaboration and discussion.
 
