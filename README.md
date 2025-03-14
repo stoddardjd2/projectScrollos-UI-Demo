@@ -3,7 +3,7 @@
 # ProjectScrollos-UI 
 
 ## Description: 
-(Superseded by (https://github.com/2351Labs/the-ui/)
+(Superseded by https://github.com/2351Labs/the-ui)
 <br/><br/>
 This repository contains the front end for an API library application, intended to centralize your API documents with useful features for discovery, collaboration and discussion.
 
