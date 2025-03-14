@@ -1,6 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-# ProjectScrollos-UI
+# ProjectScrollos-UI (Superseded by https://github.com/stoddardjd2/the-ui-demo)
 
 ## Description: 
 This repository contains the front end for an API library application, intended to centralize your API documents with useful features for discovery, collaboration and discussion.
